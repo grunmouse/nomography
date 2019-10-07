@@ -1,0 +1,132 @@
+\subsection{Первая формула}
+\paragraph{Найдём каноничную форму $\pi(b, C, k)$}
+$$m = b + C,$$
+$$b = h k \left( b+ C \right);$$
+$$h k b + h k C = b;$$
+$$\left(h k -1\right) b + h k C = 0.$$
+
+$$
+\begin{array}{l}
+x = b,\\
+y = C;\\
+\end{array}
+\Rightarrow
+\left\{
+	\begin{array}{l}
+		\left(h k -1\right) x + h k y = 0 \\
+		x - b = 0,\\
+		y - C = 0.\\
+	\end{array}
+\right.
+$$
+
+\paragraph{$\pi(b, C, k)$}
+$$
+\left|
+\begin{array}{lll}
+	h k -1 & hk & 0 \\
+	1 & 0 & -b \\
+	0 & 1 & -C
+\end{array}
+\right|
+=0.
+$$
+Вычтем из первого столбца второй
+
+$$
+\left|
+\begin{array}{lll}
+	h k -1 - hk & hk & 0 \\
+	1     - 0  & 0  & -b \\
+	0     - 1  & 1  & -C
+\end{array}
+\right|
+=0;
+\Rightarrow
+\left|
+\begin{array}{lll}
+	-1 & hk & 0 \\
+	1  & 0  & -b \\
+	-1 & 1  & -C
+\end{array}
+\right|
+=0;
+$$
+Умножим первую и третью строки на -1
+$$
+\left|
+\begin{array}{lll}
+	1 & -hk & 0 \\
+	1 & 0   & -b \\
+	1 & -1  & C
+\end{array}
+\right|
+=0;
+$$
+Поменяем местами первый и третий столбцы
+$$
+\left|
+\begin{array}{lll}
+	0  & -hk & 1 \\
+	-b  & 0   & 1 \\
+	C & -1  & 1 
+\end{array}
+\right|
+=0;
+$$
+Получена каноничная форма $\pi'$.
+\paragraph{Найдём уравнения шкал}
+$$k:
+\begin{array}{l}
+	x = 0,\\
+	y = -hk;
+\end{array}
+$$
+$$b:
+\begin{array}{l}
+	x = -b,\\
+	y = 0;
+\end{array}
+$$
+$$C:
+\begin{array}{l}
+	x = C,\\
+	y = -1;
+\end{array}
+$$
+
+\subsubsection{Другой вариант}
+\paragraph{$\pi(b, C, k)$}
+$$
+\left|
+\begin{array}{lll}
+	h k -1 & hk & 0 \\
+	1      & 0  & -b \\
+	0      & 1  & -C
+\end{array}
+\right|
+=0.
+$$
+$$R_1 += R_2$$
+$$
+\left|
+\begin{array}{lll}
+	2 h k -1  & hk & 0 \\
+	1         & 0  & -b \\
+	1         & 1  & -C
+\end{array}
+\right|
+=0.
+$$
+Известно, что $0<hk<1 \Rightarrow 2 h k -1 >0$
+$$S_1 /= (2 h k -1)$$
+$$
+\left|
+\begin{array}{lll}
+	1 & \frac{hk}{2 h k -1} & 0 \\
+	1               & 0 & -b \\
+	1               & 1 & -C
+\end{array}
+\right|
+=0.
+$$

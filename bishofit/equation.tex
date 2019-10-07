@@ -1,0 +1,75 @@
+\section{Формулы связи количества воды и бишофита с концентрацией раствора}
+
+\subsection{Переменные и общие формулы}
+\paragraph{} Пусть 
+$A$ - масса $MgCl_2$, 
+$B$ - масса связанной воды в бишофите, 
+$C$ - масса жидкой воды, используемой для растворения.
+
+\paragraph{}$B+C$ - масса воды в растворе.
+\paragraph{}$m=A+B+C$ - общая масса раствора.
+\paragraph{}$k = \frac{A}{m}$ - массовая концентрация раствора
+\paragraph{}$b = A+B$ = масса бишофита.
+\paragraph{}$d = \frac{A}{B}$ - соотношение компонентов бишофита 
+
+\paragraph{Выведем формулу}
+$$
+\left\{
+\begin{array}{l}
+B = \frac{A}{d},\\
+A =  km,\\
+b = A + B;
+\end{array}
+\right.
+\Rightarrow
+b = km \left(1 + \frac{1}{d} \right ).
+$$
+
+Обозначим $$ h = 1 + \frac{1}{d}$$
+
+$$b = h k m.$$
+
+$$\frac{b}{m} = h k.$$
+
+$$C = m - b.$$
+
+$$C = m (1 - h k).$$ 
+
+\subsection{Расчёт констант}
+\paragraph{Бишофит:} $MgCl_2 \cdot 6H_2O$.
+
+$$d = \frac{A}{B} = \frac{M\left( MgCl_2 \right)}{6 \cdot M\left( H_20 \right)}$$
+$$A_r\left( O \right) = 16.00 \pm 0.005;$$
+$$A_r\left( H \right) = 1.01 \pm 0.005;$$
+$$A_r\left( Mg \right) = 24.31 \pm 0.005;$$
+$$A_r\left( Cl \right) = 35.45 \pm 0.005;$$
+
+$$M\left( MgCl_2 \right) = 24.31 + 2 \cdot 35.45 = 95.21 \pm 0.015 \frac{g}{mol};$$
+$$M\left( H_2O \right) = 2 \cdot 1.01 + 16 = 18.02 \pm 0.015 \frac{g}{mol};$$
+$$M\left(6 \cdot H_2O \right) = 6 \cdot \left(18.02 \pm 0.015 \right) = 108.12 \pm 0.09 \frac{g}{mol};$$
+
+$$d = \frac{A}{B} = \frac{M\left( MgCl_2 \right)}{M\left(6 \cdot H_2O \right)}.$$
+$$\Delta_{d} 
+	= \Delta_{M\left( MgCl_2 \right)} + \Delta_{M\left( 6 \cdot H_2O \right)} 
+	= \frac{0.015}{95.21} + \frac{0.09}{108.12} 
+	\approx 0.00099
+;$$
+$$d 
+	= \frac{95.21}{108.12} \cdot \left( 1 \pm \Delta_d \right )
+	= 0.8806 \pm 0.0009.
+$$
+
+$$h= 1 + \frac{1}{d}.$$
+$$\Delta_\frac{1}{d} = \Delta_d;$$
+
+$$h 
+	= 1 + \frac{1}{d} \cdot \left( 1 \pm \Delta_d \right )
+	= 1 + 1.136 \pm 0.002
+	= 2.136 \pm 0.002.
+$$
+
+\subsection{Принимаемые значения}
+$$0 < k \le 0.3;$$
+$$100 \le m \le 500;$$
+$$0 < b \le 150h \Rightarrow 0 < b \le 321;$$
+$$35 \le C \le 500$$
