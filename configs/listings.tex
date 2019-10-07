@@ -1,0 +1,29 @@
+\usepackage{listings}
+\usepackage{ucs}
+\usepackage{color}
+
+\definecolor{blue128}{RGB}{0, 0, 128}
+\definecolor{green128}{RGB}{0, 128, 0}
+\definecolor{regexcolor}{RGB}{128, 0, 255}
+\definecolor{gray128}{RGB}{128, 128, 128}
+\definecolor{doccomment}{RGB}{0, 128, 128}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue128}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{blue128}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{green128}\ttfamily,
+  stringstyle=\color{gray128}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+extendedchars=\true,
+inputencoding=utf8
+}
