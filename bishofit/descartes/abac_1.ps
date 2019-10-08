@@ -1,0 +1,323 @@
+%!PS-Adobe-1.0
+%%BeginSetup
+  % A4, unrotated
+  %<< /PageSize [595 842] /Orientation 3 >> setpagedevice
+  % A4, landscape
+  << /PageSize [842 595] /Orientation 0 >> setpagedevice
+%%EndSetup
+
+%ps2pdf -dNOSAFER abac_1.ps - ключи вызова
+
+%Введём функции
+
+/m-min 100 def
+/m-max 500 def
+/k-min 0.0 def
+/k-max 0.3 def
+
+/h 2.136 def
+/lambda-x 312.1 def
+/lambda-y 0.5 def
+
+% x =  h * k
+%[k] 
+/x-scale {
+	h
+	mul
+} bind def
+%[x]
+
+% y = (m - m_min)
+%[m]
+/y-scale {
+	m-min
+	sub
+} bind def
+%[y]
+
+% y = C/(1-x) - m_min
+%[C, x]
+/C-line {
+	1
+	exch
+	%[C, 1, x]
+	sub
+	%[C, 1-x]
+	div
+	m-min sub
+} def
+%[y]
+
+%y = b/x - m_min%
+%[b, x]
+/b-line {
+	div
+	m-min sub
+} def 
+
+% По умолчанию, постскрипт использует единицу измерения 1 пункт=1/72 дюйма, 
+% а нам нравятся миллиметры.
+72 25.4 div           % 1 мм = 72/25.4 пунктов
+dup                   % дублировать значение на вершине стека
+scale                 % растянуть в это количество раз по обеим координатам
+
+20 8 translate     % установить начало координат
+
+0.4 setlinewidth	% установить толщину линии по стандарту для сплошной основной
+
+/font-size 3 def
+/mark-size 2 def
+
+%[x, y]
+/mark-down {
+	newpath
+	moveto
+	0 mark-size neg
+	rlineto
+	stroke
+} bind def
+%[]
+
+%[x, y]
+/mark-left {
+	newpath
+	moveto
+	mark-size neg 0
+	rlineto
+	stroke
+} bind def
+
+%[x, y]
+/mark-right {
+	newpath
+	moveto
+	mark-size 0
+	rlineto
+	stroke
+} bind def
+
+%[value, x, y]
+/rshow-down {
+	newpath
+	moveto
+	0 mark-size neg
+	rmoveto
+	%[value]
+	5 string 
+	cvs 
+	%[string]
+	dup
+	stringwidth 
+	pop
+	font-size
+	%[string, w, h]
+	-1 mul
+	exch
+	-0.5 mul
+	exch
+	rmoveto
+	show
+	stroke
+} bind def
+%[]
+
+%[value, x, y]
+/rshow-left {
+	newpath
+	moveto
+	mark-size neg 0
+	rmoveto
+	%[value]
+	5 string 
+	cvs 
+	%[string]
+	dup
+	stringwidth 
+	pop
+	font-size
+	%[string, w, h]
+	-0.5 mul
+	exch
+	-1 mul
+	exch
+	rmoveto
+	show
+	stroke
+} bind def
+%[]
+%[value, x, y]
+/rshow-right {
+	newpath
+	%2 copy == ==
+	moveto
+	mark-size 0
+	%2 copy == ==
+	rmoveto
+	%[value]
+	5 string 
+	cvs 
+	%[string]
+	0
+	font-size -0.5 mul
+	%2 copy == ==
+	rmoveto
+	show
+	stroke
+} bind def
+%[]
+
+/Arial findfont % взять шрифт Times-Roman
+font-size scalefont          % растянуть до размера 5 (у нас - мм!)
+setfont               % установить выбранный шрифт
+
+% Рисуем ось х
+newpath
+0 0 moveto 200 0 lineto
+stroke
+% Рисуем штрихи и подписывем
+
+k-min 0.01 k-max
+{
+	%[k]
+	dup
+	x-scale
+	lambda-x mul
+	%[k, x]
+	0 mark-down
+	%[]
+	pop
+	
+} bind for
+k-min 0.05 k-max
+{
+	%[k]
+	dup
+	x-scale
+	lambda-x mul
+	%[k, x]
+	0
+	rshow-down
+	%[]
+	
+} bind for
+
+%рисуем ось y
+
+newpath
+0 0 moveto 0 200 lineto
+stroke
+
+m-min 50 m-max
+{
+	%[m]
+	dup
+	y-scale
+	lambda-y mul
+	dup
+	0 exch mark-left
+	0 exch rshow-left
+	%[]
+} for
+
+/C-point {
+	%[C, k]
+	x-scale
+	%[C, x]
+	dup
+	3 1 roll
+	%[x, C, x]
+	C-line
+	%[x, y]
+	lambda-y mul
+	exch
+	lambda-x mul
+	exch
+} def
+
+/b-point {
+	%[b, k]
+	x-scale
+	%[b, x]
+	dup
+	3 1 roll
+	%[x, b, x]
+	b-line
+	%[x, y]
+	lambda-y mul
+	exch
+	lambda-x mul
+	exch
+} def
+
+/draw-C {
+	%[C]
+	newpath
+	dup
+	k-min
+	C-point
+	moveto
+	dup
+	%[C, C]
+	k-min 0.001 add
+	0.001
+	k-max
+	{
+		%[C, C, k]
+		C-point
+		lineto
+		%[C]
+		dup
+		%[C, C]
+	} for
+	stroke
+	pop pop
+} def
+
+/draw-b {
+	%[b]
+	newpath
+	dup
+	k-min 0.001 add
+	b-point
+	
+	moveto
+	dup
+	%[b, b]
+	k-min 0.002 add
+	0.001
+	k-max
+	{
+		%[b, b, k]
+		b-point
+		%2 copy == ==
+		lineto
+		%[b]
+		dup
+		%[b, b]
+	} for
+	stroke
+	pop pop
+} def
+
+0 0 200 200 rectclip
+
+100 50 400 {
+	draw-C
+} for
+
+50 50 250 {
+	draw-b 
+} for
+
+initclip
+
+50 50 250 {
+	%(b) == dup ==
+	dup k-max b-point 
+	%2 copy == ==
+	rshow-right
+} for
+
+
+
+showpage              % вывести страницу
