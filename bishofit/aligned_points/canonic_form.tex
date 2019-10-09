@@ -1,3 +1,83 @@
+\subsubsection{Преобразование к форме $\pi'$}
 
-\stealfile{pi_c_b_k}
-\stealfile{pi_c_b_m}
+Введя переменные 
+$$x = hk;$$
+$$y = \frac{1}{m}.$$
+Мы получили уравнения: 
+$$k: x - hk = 0;$$
+$$m: y - \frac{1}{m} = 0;$$
+$$b: -\frac{x}{b} + y = 0;$$
+$$C: \frac{x}{C} + y - \frac{1}{C} =0.$$
+
+Для краткости запишем их в виде матрицы
+$$
+\left(
+\begin{array}{ccc}
+	1 & 0 & -hk \\
+	0 & 1 & -\frac{1}{m} \\
+	-\frac{1}{b} & 1 & 0 \\
+	\frac{1}{C} & 1 & -\frac{1}{C}
+\end{array}
+\right)
+$$
+
+Если из первого столбца вычесть третьй
+
+$$
+\left(
+\begin{array}{ccc}
+	1+hk & 0 & -hk \\
+	\frac{1}{m} & 1 & -\frac{1}{m} \\
+	-\frac{1}{b} & 1 & 0 \\
+	\frac{2}{C} & 1 & -\frac{1}{C}
+\end{array}
+\right)
+$$
+
+Разделим каждую строку на значение её первого столбца
+
+$$
+\left(
+\begin{array}{ccc}
+	1 & 0 & -\frac{hk}{1+hk} \\
+	1 & m & -1 \\
+	1 & -b & 0 \\
+	1 & \frac{C}{2} & -\frac{1}{2}
+\end{array}
+\right)
+$$
+
+Умножим последний столбец на -1 и поменяем его местами с первым
+
+$$
+\left(
+\begin{array}{ccc}
+	\frac{hk}{1+hk} & 0 & 1 \\
+	1 & m & 1 \\
+	0 & -b & 1 \\
+	\frac{1}{2} & \frac{C}{2} & 1
+\end{array}
+\right)
+$$
+
+Полученная матрица - совмещение форм $\pi'$ для номограмм исходных уравнений.
+Запишем эти формы:
+$$
+\left|
+\begin{array}{ccc}
+	\frac{hk}{1+hk} & 0 & 1 \\
+	1 & m & 1 \\
+	0 & -b & 1 \\
+\end{array}
+\right| = 0.
+$$
+
+$$
+\left|
+\begin{array}{ccc}
+	1 & m & 1 \\
+	0 & -b & 1 \\
+	\frac{1}{2} & \frac{C}{2} & 1
+\end{array}
+\right| = 0.
+$$
