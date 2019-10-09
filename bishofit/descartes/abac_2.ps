@@ -6,54 +6,27 @@
   << /PageSize [842 595] /Orientation 0 >> setpagedevice
 %%EndSetup
 
-%ps2pdf -dNOSAFER abac_1.ps - ключи вызова
+%ps2pdf -dNOSAFER abac_2.ps - ключи вызова
 
-%Введём функции
+% Пределы величин по осям
 
 /m-min 100 def
 /m-max 500 def
 /k-min 0.0 def
 /k-max 0.3 def
 
+%константы
+
 /h 2.136 def
 /lambda-x 312.1 def
-/lambda-y 0.5 def
+/lambda-y 25000 def
 
-% x =  h * k
-%[k] 
-/x-scale {
-	h
-	mul
-} bind def
-%[x]
+/y-min 1 m-max div def
+/y-max 1 m-min div def
+/x-min 0 def
+/x-max k-max h mul def
 
-% y = (m - m_min)
-%[m]
-/y-scale {
-	m-min
-	sub
-} bind def
-%[y]
-
-% y = C/(1-x) - m_min
-%[C, x]
-/C-line {
-	1
-	exch
-	%[C, 1, x]
-	sub
-	%[C, 1-x]
-	div
-	m-min sub
-} def
-%[y]
-
-%y = b/x - m_min%
-%[b, x]
-/b-line {
-	div
-	m-min sub
-} def 
+%Укажем правила черчения и подключим библиотеку
 
 % По умолчанию, постскрипт использует единицу измерения 1 пункт=1/72 дюйма, 
 % а нам нравятся миллиметры.
@@ -75,19 +48,87 @@ font-size scalefont
 setfont               % установить выбранный шрифт
 
 
+%[k]
+/k-scale {
+	h mul
+	lambda-x mul
+} def
+%[x]
+
+%[m]
+/m-scale {
+	%[m]
+	1 exch div
+	1 m-max div
+	sub
+	lambda-y mul
+} def
+%[y]
+
+%[b, x]
+/b-point {
+	2 dict begin
+		/x exch def
+		/b exch def
+		x lambda-x mul
+		x b div
+		y-min sub
+		lambda-y mul
+	end
+} def
+
+%[C, x]
+/C-point {
+	2 dict begin
+		/x exch def
+		/C exch def
+		x lambda-x mul
+		1 x sub %[1-x]
+		C div %[(1-x)/C]
+		y-min sub
+		lambda-y mul
+	end
+} def
+
+%[b]
+/b-line {
+	newpath
+	dup
+	x-min
+	b-point
+	moveto
+	x-max
+	b-point
+	lineto
+	stroke
+} def
+
+%[C]
+/C-line {
+	newpath
+	dup
+	x-min
+	C-point
+	moveto
+	x-max
+	C-point
+	lineto
+	stroke
+} def
+
+%Нарисуем оси
+
 k-min 0.01 k-max
 {
-	x-scale lambda-x mul
+	k-scale
 }
 bottom-line-scale
-
 
 k-min 0.05 k-max
 {
 	%[k]
 	dup
-	x-scale
-	lambda-x mul
+	k-scale
 	%[k, x]
 	0
 	rshow-down
@@ -95,82 +136,39 @@ k-min 0.05 k-max
 	
 } for
 
-
-m-min 50 m-max 
+m-min 50 m-max
 {
-	y-scale
-	lambda-y mul
+	m-scale
 }
 left-line-scale
 
-/C-point {
-	%[C, k]
-	x-scale
-	%[C, x]
+m-min 50 m-max
+{
+	%[m]
 	dup
-	3 1 roll
-	%[x, C, x]
-	C-line
-	%[x, y]
-	lambda-y mul
+	m-scale
+	0
 	exch
-	lambda-x mul
-	exch
-} def
-
-/b-point {
-	%[b, k]
-	x-scale
-	%[b, x]
-	dup
-	3 1 roll
-	%[x, b, x]
-	b-line
-	%[x, y]
-	lambda-y mul
-	exch
-	lambda-x mul
-	exch
-} def
-
-/draw-C {
-	%[C]
-	%[b]
-	k-min 0.001 add
-	0.001
-	k-max
-	{C-point}
-	draw-curve
-} def
-
-/draw-b {
-	%[b]
-	k-min 0.001 add
-	0.001
-	k-max
-	{b-point}
-	draw-curve
-} def
+	rshow-left
+}
+for
 
 0 0 200 200 rectclip
 
 100 50 400 {
-	draw-C
+	C-line
 } for
 
 50 50 250 {
-	draw-b 
+	b-line
 } for
 
 initclip
 
-50 50 250 {
-	%(b) == dup ==
-	dup k-max b-point 
-	%2 copy == ==
+50 50 250{
+	dup
+	x-max b-point
 	rshow-right
 } for
-
-
 
 showpage              % вывести страницу
