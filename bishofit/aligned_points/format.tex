@@ -1,67 +1,282 @@
 \subsection{Впишем диаграмму в формат $185 \times 232$}
 
+Область номограммы представляет собой четырёхугольник, построенный по точкам
+$(0; 0)$, $(0; -b_{max}$, $(1, m_{min})$, $(1, m_{max})$.
+Левая и правая его стороны - содержат шкалы $b$ и $m$ соответственно, шкалы $C$ и $k$ находятся внутри четырёхугольника.
 Сверху и снизу подписи не требуются, можно оставить по 5 мм.
 Слева и справа будут подписи шкал, со значениями от 0 до 500 и от 0 до 321, отступим от левого и правого края по 20 мм.
 Таким образом, чертёж номограммы, за исключением подписей шкал, нужно уложить в прямоугольник размером $145 \times 222$
 
 \paragraph{Преобразование формы номограммы}
+
+Обозначим ширину и высоту доступной для построения области через $a$ и $b$.
+
 Вертикальные шкалы - параллельны, а форма номограммы в целом - близка к параллелограмму.
 Преобразуем номограмму таким образом, чтобы приблизить её к прямоугольнику.
+Это можно сделать с помощью афинного преобразования.
 
-Найдём, матрицу соответствующего преобразования.
 $$
-\left(
-	\begin{array}{c}
-		x' \\
-		y'
-	\end{array}
-\right) 
-= 
-\left(
-	\begin{array}{cc}
-		1 & 0 \\
-		p & 1
-	\end{array}
-\right) 
-\times 
-\left(
-	\begin{array}{c}
-		x \\
-		y
-	\end{array}
-\right)
-;
-\Rightarrow
-\left\{
-	\begin{array}{l}
-		x' = x,\\
-		y' = px + y.
-	\end{array}
-\right. 
+\begin{pmatrix}
+	x' \\
+	y'
+\end{pmatrix}
+= M
+\begin{pmatrix}
+	x \\
+	y
+\end{pmatrix}
++
+\vec{v}.
 $$
 
-Нам нужно привести примерно к одному уровню нижние точки шкал $p$ и $m$. 
-Они имеют координаты $(0; -b_{max})$ и $(1; 0)$ соответственно
-Так как наша матрица не смещает точки, лежащие на оси ординат, будем смещать точку $(1; 0)$ до ординаты $-b_{max}$
-$$-b_{max} = p \cdot 1 + 0;$$
-$$p = -b_{max}.$$
+Где 
+$$M = \begin{pmatrix}
+	\lambda_x & p_x \\
+	p_y & \lambda_y
+\end{pmatrix}
+$$
+a $\vec{v}$ - вектор смещения координат $\{x'_0; y'_0\}$.
 
-После такого преобразования матрица сильно сместилась вниз, нужно сместить её обратно, прибавлением вектора $\{0; b_{max}\}$.
-Тогда:
+Раскрывая уравнение, получим
+$$x' = \lambda_x x + p_x y + x'_0,$$
+$$y' = \lambda_y y + p_y x + y'_0.$$
+
+Мы хотим расположить самую нижнюю точку - $(0; -b_{max})$ - в нижнем левом углу чертежа, а шкалу $m$ - самую длинную и находящуюся справа - вдоль правой стороны чертежа.
+Запишем систему
 $$
 \left\{
-	\begin{array}{l}
-		x' = x,\\
-		y' = -b_{max}x + y + b_{max}.
-	\end{array}
-\right. 
+\begin{gathered}
+	0 = 0 \lambda_x -b_{max} p_x + x'_0, \\
+	0 = -b_{max} \lambda_y + 0 p_y + y'_0, \\
+	W = 1 \lambda_x + m_{max} p_x + x'_0, \\
+	H = m_{max} \lambda_y + 1 p_y + y'_0, \\
+	W = 1 \lambda_x + m_{min} p_x + x'_0,\\
+	0 = m_{min} \lambda_y + 1 p_y + y'_0.
+\end{gathered}
+\right.
 $$
 
-\paragraph{Размер номограммы и модули шкал}
+Она распадается на две подсистемы
+$$
+\left\{
+\begin{gathered}
+	0 = 0 \lambda_x -b_{max} p_x + x'_0, \\
+	W = 1 \lambda_x + m_{max} p_x + x'_0, \\
+	W = 1 \lambda_x + m_{min} p_x + x'_0.
+\end{gathered}
+\right.
+$$
+$$
+\left\{
+\begin{gathered}
+	0 = -b_{max} \lambda_y + 0 p_y + y'_0, \\
+	H = m_{max} \lambda_y + 1 p_y + y'_0, \\
+	0 = m_{min} \lambda_y + 1 p_y + y'_0.
+\end{gathered}
+\right.
+$$
 
-Общая высота номограммы равна $m_{max}$.
-Значит вертикальный масштаб номограммы
-$$\lambda_y = \frac{222}{m_{max}}.$$
+% И решим её методом Гаусса
+$$\vec{x} = \{\lambda_x, p_x, x'_0\}$$
 
-Общая ширина номограммы равна 1.
-$$\lambda_x = 145.$$
+$$
+\begin{gathered}
+	\left(
+		\begin{array}{ccc}
+			0 & -b_{max} & 1\\
+			1 & m_{max} & 1 \\
+			1 & m_{min} & 1
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			0 \\ W \\ W
+		\end{array}
+	\right)
+	\Rightarrow
+	\begin{array}{c}
+		S_2-=S_3\\
+		S_3-=S1
+	\end{array}
+	\left(
+		\begin{array}{ccc}
+			0 & -b_{max} & 1\\
+			0 & m_{max}+m_{min} & 0 \\
+			1 & m_{min}+b_{max} & 0
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			0 \\ 0 \\ W
+		\end{array}
+	\right)	
+	\Rightarrow \\
+	\Rightarrow
+	\begin{array}{c}
+		S_2-=S_1 \\
+		S_2/=m_{max}+m_{min}
+	\end{array}
+	\left(
+		\begin{array}{ccc}
+			0 & -b_{max} & 1\\
+			0 & 1 & 0 \\
+			1 & 0 & 0
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			0 \\ 0 \\ W
+		\end{array}
+	\right)	
+	\Rightarrow
+	\begin{array}{c}
+		S_1+=b_{max}S_2
+	\end{array}
+	\left(
+		\begin{array}{ccc}
+			0 & 0 & 1\\
+			0 & 1 & 0 \\
+			1 & 0 & 0
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			0 \\ 0 \\ W
+		\end{array}
+	\right)	
+\end{gathered}
+$$
+
+$$
+\left\{
+\begin{gathered}
+	\lambda_x = W, \\
+	p_x = 0, \\
+	x'_0 = 0.
+\end{gathered}
+\right.
+$$
+
+$$x' = W x.$$
+
+
+$$\vec{y} = \{\lambda_y, p_y, y'_0\}$$
+
+$$
+\begin{gathered}
+	\left(
+		\begin{array}{ccc}
+			-b_{max} & 0 & 1 \\
+			m_{max} & 1 & 1 \\
+			m_{min} & 1 & 1
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			0 \\ H \\ 0
+		\end{array}
+	\right)
+	\Rightarrow
+	\begin{array}{c}
+		S_2-=S_3\\
+		S_3-=S_1
+	\end{array}
+	\left(
+		\begin{array}{ccc}
+			-b_{max} & 0 & 1 \\
+			m_{max} - m_{min} & 0 & 0 \\
+			m_{min} + b_{max} & 1 & 0
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			0 \\ H \\ 0
+		\end{array}
+	\right)
+	\Rightarrow\\
+	\Rightarrow
+	\begin{array}{c}
+		S_2/=m_{max} - m_{min}\\
+	\end{array}
+	\left(
+		\begin{array}{ccc}
+			-b_{max} & 0 & 1 \\
+			1 & 0 & 0 \\
+			m_{min} + b_{max} & 1 & 0
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			0 \\ \frac{H}{m_{max} - m_{min}} \\ 0
+		\end{array}
+	\right)
+\end{gathered}
+$$
+Запишем
+$$\lambda_y = \frac{H}{m_{max} - m_{min}};$$
+Заменим запись и работаем дальше
+$$
+\begin{gathered}
+	\left(
+		\begin{array}{ccc}
+			-b_{max} & 0 & 1 \\
+			1 & 0 & 0 \\
+			m_{min} + b_{max} & 1 & 0
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			0 \\ \lambda_y \\ 0
+		\end{array}
+	\right)
+	\Rightarrow\\
+	\Rightarrow
+	\begin{array}{c}
+		S_1+=b_{max} S_2\\
+		S_3-=(m_{min} + b_{max}) S_2
+	\end{array}
+	\left(
+		\begin{array}{ccc}
+			0 & 0 & 1 \\
+			1 & 0 & 0 \\
+			0 & 1 & 0
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			b_{max}\lambda_y \\ 
+			\lambda_y \\ 
+			-(m_{min} + b_{max})\lambda_y
+		\end{array}
+	\right)
+	\Rightarrow
+	\left(
+		\begin{array}{ccc}
+			1 & 0 & 0 \\
+			0 & 1 & 0 \\
+			0 & 0 & 1 \\
+		\end{array}
+		\right.
+		\left|
+		\begin{array}{c}
+			\lambda_y \\ 
+			-(m_{min} + b_{max})\lambda_y\\
+			b_{max}\lambda_y
+		\end{array}
+	\right)
+\end{gathered}
+$$
+
+$$
+\left\{
+\begin{gathered}
+	\lambda_y = \frac{H}{m_{max} - m_{min}},\\
+	p_y = -(m_{min} + b_{max})\lambda_y,\\
+	y'_0 = b_{max}\lambda_y;
+\end{gathered}
+\right.
+$$
+
+$$y' = \lambda_y y + p_y x + y'_0;$$
+$$y' = \lambda_y y -(m_{min} + b_{max})\lambda_y x + b_{max}\lambda_y;$$
+$$y' = \lambda_y \left( y - (m_{min} + b_{max}) x + b_{max} \right).$$

@@ -1,14 +1,19 @@
 %!PS-Adobe-1.0
 %%BeginSetup
   % A4, unrotated
-  << /PageSize [595 842] /Orientation 3 >> setpagedevice
+  << /PageSize [595 842] /Orientation 0 >> setpagedevice
   % A4, landscape
   %<< /PageSize [842 595] /Orientation 0 >> setpagedevice
 %%EndSetup
 
-%ps2pdf -dNOSAFER abac_1.ps - ключи вызова
+%ps2pdf -dNOSAFER abac.ps - ключи вызова
+
+/width 145 def
+/height 222 def
 
 %Пределы величин
+
+/h 2.136 def
 
 /m-max 500 def
 /m-min 100 def
@@ -17,16 +22,141 @@
 /k-max 0.3 def
 
 /b-min 0 def
-/b-max 321 def
+/b-max 
+	h
+	k-max mul
+	m-max mul
+	%dup (b-max) == ==
+def	%321
 
-/C-min 0 def
-/C-max 500 def
+/C-min 
+	1
+	h k-max mul
+	sub
+	m-min mul
+	%dup (C-min) == ==
+def
+/C-max 
+	1
+	h k-min mul
+	sub
+	m-max mul
+	%dup (C-max) == ==
+def %500
 
-/h 2.136 def
 
-/width 145 def
-/height 222 def
 
-/lambda-y width m-max div def
 /lambda-x width def
+/lambda-y 
+	height
+	m-max m-min sub
+	div
+	%dup (lambda-y) == ==
+def
 
+%[x, y]
+/afine{
+	2 dict begin
+		/y exch def
+		/x exch def
+		
+		x lambda-x mul
+		%[x]
+		
+		y
+		m-min b-max add
+		x mul
+		sub
+		b-max add
+		
+		lambda-y mul
+		%[x, y]
+	end
+} def
+%[x, y]
+
+%[k]
+/k-point{
+	h mul
+	%[h*k]
+	dup
+	%[h*k, h*k]
+	1 add
+	%[h*k, h*k+1]
+	div
+	%[h*k/(h*k+1)]
+	0
+} def 
+%[x, y]
+
+%[m]
+/m-point{
+	1
+	exch
+} def
+%[x, y]
+
+%[b]
+/b-point{
+	neg
+	0
+	exch
+} def
+%[x, y]
+
+%[C]
+/C-point{
+	2 div
+	0.5
+	exch
+} def
+%[x, y]
+
+
+% По умолчанию, постскрипт использует единицу измерения 1 пункт=1/72 дюйма, 
+% а нам нравятся миллиметры.
+72 25.4 div           % 1 мм = 72/25.4 пунктов
+dup                   % дублировать значение на вершине стека
+scale                 % растянуть в это количество раз по обеим координатам
+
+0.4 setlinewidth	% установить толщину линии по стандарту для сплошной основной
+20 5 translate %переставляем начало отсчёта на нижний левый угол штампа
+0 55 translate %переставляем начало отсчёта на нижний левый угол области чертежа
+
+20 5 translate %на нижний левый угол областиномограммы
+
+% newpath
+	% 0 0 moveto
+	% 0 height lineto
+	% width height lineto
+	% width 0 lineto
+	% 0 0 lineto
+% stroke
+
+newpath
+	k-min k-point afine
+	moveto
+	k-max k-point afine
+	lineto
+stroke
+
+newpath
+	b-min b-point afine
+	moveto
+	b-max b-point afine
+	lineto
+stroke
+
+newpath
+	m-min m-point afine
+	moveto
+	m-max m-point afine
+	lineto
+stroke
+
+newpath
+	C-min C-point afine
+	moveto
+	C-max C-point afine
+	lineto
+stroke

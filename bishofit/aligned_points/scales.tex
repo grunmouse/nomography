@@ -35,25 +35,82 @@ $$
 
 \paragraph{Рассчитаем координаты концов каждой шкалы}
 \subparagraph{k:}
-$x = x(k)$
 $$x(k_{min}) = \frac{hk_{min}}{1+hk_{min}} = \frac{0}{1+0} = 0;$$
 $$x(k_{max}) = \frac{h k_{max}}{1+h k_{max}} = \frac{2.136 \cdot 0.3}{1 + 2.136 \cdot 0.3} = 0.3905;$$
-$$y = 0.$$
+$$y(k) = 0.$$
 
 \subparagraph{m:}
-$$x = 1;$$
+$$x(m) = 1;$$
 $$y(m_{min}) = m_{min} = 100;$$
 $$y(m_{max}) = m_{max} = 500.$$
 
 \subparagraph{b:}
-$$x = 0;$$
+$$x(b) = 0;$$
 $$y(b_{min}) = -b_{min} = 0;$$
 $$y(b_{max}) = -b_{max} = -321.$$
 
 \subparagraph{C:}
-$$x = 0.5;$$
+$$x(C) = 0.5;$$
 $$y(C_{min}) = \frac{C_{min}}{2} = \frac{35}{2} = 17.5;$$
 $$y(C_{max}) = \frac{C_{max}}{2} = \frac{500}{2} = 250.$$
 
-\subparagraph{}Таким образом, номограмма вписывается в четырёхугольник $(0; 0); (1; 500); (1; 0); (0; -321)$.
-Или, в общем виде, $(0; 0); (1; m_{max}); (1; 0); (0; -b_{max})$.
+\paragraph{Геометрический анализ расположения концов шкал}
+\subparagraph{}Пределы $k_{min}$ и $b_{min}$ - всегда нулевые. Следовательно координаты соответствующих им точек шкал совпадают и равны $(0; 0)$.
+\subparagraph{}Предел $C_{max} = m_{max}$, следовательно
+$$y(C_{max}) = \frac{C_{max}}{2} =\frac{y(m_{max})}{2}$$
+С учётом того, что $x(C) = 0.5 x(m)$, точки $C_{max}$ и $m_{max}$ лежат на прямой, проходяешей через 0.
+$$\frac{y(C_{max})}{x(C_{max})} = \frac{y(m_{max})}{x(m_{max})} = y(m_{max}).$$
+Эта прямая ограничивает номограмму сверху, т.к. ни одна шкала не заходит за неё.
+
+\subparagraph{}Снизу номограмма ограничена прямой, проходящей через точки $b_{max}$ и $m_{min}$. Эти точки не связаны непосредственно. Чтобы проверить, не заходят ли за неё шкалы, найдём уравнение этой прямой
+$$
+\begin{vmatrix}
+	x - x(b_{max}) & y - y(b_{max}) \\
+	x(m_{min}) - x(b_{max}) & y(m_{min}) - y(b_{max})
+\end{vmatrix} 
+= 0;$$
+$$\begin{vmatrix}
+	x & y + b_{max} \\
+	1 & m_{min} + b_{max}
+\end{vmatrix} = 0;$$
+$$x (m_{min} + b_{max}) - y - b_{max} = 0.$$
+
+Введя теперь функцию 
+$$f(x, y) = x (m_{min} + b_{max}) - y - b_{max};$$
+И подставив в неё координаты концов шкал, мы должны получить значения одного знака.
+$$f(0, 0) = - b_{max};$$
+Начало координат, служащее так же началом шкалы $k$ даёт отрицательное значение. Значит остальные точки должны дать неположительное.
+$$
+\begin{gathered}
+f\left(x(k_{max}), 0\right) 
+	= x(k_{max}) (m_{min} + b_{max}) - b_{max}
+	= \frac{h k_{max}}{1+h k_{max}} \left(m_{min} + h k_{max} m_{max} \right) - h k_{max} m_{max}
+	= \\
+	= h k_{max} \left( \frac{m_{min} + h k_{max} m_{max}}{1+h k_{max}} - m_{max} \right)
+	= h k_{max} \left( \frac{m_{min} + h k_{max} m_{max} - m_{max} - h k_{max} m_{max} }{1+h k_{max}}  \right)
+	= \\
+	= h k_{max} \left( \frac{m_{min} - m_{max} }{1+h k_{max}}  \right).
+\end{gathered}
+$$
+$$h k_{max} >0; 1+h k_{max} > 0; m_{min} - m_{max} <0;$$
+Следовательно
+$$f\left(x(k_{max}\right), 0) < 0$$
+
+$$
+\begin{gathered}
+f\left(x(C_{min}),y(C_{min})\right) 
+	= x(C_{min}) (m_{min} + b_{max}) - y(C_{min}) - b_{max}
+	= 0.5 (m_{min} + b_{max}) - \frac{C_{min}}{2} - b_{max}
+	= \\
+	= \frac{m_{min} + b_{max} - C_{min}}{2} - b_{max}
+	= \frac{m_{min} + h k_{max} m_{max} - m_{min} \left( 1 - hk_{max} \right )}{2} - h k_{max} m_{max}
+	= \\
+	= \frac{m_{min} + h k_{max} m_{max} - m_{min} + hk_{max}m_{min}}{2} - h k_{max} m_{max}
+	= h k_{max}\left(\frac{m_{max} + m_{min}}{2} - m_{max} \right)
+	= \\
+	= h k_{max}\left(\frac{m_{min} - m_{max}}{2} \right).
+\end{gathered}
+$$
+$$f\left(x(C_{min}),y(C_{min})\right) <0.$$
+Проверено. Ни одна из шкал не выдаётся за пределы чётырёхухольника построенного по точкам
+$(0; 0)$, $(0; -b_{max}$, $(1, m_{min}$, $(1, m_{max})$.

@@ -1,0 +1,42 @@
+\subparagraph{}Исходя из свойств номограммы из выравненных точек и связи пределов $b_{max}$, $k_{max}$ и $m_{max}$ соответствующие концы шкал должны лежать на одной прямой.
+Чтобы проверить это, найдём псевдоскалярное произведение
+$$
+\begin{gathered}
+	\left(\vec{r}(k_{max}) - \vec{r}(b_{max}) \right) \wedge \left(\vec{r}(m_{max}) - \vec{r}(b_{max}) \right)
+	=
+	\left|
+		\begin{array}{cc}
+			x(k_{max}) - x(b_{max}) & y(k_{max}) - y(b_{max}) \\
+			x(m_{max}) - x(b_{max}) & y(m_{max}) - y(b_{max})
+		\end{array}
+	\right|
+	= \\
+	=
+	\left|
+		\begin{array}{cc}
+			\frac{h k_{max}}{1+h k_{max}} - 0 & 0 + b_{max} \\
+			1 - 0 & m_{max} + b_{max}
+		\end{array}
+	\right|
+	= 
+	\begin{vmatrix}
+		\frac{h k_{max}}{1+h k_{max}} & b_{max} \\
+		1 & m_{max} + b_{max}
+	\end{vmatrix}
+	= \frac{h k_{max}}{1+h k_{max}} \cdot \left(m_{max} + b_{max} \right) - b_{max} 
+	= \\
+	= \frac{h k_{max}}{1+h k_{max}} \cdot \left(m_{max} + h k_{max} m_{max}\right) - h k_{max} m_{max}
+	= \frac{h k_{max}}{1+h k_{max}} \cdot m_{max} \left(1 + h k_{max}\right) - h k_{max} m_{max}
+	= \\
+	= h k_{max} m_{max}  - h k_{max} m_{max} = 0.
+\end{gathered}
+$$
+Действительно, точки лежат на одной прямой.
+Эта прямая может быть задана уравнением
+$$
+\begin{vmatrix}
+	x & y + b_{max} \\
+	1 & m_{max} + b_{max}
+\end{vmatrix}
+=0.
+$$
