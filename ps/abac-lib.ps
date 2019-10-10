@@ -1,0 +1,253 @@
+%Процедуры для рисования штрихов на шкалах
+
+%[x, y]
+/mark-down {
+	newpath
+	moveto
+	0 mark-size neg
+	rlineto
+	stroke
+} def
+%[]
+
+%[x, y]
+/mark-up {
+	newpath
+	moveto
+	0 mark-size
+	rlineto
+	stroke
+} def
+%[]
+
+%[x, y]
+/mark-left {
+	newpath
+	moveto
+	mark-size neg 0
+	rlineto
+	stroke
+} def
+
+%[x, y]
+/mark-right {
+	newpath
+	moveto
+	mark-size 0
+	rlineto
+	stroke
+} def
+
+% Процедуры подписывания значений около указанных точек
+%[value, x, y]
+/rshow-down {
+	newpath
+	moveto
+	0 mark-size neg
+	rmoveto
+	%[value]
+	5 string 
+	cvs 
+	%[string]
+	dup
+	stringwidth 
+	pop
+	font-size
+	%[string, w, h]
+	-1 mul
+	exch
+	-0.5 mul
+	exch
+	rmoveto
+	show
+	stroke
+} def
+%[]
+
+%[value, x, y]
+/rshow-left {
+	newpath
+	moveto
+	mark-size neg 0
+	rmoveto
+	%[value]
+	5 string 
+	cvs 
+	%[string]
+	dup
+	stringwidth 
+	pop
+	font-size
+	%[string, w, h]
+	-0.5 mul
+	exch
+	-1 mul
+	exch
+	rmoveto
+	show
+	stroke
+} def
+%[]
+%[value, x, y]
+/rshow-right {
+	newpath
+	%2 copy == ==
+	moveto
+	mark-size 0
+	%2 copy == ==
+	rmoveto
+	%[value]
+	5 string 
+	cvs 
+	%[string]
+	0
+	font-size -0.5 mul
+	%2 copy == ==
+	rmoveto
+	show
+	stroke
+} def
+%[]
+
+%[min, step, max, fun]
+/bottom-line-scale {
+	4 dict begin %объявляем локальный scope процедуры
+		/fun exch def
+		/t-max exch def
+		/t-step exch def
+		/t-min exch def
+		
+		% линия оси
+		newpath
+			t-min fun
+			0
+			moveto
+			t-max fun
+			0
+			lineto
+		stroke
+		
+		t-min t-step t-max {
+			fun
+			0
+			mark-down
+		} for
+	end
+} def
+
+%[min, step, max, fun]
+/left-line-scale {
+	4 dict begin %объявляем локальный scope процедуры
+		/fun exch def
+		/t-max exch def
+		/t-step exch def
+		/t-min exch def
+		
+		% линия оси
+		newpath
+			0
+			t-min fun
+			moveto
+			0
+			t-max fun
+			lineto
+		stroke
+		
+		t-min t-step t-max {
+			fun
+			0
+			exch
+			mark-left
+		} for
+	end
+} def
+
+%[par, min, step, max, fun-point]
+/draw-curve {
+	5 dict begin
+		/fun-point exch def
+		/t-max exch def
+		/t-step exch def
+		/t-min exch def
+		/b exch def
+		%[b]
+		newpath
+		b t-min 
+		fun-point
+		moveto
+		
+		t-min t-step add
+		t-step
+		t-max
+		{
+			%[t]
+			b exch
+			%[b, t]
+			fun-point
+			%[x, y]
+			lineto
+		} for
+		stroke
+	end
+} def
+
+%[x, y] находит ближайшее число меньше или равное x, кратное y
+/mfloor {
+	exch
+	floor
+	%[y, x]
+	dup
+	%[y, x, x]
+	3 -1 roll
+	%[x, x, y]
+	mod
+	%[x, x mod y]
+	sub
+} def
+%[x - x mod y]
+
+%[x, y] находит ближайшее число меньше или равное x, кратное y
+/mfloor {
+	exch
+	%(floor) == dup ==
+	floor
+	cvi
+	%[y, x]
+	dup
+	%[y, x, x]
+	3 -1 roll
+	%[x, x, y]
+	mod
+	%[x, x mod y]
+	sub
+} def
+%[x - x mod y]
+
+%[x, y]
+/mceil {
+	exch
+	ceiling
+	cvi
+	%[y, x]
+	exch
+	2 copy
+	%[x, y, x, y]
+	mod
+	%[x, y, x mod y]
+	dup
+	0 eq
+	%then
+	{
+		%[x, y, x mod y]
+		dup dup
+		%[x]
+	}
+	%else
+	{
+		%[x, y, x mod y]
+		sub
+		add
+		%[x + y - x mod y]
+	}
+	ifelse
+} def
