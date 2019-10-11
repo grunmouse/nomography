@@ -196,11 +196,66 @@ b-min 25 b-max {
 	rshow-left
 } for
 
+/k-angle
+	k-max k-point afine
+	k-min k-point afine
+	%[x1,y1, x0,y0]
+	3 -1 roll
+	%[x1,x0, y0,y1]
+	exch
+	%[x1,x0, y1,y0]
+	sub
+	%[x1,x0, delta-y]
+	3 1 roll
+	%[delta-y, x1,x0]
+	sub
+	%exch
+	%[delta-x, delta-y]
+	atan
+	%[atan2(delta-y, delta-x]
+	%dup ==
+	90 add
+def
+	
 k-min 0.01 k-max {
 	%[k]
 	dup
 	k-point afine
-	2 copy
-	mark-right
-	rshow-right
+	%2 copy
+	gsave
+		translate
+		k-angle rotate
+		0 0 mark-right
+		0 0 rshow-right
+	grestore
 } for
+
+newpath
+	C-max C-point afine
+	moveto
+	0 5 rmoveto
+	(H20) show
+stroke
+
+newpath
+	k-max k-point afine
+	moveto
+	-20 0 rmoveto
+	(mass fraction) show
+	-10 -4 rmoveto
+	(MgCl2) show
+stroke
+
+newpath
+	b-max b-point afine
+	moveto
+	5 0 rmoveto
+	(MgCl2*6H2O) show
+stroke
+
+newpath
+	m-max m-point afine
+	moveto
+	-15 0 rmoveto
+	(total mass) show
+stroke
