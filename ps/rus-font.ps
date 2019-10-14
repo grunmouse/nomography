@@ -1,0 +1,301 @@
+%% Русский чертёжный шрифт
+%% Кодировка, идеологически подобна КОИ8, но со следующими отличиями:
+%% Поменяны местами заглавные и строчные буквы, чтобы удобнее было набирать транслитерированный текст
+%% Задублированы ъ, ь, ё
+
+
+<<
+	%Required for all fonts
+	/FontType 3
+	/FontMatrix [0.1 0 0 0.1 0 0] %Наклонить потом
+	%Required for base fonts
+	
+	%Кодовая страница. Здесь должны быть мои буквы
+	%Кодировка будет отображать введёные буквы первой половины таблицы ASCII на русские буквы
+	%Из-за этого выпадают первые 32 символа
+	%Для именования букв используется следующая схема:
+	% j - й или йотирование гласной в сочетании
+	% v - ж
+	% w - в
+	% x - ь
+	% y - ы
+	% sh - ш как в "шинус"
+	% shx - щ - ш с мягким знаком
+	% ch - ч как в "чосинус".
+	% er - ъ, еръ
+	/Encoding [
+%Oct 000 - 177 == 00 - 7F == 0 - 127
+%.0			.1			.2			.3			.4			.5			.6			.7
+%управляющие символы ASCII
+ /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%00.
+ /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%01.
+%управляющие символы ASCII
+ /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%02.
+ /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%03.
+
+ /space		/.notdef	/.notdef	/JO			/jo			/.notdef	/.notdef	/er			%04.
+ /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%05.
+
+ /.notdef	/.notdef	/.notdef	/jo			/.notdef	/.notdef	/.notdef	/.notdef	%06.
+ /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%07.
+ 
+ /JU		/A			/B			/C			/D			/JE			/F			/G			%10.
+ /H			/I			/J			/K			/L			/M			/N			/O			%11.
+
+ /P			/JA			/R			/S			/T			/U			/V			/W			%12.
+ /X			/Y			/Z			/SH			/E			/SHX		/CH			/ER			%13.
+
+ /ju		/a			/b			/c			/d			/je			/f			/g			%14.
+ /h			/i			/j			/k			/l			/m			/n			/o			%15.
+
+ /p			/ja			/r			/s			/t			/u			/v			/w			%16.
+ /x			/y			/z			/sh			/e			/shx		/ch			/er			%17.
+
+	] %Кодовая страница. Здесь должны быть мои буквы
+	
+	/FontBBox [0 0 0 0] %Потом заменить реальными значениями
+	
+	%Запускается для отрисовки символа
+	%[this, charName]
+	/BuildGlyph {
+		
+		%[this, charName]
+		1 index 
+		%[this, charName, this]
+		
+		% dup
+		% /font-params get begin
+			% g a add  0  % Width
+			% 0  0  g  h  % Bounding box
+			% setcachedevice
+		% end
+		
+		/CharProcs get 
+		%[this, charName, this.CharProcs]
+		exch % Get CharProcs dictionary
+		%[this, this.CharProcs, charName]
+		
+		2 copy known not % See if charname is known
+		{pop /.notdef}
+		if
+		
+		%[this, this.CharProcs, charName]
+		get exec % Execute BuildGlyph procedure
+	}
+	
+	%Устаревшая схема, для совместимости
+	%[this, charCode]
+	/BuildChar {
+		1 index /Encoding 
+		%[this, charCode, this.Encoding]
+		get exch get
+		%[this, charName]
+		1 index /BuildGlyph get 
+		%[this, charName, this.BuildGlyph]
+		exec
+	} bind
+	
+	/font-params <<
+		/h 10 %высота прописных букв
+		/c 7  %высота строчных букв
+		/a 2  %расстояние между буквами
+		/b 17 %интерлиньяж
+		/e 6  %расстояние между словами
+		/d 1  % толщина линии
+		
+		/h_ 9
+		/c_ 6
+		
+		%Принимает на вход ширину буквы, устанавливает setcachedevice
+		/setcache {
+			1 dict begin
+				/g exch def
+				g a add  
+					0  % Width
+					
+				0  0  3 index  h  % Bounding box
+				setcachedevice
+			end
+		}
+	>>
+	
+	/CharProcs <<
+		/.notdef {}
+		/space {			
+			/font-params get
+			begin
+				e
+				setcache
+			end
+		}
+		/A {}
+		/B {}
+		/W {}
+		/G {
+			/font-params get
+			begin
+				5
+				setcache
+				0 0 moveto
+				0 h lineto
+				5 h lineto
+				stroke
+			end
+		}
+		/D {}
+		/JE {
+			/font-params get
+			begin
+				5
+				setcache
+				5 0 moveto
+				0 0 lineto
+				0 h lineto
+				5 h lineto
+				0 
+				h 2 div moveto
+				3 0 rlineto
+				stroke
+			end
+		}
+		/JO {}
+		/W {}
+		/Z {}
+		/I {}
+		/J {}
+		/K {}
+		/L {}
+		/M {}
+		/N {
+			/font-params get
+			begin
+				6
+				setcache
+				0 0 moveto
+				0 h lineto
+				6 h moveto
+				6 0 lineto
+				0 h 2 div moveto
+				6 0 rlineto
+				stroke
+			end
+		}
+		/O {}
+		/P {
+			/font-params get
+			begin
+				6
+				setcache
+				0 0 moveto
+				0 h lineto
+				6 h lineto
+				6 0 lineto
+				stroke
+			end
+		}
+		/R {}
+		/S {}
+		/T {
+			/font-params get
+			begin
+				6
+				setcache
+				3 0 moveto
+				0 h rlineto
+				0 h lineto
+				6 0 rlineto
+				stroke
+			end
+		}
+		/U {}
+		/F {}
+		/H {}
+		/C {
+			/font-params get
+			begin
+				6
+				setcache
+				0 h moveto
+				0 0 lineto
+				7 0 lineto
+				0 -1 rlineto
+				6 h moveto
+				6 0 lineto
+				stroke
+			end
+		}
+		/CH {}
+		/SH {
+			/font-params get
+			begin
+				8
+				setcache
+				0 h moveto
+				0 0 lineto
+				8 0 lineto
+				8 h lineto
+				4 0 moveto
+				0 h rlineto
+				stroke
+			end
+		}
+		/SHX {
+			/font-params get
+			begin
+				8
+				setcache
+				0 h moveto
+				0 0 lineto
+				9 0 lineto
+				0 -1 rlineto
+				8 h moveto
+				8 0 lineto
+				4 0 moveto
+				0 h rlineto
+				stroke
+			end
+		}
+		/ER {}
+		/Y {}
+		/X {}
+		/E {}
+		/JU {}
+		/JA {}
+		/a {}
+		/b {}
+		/w {}
+		/g {}
+		/d {}
+		/je {}
+		/jo {}
+		/w {}
+		/z {}
+		/i {}
+		/j {}
+		/k {}
+		/l {}
+		/m {}
+		/n {}
+		/o {}
+		/p {}
+		/r {}
+		/s {}
+		/t {}
+		/u {}
+		/f {}
+		/h {}
+		/c {}
+		/ch {}
+		/sh {}
+		/shx {}
+		/er {}
+		/y {}
+		/x {}
+		/e {}
+		/ju {}
+		/ja {}
+	>>
+	
+>>
+
+/rus-eskd-font exch definefont pop
