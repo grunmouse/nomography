@@ -80,7 +80,7 @@
 		if
 		
 		%[this, this.CharProcs, charName]
-		get exec % Execute BuildGlyph procedure
+		get exec % Execute BuildGlyph procedure with [this]
 	}
 	
 	%Устаревшая схема, для совместимости
@@ -106,17 +106,33 @@
 		/h_ 9
 		/c_ 6
 		
+		/top {
+			0.5 add
+		}
+		/bot {
+			0.5 sub
+		}
 		%Принимает на вход ширину буквы, устанавливает setcachedevice
 		/setcache {
-			1 dict begin
-				/g exch def
-				g a add  
-					0  % Width
-					
-				0  0  3 index  h  % Bounding box
-				setcachedevice
-			end
+			/g exch def %определяем g
+			/g_ g 1 sub def
+			
+			g a add  
+			0
+			% Width
+				
+			0  
+			-3  
+			3 index  
+			h 2 add
+			% Bounding box
+			setcachedevice
+			
+			d setlinewidth
+			
+			0.5 0.5 translate
 		}
+		
 	>>
 	
 	/CharProcs <<
@@ -128,55 +144,196 @@
 				setcache
 			end
 		}
-		/A {}
+		/A {
+			/font-params get
+			begin
+				7
+				setcache
+				1 setlinejoin
+				0 0 bot moveto
+				g_ 2 div h_ lineto
+				g_ 0 bot lineto
+				1 2.5 moveto
+				g_ 1 sub 2.5 lineto
+				stroke
+			end
+		}
 		/B {}
 		/W {}
 		/G {
 			/font-params get
 			begin
-				5
+				4
 				setcache
-				0 0 moveto
-				0 h lineto
-				5 h lineto
+				%2 setlinecap 
+				0 -0.5 moveto
+				0 h_ lineto
+				g h_ lineto
 				stroke
 			end
 		}
-		/D {}
+		/D {
+			/font-params get
+			begin
+				5
+				setcache
+				-1 -1.5 moveto
+				-1 0 lineto
+				g 0 lineto
+				g -1.5 lineto
+				0 0 moveto
+				1 setlinejoin 
+				1  h_ lineto
+				g_ h_  lineto
+				0 setlinejoin 
+				g_ 0 lineto
+				stroke
+			end
+		}
 		/JE {
 			/font-params get
 			begin
 				5
 				setcache
-				5 0 moveto
+				g_ 0 moveto
 				0 0 lineto
-				0 h lineto
-				5 h lineto
+				0 h_ lineto
+				g_ h_ lineto
 				0 
-				h 2 div moveto
+				h_ 2 div moveto
 				3 0 rlineto
 				stroke
 			end
 		}
-		/JO {}
-		/W {}
-		/Z {}
-		/I {}
-		/J {}
-		/K {}
-		/L {}
-		/M {}
+		/JO {
+			dup dup
+			/CharProcs get /JE get exec
+			/font-params get
+			begin
+				1 setlinejoin 
+				0.5 h_ 2 add moveto
+				1 0 rlineto
+				1 0 rmoveto
+				1 0 rlineto
+				stroke
+			end
+		
+		}
+		/V {
+			/font-params get
+			begin
+				8
+				setcache
+				2 dict begin
+					/cg g_ 2 div def
+					/ch h_ 2 div def
+					
+					cg 0 bot moveto
+					cg h_ top lineto
+					
+					cg ch moveto
+					g_ h_ top lineto
+					cg ch moveto
+					0 h_ top lineto
+					
+					cg 1 add ch 1 add moveto
+					g_ 0 bot lineto
+					
+					cg 1 sub ch 1 add moveto
+					0 0 bot lineto
+					stroke
+				end
+				
+			end
+		}
+		/Z {
+			/font-params get
+			begin
+				5
+				setcache
+				0 1 top moveto
+				0 1 lineto
+				1 1 1 180 270 arc
+				g_ 1 sub 0 lineto
+				
+				stroke
+			end
+		}
+		/I {
+			/font-params get
+			begin
+				6
+				setcache
+				1 setlinejoin 
+				0 h_ top moveto
+				0 0 lineto
+				g_ h_ lineto
+				g_ -0.5 lineto
+				stroke
+			end
+		}
+		/J {
+			dup dup
+			/CharProcs get /I get exec
+			/font-params get
+			begin
+				1 h_ 2 add moveto
+				3 0 rlineto
+				stroke
+			end
+		}
+		/K {
+			/font-params get
+			begin
+				5
+				setcache
+				0 0 moveto
+				0 h_ top lineto
+				0 5 moveto
+				g_ h_ top lineto
+				1 6 moveto
+				g_ 0 lineto
+				stroke
+		}
+		/L {
+			/font-params get
+			begin
+				6
+				setcache
+				0 -0.5 moveto
+				2 h_ lineto
+				g_ h_ lineto
+				g_ -0.5 lineto
+				stroke
+			end
+		}
+		/M {
+			/font-params get
+			begin
+				7
+				setcache
+				1 setlinejoin 
+				0 -0.5 moveto
+				0 h_ lineto
+				g_ 2 div h_ 2 div lineto
+				g_ h_ lineto
+				g_ -0.5 lineto
+				stroke
+		}
 		/N {
 			/font-params get
 			begin
 				6
 				setcache
-				0 0 moveto
-				0 h lineto
-				6 h moveto
-				6 0 lineto
-				0 h 2 div moveto
-				6 0 rlineto
+				
+				0 -0.5 moveto
+				0 h rlineto
+				
+				g_ -0.5 moveto
+				0 h rlineto
+				
+				0 h_ 2 div moveto
+				g_ 0 rlineto
 				stroke
 			end
 		}
@@ -186,10 +343,10 @@
 			begin
 				6
 				setcache
-				0 0 moveto
-				0 h lineto
-				6 h lineto
-				6 0 lineto
+				0 -0.5 moveto
+				0 h_ lineto
+				g_ h_ lineto
+				g_ -0.5 lineto
 				stroke
 			end
 		}
@@ -200,27 +357,38 @@
 			begin
 				6
 				setcache
-				3 0 moveto
+				g 2 div -0.5 moveto
 				0 h rlineto
-				0 h lineto
-				6 0 rlineto
+				0 h_ moveto
+				g 0 rlineto
 				stroke
 			end
 		}
 		/U {}
 		/F {}
-		/H {}
+		/H {
+			/font-params get
+			begin
+				7
+				setcache
+				0 0 bot moveto
+				g_ h_ top lineto
+				0 h_ top moveto
+				g_ 0 bot lineto
+				stroke
+			end
+		}
 		/C {
 			/font-params get
 			begin
 				6
 				setcache
-				0 h moveto
+				0 h_ top moveto
 				0 0 lineto
-				7 0 lineto
-				0 -1 rlineto
-				6 h moveto
-				6 0 lineto
+				g 0 lineto
+				0 -1.5 rlineto
+				g_ h_ top moveto
+				g_ 0 lineto
 				stroke
 			end
 		}
@@ -230,12 +398,12 @@
 			begin
 				8
 				setcache
-				0 h moveto
+				0 h_ top moveto
 				0 0 lineto
-				8 0 lineto
-				8 h lineto
-				4 0 moveto
-				0 h rlineto
+				g_ 0 lineto
+				g_ h_ top lineto
+				g_ 2 div 0 moveto
+				0 h_ top rlineto
 				stroke
 			end
 		}
@@ -244,14 +412,14 @@
 			begin
 				8
 				setcache
-				0 h moveto
+				0 h_ top moveto
 				0 0 lineto
-				9 0 lineto
-				0 -1 rlineto
-				8 h moveto
-				8 0 lineto
-				4 0 moveto
-				0 h rlineto
+				g 0 lineto
+				0 -1.5 rlineto
+				g_ h_ top moveto
+				g_ 0 lineto
+				g_ 2 div 0 moveto
+				0 h_ top rlineto
 				stroke
 			end
 		}
@@ -268,7 +436,7 @@
 		/d {}
 		/je {}
 		/jo {}
-		/w {}
+		/v {}
 		/z {}
 		/i {}
 		/j {}
