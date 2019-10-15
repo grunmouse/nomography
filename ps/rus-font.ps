@@ -150,11 +150,12 @@
 				7
 				setcache
 				1 setlinejoin
-				0 0 bot moveto
+				2 setlinecap 
+				0 0 moveto
 				g_ 2 div h_ lineto
-				g_ 0 bot lineto
-				1 2.5 moveto
-				g_ 1 sub 2.5 lineto
+				g_ 0 lineto
+				1 2 moveto
+				g_ 1 sub 2 lineto
 				stroke
 			end
 		}
@@ -165,8 +166,8 @@
 			begin
 				4
 				setcache
-				%2 setlinecap 
-				0 -0.5 moveto
+				2 setlinecap 
+				0 0 moveto
 				0 h_ lineto
 				g h_ lineto
 				stroke
@@ -177,10 +178,11 @@
 			begin
 				5
 				setcache
-				-1 -1.5 moveto
+				2 setlinecap 
+				-1 -1 moveto
 				-1 0 lineto
 				g 0 lineto
-				g -1.5 lineto
+				g -1 lineto
 				0 0 moveto
 				1 setlinejoin 
 				1  h_ lineto
@@ -195,6 +197,7 @@
 			begin
 				5
 				setcache
+				2 setlinecap 
 				g_ 0 moveto
 				0 0 lineto
 				0 h_ lineto
@@ -210,6 +213,7 @@
 			/CharProcs get /JE get exec
 			/font-params get
 			begin
+				0 setlinecap 
 				1 setlinejoin 
 				0.5 h_ 2 add moveto
 				1 0 rlineto
@@ -228,19 +232,21 @@
 					/cg g_ 2 div def
 					/ch h_ 2 div def
 					
-					cg 0 bot moveto
-					cg h_ top lineto
+					2 setlinecap
+					
+					cg 0 moveto
+					cg h_ lineto
 					
 					cg ch moveto
-					g_ h_ top lineto
+					g_ h_ lineto
 					cg ch moveto
-					0 h_ top lineto
+					0 h_ lineto
 					
 					cg 1 add ch 1 add moveto
-					g_ 0 bot lineto
+					g_ 0 lineto
 					
 					cg 1 sub ch 1 add moveto
-					0 0 bot lineto
+					0 0 lineto
 					stroke
 				end
 				
@@ -251,7 +257,8 @@
 			begin
 				5
 				setcache
-				0 1 top moveto
+				2 setlinecap
+				0 1 moveto
 				0 1 lineto
 				1 1 1 180 270 arc
 				g_ 1 sub 0 lineto
@@ -265,10 +272,11 @@
 				6
 				setcache
 				1 setlinejoin 
-				0 h_ top moveto
+				2 setlinecap
+				0 h_ moveto
 				0 0 lineto
 				g_ h_ lineto
-				g_ -0.5 lineto
+				g_ 0 lineto
 				stroke
 			end
 		}
@@ -277,6 +285,7 @@
 			/CharProcs get /I get exec
 			/font-params get
 			begin
+				0 setlinecap
 				1 h_ 2 add moveto
 				3 0 rlineto
 				stroke
@@ -287,10 +296,11 @@
 			begin
 				5
 				setcache
+				2 setlinecap 
 				0 0 moveto
-				0 h_ top lineto
+				0 h_ lineto
 				0 5 moveto
-				g_ h_ top lineto
+				g_ h_ lineto
 				1 6 moveto
 				g_ 0 lineto
 				stroke
@@ -300,10 +310,11 @@
 			begin
 				6
 				setcache
-				0 -0.5 moveto
+				2 setlinecap
+				0 0 moveto
 				2 h_ lineto
 				g_ h_ lineto
-				g_ -0.5 lineto
+				g_ 0 lineto
 				stroke
 			end
 		}
@@ -313,11 +324,12 @@
 				7
 				setcache
 				1 setlinejoin 
-				0 -0.5 moveto
+				2 setlinecap
+				0 0 moveto
 				0 h_ lineto
 				g_ 2 div h_ 2 div lineto
 				g_ h_ lineto
-				g_ -0.5 lineto
+				g_ 0 lineto
 				stroke
 		}
 		/N {
@@ -325,12 +337,12 @@
 			begin
 				6
 				setcache
+				2 setlinecap
+				0 0 moveto
+				0 h_ rlineto
 				
-				0 -0.5 moveto
-				0 h rlineto
-				
-				g_ -0.5 moveto
-				0 h rlineto
+				g_ 0 moveto
+				0 h_ rlineto
 				
 				0 h_ 2 div moveto
 				g_ 0 rlineto
@@ -343,10 +355,11 @@
 			begin
 				6
 				setcache
-				0 -0.5 moveto
+				2 setlinecap
+				0 0 moveto
 				0 h_ lineto
 				g_ h_ lineto
-				g_ -0.5 lineto
+				g_ 0 lineto
 				stroke
 			end
 		}
@@ -357,10 +370,11 @@
 			begin
 				6
 				setcache
-				g 2 div -0.5 moveto
-				0 h rlineto
+				2 setlinecap
+				g_ 2 div 0 moveto
+				0 h_ rlineto
 				0 h_ moveto
-				g 0 rlineto
+				g_ 0 rlineto
 				stroke
 			end
 		}
@@ -371,10 +385,11 @@
 			begin
 				7
 				setcache
-				0 0 bot moveto
-				g_ h_ top lineto
-				0 h_ top moveto
-				g_ 0 bot lineto
+				2 setlinecap
+				0 0 moveto
+				g_ h_ lineto
+				0 h_ moveto
+				g_ 0 lineto
 				stroke
 			end
 		}
@@ -383,11 +398,12 @@
 			begin
 				6
 				setcache
-				0 h_ top moveto
+				2 setlinecap
+				0 h_  moveto
 				0 0 lineto
 				g 0 lineto
-				0 -1.5 rlineto
-				g_ h_ top moveto
+				0 -1 rlineto
+				g_ h_ moveto
 				g_ 0 lineto
 				stroke
 			end
@@ -398,28 +414,24 @@
 			begin
 				8
 				setcache
-				0 h_ top moveto
+				2 setlinecap
+				0 h_ moveto
 				0 0 lineto
 				g_ 0 lineto
-				g_ h_ top lineto
+				g_ h_ lineto
 				g_ 2 div 0 moveto
-				0 h_ top rlineto
+				0 h_ rlineto
 				stroke
 			end
 		}
 		/SHX {
+			dup dup
+			/CharProcs get /SH get exec
 			/font-params get
 			begin
-				8
-				setcache
-				0 h_ top moveto
-				0 0 lineto
-				g 0 lineto
-				0 -1.5 rlineto
-				g_ h_ top moveto
-				g_ 0 lineto
-				g_ 2 div 0 moveto
-				0 h_ top rlineto
+				2 setlinecap
+				g 0 moveto
+				0 -1 rlineto
 				stroke
 			end
 		}
