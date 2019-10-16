@@ -274,6 +274,16 @@
 			0 ht lineto
 		}
 		
+		%[w]
+		/xc {
+			0 c_ moveto
+			0 0 lineto
+			%[w] 
+			1 1 1 tlinearctx
+			cm 1 -1 1 tlinearcty
+			0 cm lineto
+		}
+		
 		
 	>>
 	
@@ -783,7 +793,21 @@
 				stroke
 			end
 		}
-		/g {}
+		/g {
+			/font-params get
+			begin
+				4 setconfig
+				1 setlinejoin
+				1 setlinecap
+				0 c_ moveto 0 -1 rmoveto
+				1 1 1 arcty
+				g_ 1 1 -1 tlinearctx
+				0 2 lineto
+				0 1 1 -1 tlinearcty
+				g_ 0.5 add 1 1 1 tlinearctx
+				stroke
+			end
+		}
 		/d {
 			/font-params get
 			begin
@@ -810,7 +834,20 @@
 				stroke
 			end
 		}
-		/jo {}
+		/jo {
+			dup dup
+			/CharProcs get /je get exec
+			/font-params get
+			begin
+				1 setlinejoin 
+				0 setlinecap
+				0.5 c_ 2 add moveto
+				1 0 rlineto
+				1 0 rmoveto
+				1 0 rlineto
+				stroke
+			end		
+		}
 		/v {
 			/font-params get
 			begin
@@ -832,7 +869,23 @@
 				stroke
 			end
 		}
-		/z {}
+		/z {
+			/font-params get
+			begin
+				4 setconfig
+				1 setlinecap
+				0 1 moveto
+				1 1 -1 arcty
+				g_ 1 1 1 tlinearctx
+				cm 1 -1 1 tlinearcty
+				-1 0 rlineto
+				1 0 rmoveto
+				1 1 1 arctx
+				c_ 1 -1 1 tlinearcty
+				0 1 -1 -1 tlinearctx
+				stroke
+			end
+		}
 		/i {
 			/font-params get
 			begin
@@ -939,6 +992,7 @@
 		/r {
 			/font-params get
 			begin
+				5 setconfig
 				0 c_ moveto
 				0 -3 lineto
 				0 c_ moveto
@@ -987,7 +1041,21 @@
 				stroke
 			end
 		}
-		/f {}
+		/f {
+			/font-params get
+			begin
+				7 setconfig
+				0 cm moveto
+				c_ 1 1 1 tlinearcty
+				g_ 1 1 -1 tlinearctx
+				0 1 -1 -1 tlinearcty
+				0 1 -1 1 tlinearctx
+				0 cm lineto
+				m c_ moveto 0 2 rmoveto 
+				m -3 lineto
+				stroke
+			end
+		}
 		/h {
 			/font-params get
 			begin
@@ -1050,9 +1118,34 @@
 				stroke
 			end
 		}
-		/er {}
-		/y {}
-		/x {}
+		/er {
+			/font-params get
+			begin
+				5 setconfig
+				g_ xc
+				0 c_ moveto
+				-1 0 rlineto
+				stroke
+			end
+		}
+		/y {
+			/font-params get
+			begin
+				6 setconfig
+				3 xc
+				g_ 0 moveto
+				g_ c_ lineto
+				stroke
+			end
+		}
+		/x {
+			/font-params get
+			begin
+				5 setconfig
+				g_ xc
+				stroke
+			end
+		}
 		/e {
 			/font-params get
 			begin
@@ -1066,8 +1159,34 @@
 				stroke
 			end
 		}
-		/ju {}
-		/ja {}
+		/ju {
+			/font-params get
+			begin
+				6 setconfig
+				0 0 moveto 0 c_ lineto
+				0 cm moveto 2 cm lineto
+				c_ 1 1 1 tlinearcty
+				g_ 1 1 -1 tlinearctx
+				0 1 -1 -1 tlinearcty
+				2 1 -1 1 tlinearctx
+				2 cm lineto
+				stroke
+			end
+		}
+		/ja {
+			/font-params get
+			begin
+				5 setconfig
+				g_ 0 moveto
+				g_ c_ lineto
+				0 1 -1 -1 tlinearctx
+				cm 1 1 -1 tlinearcty
+				g_ cm lineto
+				m cm moveto
+				0 0 lineto
+				stroke
+			end
+		}
 	>>
 	
 >>
