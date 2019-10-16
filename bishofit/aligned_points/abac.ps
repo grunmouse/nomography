@@ -1,7 +1,7 @@
 %!PS-Adobe-1.0
 %%BeginSetup
   % A4, unrotated
-  << /PageSize [595 842] /Orientation 0 >> setpagedevice
+  %<< /PageSize [595 842] /Orientation 0 >> setpagedevice
   % A4, landscape
   %<< /PageSize [842 595] /Orientation 0 >> setpagedevice
 %%EndSetup
@@ -116,6 +116,8 @@ def
 (../../ps/abac-lib.ps) run
 
 in2mm
+
+<< /PageSize [210 297] /Orientation 0 >> setpagedevice
 
 0.4 setlinewidth	% установить толщину линии по стандарту для сплошной основной
 

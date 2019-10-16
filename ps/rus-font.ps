@@ -8,6 +8,7 @@
 	%Required for all fonts
 	/FontType 3
 	/FontMatrix [0.1 0 0 0.1 0 0] %Наклонить потом
+	
 	%Required for base fonts
 	
 	%Кодовая страница. Здесь должны быть мои буквы
@@ -80,7 +81,10 @@
 		if
 		
 		%[this, this.CharProcs, charName]
-		get exec % Execute BuildGlyph procedure with [this]
+		2 index begin
+			shared_config
+			get exec % Execute BuildGlyph procedure with [this]
+		end
 	}
 	
 	%Устаревшая схема, для совместимости
@@ -95,13 +99,18 @@
 		exec
 	} bind
 	
+	/h 10 %высота прописных букв
+	/c 7  %высота строчных букв
+	/a 2  %расстояние между буквами
+	/b 17 %интерлиньяж
+	/e 6  %расстояние между словами
+	/d 1  % толщина линии
+	
+	/shared_config {
+
+	}			
+
 	/font-params <<
-		/h 10 %высота прописных букв
-		/c 7  %высота строчных букв
-		/a 2  %расстояние между буквами
-		/b 17 %интерлиньяж
-		/e 6  %расстояние между словами
-		/d 1  % толщина линии
 		
 		/h_ 9
 		/c_ 6
@@ -132,145 +141,23 @@
 			h 2 add
 			% Bounding box
 			setcachedevice
-			
+
 			d setlinewidth
 			
 			0.5 0.5 translate
 			
-			2 setlinecap
-		}
-		
-		%[r, sgndx, sgndy]
-		/preparct{
-			2 index mul
-			%[r, sgndx, dy]
-			exch
-			2 index mul
-			%[r, dy, dx]
-			currentpoint
-			%[r, dy, dx, x0, y0]
-			4 1 roll
-			%[r, y0, dy, dx, x0]
-			add
-			%[r, y0, dy, xn]
-			3 1 roll
-			%[r, xn, y0, dy]
-			add
-			%[r, x2, y2]
-		}
-		
-		%Рисует четвертькруговую дугу из точки currentpoint в точку с координатами currentpoint + r{sgndx, sgndy}, начиная по вертикали
-		%[r, sgndx, sgndy]
-		/arcty {
-			preparct
-			%[r, x2, y2]
-			currentpoint
-			%[r, x2, y2, x0, y0]
-			%x1 = x0, y1 = y2
-			pop
-			%[r, x2, y2, x0]
-			3 1 roll
-			%[r, x0, x2, y2]
-			%[r, x0, x2, y2, y2]
-			dup
-			3 1 roll
-			%[r, x0, y2, x2, y2]
-			5 -1 roll
-			%[x1, y1, x2, y2, r]
-			%5 copy (r) == == (2yx) == == == (1yx) == == ==
-			arct
-		}
-		
-		%Рисует четвертькруговую дугу из точки currentpoint в точку с координатами currentpoint + r{sgndx, sgndy}, начиная по горизонтали
-		%[r, sgndx, sgndy]
-		/arctx {
-			preparct
-			%3 copy (pre 2yx) == == == (pre r) == ==
-			%[r, x2, y2]
-			currentpoint
-			%x1 = x2, y1 = y0
-			%[r, x2, y2, x0, y0]
-			3 1 roll
-			%[r, x2, y0, y2, x0]
-			pop
-			%[r, x2, y0, y2]
-			2 index
-			%[r, x2, y0, y2, x2]
-			exch
-			%[r, x2, y0, x2, y2]
-			5 -1 roll
-			%[x1, y1, x2, y2, r]
-			%5 copy (r) == == (2) == == == (1) == == ==
-			arct
-		}
-		
-		%[ldx, r, sgndx, sgndy]
-		/rlinearctx {
-			4 -1 roll
-			%[r, sgndx, sgndy, ldx]
-			3 index
-			%[r, sgndx, sgndy, ldx, r]
-			1 index 
-			%[r, sgndx, sgndy, ldx, r, ldx]
-			dup abs div %sgn
-			%[r, sgndx, sgndy, ldx, r, sgnldx]
-			mul
-			%[r, sgndx, sgndy, ldx, r*sgnldx]
-			sub
-			%[r, sgndx, sgndy, sgnldx*(absldx - r)]
-			0
-			rlineto
-			arctx
-		}
-		
-		%[x, r, sgndx, sgndy]
-		/tlinearctx {
-			4 -1 roll
-			currentpoint
-			pop
-			sub
-			4 1 roll
-			rlinearctx
-		}
+			2 setlinecap			
 
-		%[y, r, sgndx, sgndy]
-		/tlinearcty {
-			4 -1 roll
-			currentpoint
-			exch
-			pop
-			sub
-			4 1 roll
-			rlinearcty
 		}
-
-		%[ldy, r, sgndx, sgndy]
-		/rlinearcty {
-			4 -1 roll
-			%[r, sgndx, sgndy, ldy]
-			3 index
-			%[r, sgndx, sgndy, ldy, r]
-			1 index 
-			%[r, sgndx, sgndy, ldy, r, ldy]
-			dup abs div %sgn
-			%[r, sgndx, sgndy, ldy, r, sgnldy]
-			mul
-			%[r, sgndx, sgndy, ldy, r*sgnldy]
-			sub
-			%[r, sgndx, sgndy, sgnldy*(absldy - r)]
-			0
-			exch
-			rlineto
-			arcty
-		}
+		
 		
 		%[w]
 		/x {
 			0 h_ moveto
 			0 0 lineto
 			%[w] 
-			1 1 1 tlinearctx
-			ht 1 -1 1 tlinearcty
+			1 xlinearcup
+			ht 1 ylinearcleft
 			0 ht lineto
 		}
 		
@@ -279,8 +166,8 @@
 			0 c_ moveto
 			0 0 lineto
 			%[w] 
-			1 1 1 tlinearctx
-			cm 1 -1 1 tlinearcty
+			1 xlinearcup
+			cm 1 ylinearcleft
 			0 cm lineto
 		}
 		
@@ -328,8 +215,8 @@
 				setconfig
 				g_ x
 				0 h_ moveto
-				g_ 1 sub 1 1 -1 tlinearctx
-				ht 2 -1 -1 tlinearcty
+				g_ 1 sub 1 xlinearcdown
+				ht 2 ylinearcleft
 				stroke
 			end
 		}
@@ -424,13 +311,13 @@
 				1 setlinecap
 				0 1 moveto
 				1 1 -1 arcty
-				g_ 2 1 1 tlinearctx
-				ht 2 -1 1 tlinearcty
+				g_ 2 xlinearcup
+				ht 2 ylinearcleft
 				-1 0 rlineto
 				1 0 rmoveto
 				2 1 1 arctx
-				h_ 1 -1 1 tlinearcty
-				0 1 -1 -1 tlinearctx
+				h_ 1 ylinearcleft
+				0 1 xlinearcdown
 				stroke
 			end
 		}
@@ -517,12 +404,8 @@
 			begin
 				6
 				setconfig
-				m 0 moveto
-				g_ 2 1 1 tlinearctx
-				h_ 2 -1 1 tlinearcty
-				0 2 -1 -1 tlinearctx
-				0 2 1 -1 tlinearcty
-				m 0 lineto
+				0 0 moveto
+				2 g_ h_ o
 				stroke
 			end
 		}
@@ -545,8 +428,8 @@
 				setconfig
 				0 0 moveto
 				0 h_ lineto
-				g_ 1 1 -1 tlinearctx
-				hb 1 -1 -1 tlinearcty
+				g_ 1 xlinearcdown
+				hb 1 ylinearcleft
 				0 hb lineto
 				stroke
 			end
@@ -557,8 +440,8 @@
 				5
 				setconfig
 				g_ 0 moveto
-				0  2 -1 1 tlinearctx
-				h_ 2 1 1 tlinearcty
+				0  2 xlinearcup
+				h_ 2 ylinearcright
 				g_ h_ lineto
 				stroke
 			end
@@ -581,10 +464,10 @@
 				6
 				setconfig
 				0 h_ moveto
-				hb 1 1 -1 tlinearcty
+				hb 1 ylinearcright
 				g_ hb lineto
 				g_ h_ moveto
-				0 2 -1 -1 tlinearcty
+				0 2 ylinearcleft
 				1 0 lineto
 				stroke
 			end
@@ -596,12 +479,8 @@
 				setconfig
 				m 0 moveto
 				0 h_ rlineto
-				m 2 moveto
-				0 2 -1 1 tlinearctx
-				h_ 2 sub 2 1 1 tlinearcty
-				g_ 2 1 -1 tlinearctx
-				2 2 -1 -1 tlinearcty
-				m 2 lineto
+				0 2 moveto
+				2 g_ h_ 2 sub o
 				stroke
 			end
 		}
@@ -637,7 +516,7 @@
 				6
 				setconfig
 				0 h_ moveto
-				hb 1 1 -1 tlinearcty
+				hb 1 ylinearcright
 				g_ hb lineto
 				g_ h_ moveto
 				g_ 0 lineto
@@ -707,8 +586,8 @@
 				6
 				setconfig
 				0 0 moveto
-				g_ 1 1 1 tlinearctx
-				h_ 1 -1 1 tlinearcty
+				g_ 1 xlinearcup
+				h_ 1 ylinearcleft
 				0 h_ lineto
 				g_ ht moveto
 				2 ht lineto
@@ -723,12 +602,9 @@
 				0 0 moveto
 				0 h_ lineto
 				0 ht moveto
-				2 0 rlineto
-				0 1 1 -1 tlinearcty
-				g_ 1 1 1 tlinearctx
-				h_ 1 -1 1 tlinearcty
-				2 1 -1 -1 tlinearctx
 				2 ht lineto
+				2 0 moveto
+				2 g_ h_ o
 				stroke
 			end
 		}
@@ -739,8 +615,8 @@
 				setconfig
 				2 setlinecap
 				g_ h_ moveto
-				0 1 -1 -1 tlinearctx
-				hb 1 1 -1 tlinearcty
+				0 1 xlinearcdown
+				hb 1 ylinearcright
 				g_ hb lineto
 				g_ h_ moveto
 				g_ 0 lineto
@@ -754,9 +630,9 @@
 			begin
 				5 setconfig
 				g_ c_ moveto
-				0 1 -1 -1 tlinearctx
-				0 1 1 -1 tlinearcty
-				g_ 1 1 1 tlinearctx
+				0 1 xlinearcdown
+				0 1 ylinearcright
+				g_ 1 xlinearcup
 				g_ c_ lineto
 				g_ 1 moveto
 				1 -1 rlineto
@@ -771,10 +647,10 @@
 				g_ c_ moveto 0 3 rmoveto
 				0 c_ 3 add lineto
 				g_ 1 sub c_ lineto
-				g_ 1 1 -1 tlinearctx
-				0 1 -1 -1 tlinearcty
-				0 1 -1 1 tlinearctx
-				c_ 1 1 1 tlinearcty
+				g_ 1 xlinearcdown
+				0 1 ylinearcleft
+				0 1 xlinearcup
+				c_ 1 ylinearcright
 				g_ 1 sub c_ lineto
 				stroke
 			end
@@ -784,11 +660,11 @@
 			begin
 				5 setconfig
 				0 c_ moveto
-				g_ 1 1 -1 tlinearctx
-				0 1 -1 -1 tlinearcty
-				0 1 -1 1 tlinearctx
-				c_ 3 add 1 1 1 tlinearcty
-				2 1 1 -1 tlinearctx
+				g_ 1 xlinearcdown
+				0 1 ylinearcleft
+				0 1 xlinearcup
+				c_ 3 add 1 ylinearcright
+				2 1 xlinearcdown
 				1 c_ lineto
 				stroke
 			end
@@ -801,10 +677,10 @@
 				1 setlinecap
 				0 c_ moveto 0 -1 rmoveto
 				1 1 1 arcty
-				g_ 1 1 -1 tlinearctx
+				g_ 1 xlinearcdown
 				0 2 lineto
-				0 1 1 -1 tlinearcty
-				g_ 0.5 add 1 1 1 tlinearctx
+				0 1 ylinearcright
+				g_ 0.5 add 1 xlinearcup
 				stroke
 			end
 		}
@@ -813,11 +689,11 @@
 			begin
 				5 setconfig
 				0 c_ moveto 1 3 rmoveto
-				g_ 1 1 -1 tlinearctx
-				0 1 -1 -1 tlinearcty
-				0 1 -1 1 tlinearctx
-				c_ 1 1 1 tlinearcty
-				g_ 1 1 -1 tlinearctx
+				g_ 1 xlinearcdown
+				0 1 ylinearcleft
+				0 1 xlinearcup
+				c_ 1 ylinearcright
+				g_ 1 xlinearcdown
 				stroke
 			end
 		}
@@ -826,10 +702,10 @@
 			begin
 				5 setconfig
 				g_ 0 moveto
-				0 1 -1 1 tlinearctx
-				c_ 1 1 1 tlinearcty
-				g_ 1 1 -1 tlinearctx
-				cm 1 -1 -1 tlinearcty
+				0 1 xlinearcup
+				c_ 1 ylinearcright
+				g_ 1 xlinearcdown
+				cm 1 ylinearcleft
 				0 cm lineto
 				stroke
 			end
@@ -876,13 +752,13 @@
 				1 setlinecap
 				0 1 moveto
 				1 1 -1 arcty
-				g_ 1 1 1 tlinearctx
-				cm 1 -1 1 tlinearcty
+				g_ 1 xlinearcup
+				cm 1 ylinearcleft
 				-1 0 rlineto
 				1 0 rmoveto
 				1 1 1 arctx
-				c_ 1 -1 1 tlinearcty
-				0 1 -1 -1 tlinearctx
+				c_ 1 ylinearcleft
+				0 1 xlinearcdown
 				stroke
 			end
 		}
@@ -892,7 +768,7 @@
 				5
 				setconfig
 				0 c_ moveto
-				0 1 1 -1 tlinearcty
+				0 1 ylinearcright
 				g_ 0 lineto
 				g_ c_ lineto
 				stroke
@@ -970,10 +846,10 @@
 			begin
 				5 setconfig
 				0 cm moveto
-				0 1 1 -1 tlinearcty
-				g_ 1 1 1 tlinearctx
-				c_ 1 -1 1 tlinearcty
-				0 1 -1 -1 tlinearctx
+				0 1 ylinearcright
+				g_ 1 xlinearcup
+				c_ 1 ylinearcleft
+				0 1 xlinearcdown
 				closepath
 				stroke
 			end
@@ -984,7 +860,7 @@
 				5 setconfig
 				0 0 moveto
 				0 c_ lineto
-				g_ 1 1 -1 tlinearctx
+				g_ 1 xlinearcdown
 				g_ 0 lineto
 				stroke
 			end
@@ -996,8 +872,8 @@
 				0 c_ moveto
 				0 -3 lineto
 				0 c_ moveto
-				g_ 1 1 -1 tlinearctx
-				0 1 -1 -1 tlinearcty
+				g_ 1 xlinearcdown
+				0 1 ylinearcleft
 				0 0 lineto
 				stroke
 			end
@@ -1007,8 +883,8 @@
 			begin
 				4 setconfig
 				g_ c_ moveto
-				0 1 -1 -1 tlinearctx
-				0 1 1 -1 tlinearcty
+				0 1 xlinearcdown
+				0 1 ylinearcright
 				g_ 0 lineto
 				stroke
 			end
@@ -1020,7 +896,7 @@
 				setconfig
 				0 0 moveto
 				0 c_ lineto
-				g_ 1 1 -1 tlinearctx
+				g_ 1 xlinearcdown
 				g_ 0 lineto
 				m c_ moveto
 				m 0 lineto
@@ -1033,10 +909,10 @@
 				5
 				setconfig
 				0 c_ moveto
-				0 1 1 -1 tlinearcty
+				0 1 ylinearcright
 				g_ 0 lineto
 				g_ c_ moveto
-				-3 2 -1 -1 tlinearcty
+				-3 2 ylinearcleft
 				1 -3 lineto
 				stroke
 			end
@@ -1045,12 +921,8 @@
 			/font-params get
 			begin
 				7 setconfig
-				0 cm moveto
-				c_ 1 1 1 tlinearcty
-				g_ 1 1 -1 tlinearctx
-				0 1 -1 -1 tlinearcty
-				0 1 -1 1 tlinearctx
-				0 cm lineto
+				0 0 moveto
+				1 g_ c_ o
 				m c_ moveto 0 2 rmoveto 
 				m -3 lineto
 				stroke
@@ -1088,7 +960,7 @@
 				5
 				setconfig
 				0 c_ moveto
-				cm 1 1 -1 tlinearcty
+				cm 1 ylinearcright
 				g_ cm lineto
 				g_ c_ moveto
 				g_ 0 lineto
@@ -1100,7 +972,7 @@
 			begin
 				7 setconfig
 				0 c_ moveto
-				0 1 1 -1 tlinearcty
+				0 1 ylinearcright
 				g_ 0 lineto
 				g_ c_ lineto
 				m 0 moveto
@@ -1151,8 +1023,8 @@
 			begin
 				5 setconfig
 				0 0 moveto
-				g_ 1 1 1 tlinearctx
-				c_ 1 -1 1 tlinearcty
+				g_ 1 xlinearcup
+				c_ 1 ylinearcleft
 				0 c_ lineto
 				g_ cm moveto
 				-2 0 rlineto
@@ -1165,11 +1037,8 @@
 				6 setconfig
 				0 0 moveto 0 c_ lineto
 				0 cm moveto 2 cm lineto
-				c_ 1 1 1 tlinearcty
-				g_ 1 1 -1 tlinearctx
-				0 1 -1 -1 tlinearcty
-				2 1 -1 1 tlinearctx
-				2 cm lineto
+				2 0 moveto
+				1 g_ c_ o
 				stroke
 			end
 		}
@@ -1179,8 +1048,8 @@
 				5 setconfig
 				g_ 0 moveto
 				g_ c_ lineto
-				0 1 -1 -1 tlinearctx
-				cm 1 1 -1 tlinearcty
+				0 1 xlinearcdown
+				cm 1 ylinearcright
 				g_ cm lineto
 				m cm moveto
 				0 0 lineto
@@ -1189,6 +1058,8 @@
 		}
 	>>
 	
->>
+>>  dup begin
+	(font-tools.ps) run
+end
 
 /rus-eskd-font exch definefont pop

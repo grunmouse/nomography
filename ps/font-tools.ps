@@ -1,0 +1,172 @@
+%% Набор процедур, рисующих характерные, встречающиеся в шрифтах элементы
+	/sgn {
+		dup abs div
+	} def
+
+	%[r, sgndx, sgndy]
+	/preparct {
+		2 index mul
+		%[r, sgndx, dy]
+		exch
+		2 index mul
+		%[r, dy, dx]
+		currentpoint
+		%[r, dy, dx, x0, y0]
+		4 1 roll
+		%[r, y0, dy, dx, x0]
+		add
+		%[r, y0, dy, xn]
+		3 1 roll
+		%[r, xn, y0, dy]
+		add
+		%[r, x2, y2]
+	} def
+	
+	%Рисует четвертькруговую дугу из точки currentpoint в точку с координатами currentpoint + r{sgndx, sgndy}, начиная по вертикали
+	%[r, sgndx, sgndy]
+	/arcty {
+		preparct
+		%[r, x2, y2]
+		currentpoint
+		%[r, x2, y2, x0, y0]
+		%x1 = x0, y1 = y2
+		pop
+		%[r, x2, y2, x0]
+		3 1 roll
+		%[r, x0, x2, y2]
+		%[r, x0, x2, y2, y2]
+		dup
+		3 1 roll
+		%[r, x0, y2, x2, y2]
+		5 -1 roll
+		%[x1, y1, x2, y2, r]
+		%5 copy (r) == == (2yx) == == == (1yx) == == ==
+		arct
+	} def
+	
+	%Рисует четвертькруговую дугу из точки currentpoint в точку с координатами currentpoint + r{sgndx, sgndy}, начиная по горизонтали
+	%[r, sgndx, sgndy]
+	/arctx {
+		preparct
+		%3 copy (pre 2yx) == == == (pre r) == ==
+		%[r, x2, y2]
+		currentpoint
+		%x1 = x2, y1 = y0
+		%[r, x2, y2, x0, y0]
+		3 1 roll
+		%[r, x2, y0, y2, x0]
+		pop
+		%[r, x2, y0, y2]
+		2 index
+		%[r, x2, y0, y2, x2]
+		exch
+		%[r, x2, y0, x2, y2]
+		5 -1 roll
+		%[x1, y1, x2, y2, r]
+		%5 copy (r) == == (2) == == == (1) == == ==
+		arct
+	} def
+	
+	
+	%[x, r, sgny]
+	/xlinearc {
+		%%x0 = curx + sgn(x - curx)*(abs(x - curx) - r)
+		%x0 = x - sgn(x - curx)*r
+		%y0 = cury
+		%x1 = x; y1 = cury
+		%x2 = x; y2 = cury + sgny*r
+		1 index
+		mul				%[x, r, r*sgny]
+		
+		2 index
+		dup
+		currentpoint	%[x, r, r*sgny, x, x, curx, cury]
+		5 1 roll		%[x, r, cury, r*sgny, x, x, curx]
+		sub				%[x, r, cury, r*sgny, x, x - curx]
+		sgn				%[x, r, cury, r*sgny, x, sgn(x - curx)]
+		4 index			%[x, r, cury, r*sgny, x, sgn(x - curx), r]
+		mul				%[x, r, cury, r*sgny, x, sgn(x - curx)*r]
+		sub				%[x, r, cury, r*sgny, x0]
+		2 index			%[x, r, cury, r*sgny, x0, cury]
+		lineto			%[x, r, cury, r*sgny]
+		
+		1 index			%[x, r, cury, r*sgny, cury]
+		add				%[x, r, cury, y2]
+		3 index			%[x, r, cury, y2, x]
+		exch			%[x, r, cury, x, y2]
+		4 -1 roll		%[x, cury, x, y2, r]
+		%[x1, y1, x2, y2, r]
+		%5 copy (r) == == (2) == == == (1) == == ==
+		arct
+	} def
+	
+	%[y, r, sgnx]
+	/ylinearc {
+		%y0 = y - sgn(y - cury)*r
+		%x0 = curx
+		%y1 = y; x1 = curx
+		%y2 = y; x2 = curx + sgnx*r
+		1 index
+		mul				%[y, r, r*sgnx]
+		
+		2 index
+		dup
+		currentpoint	%[y, r, r*sgnx, y, y, curx, cury]
+		exch			%[y, r, r*sgnx, y, y, cury, curx]
+		7 1 roll		%[curx, y, r, r*sgnx, y, y, cury]
+		sub				%[curx, y, r, r*sgnx, y, y - curx]
+		sgn				%[curx, y, r, r*sgnx, y, sgn(y - cury)]
+		3 index			%[curx, y, r, r*sgnx, y, sgn(y - cury), r]
+		mul				%[curx, y, r, r*sgnx, y, sgn(y - cury)*r]
+		sub				%[curx, y, r, r*sgnx, y0]
+		4 index exch	%[curx, y, r, r*sgnx, curx, y0]
+		%[curx, y0]
+		%[x0, y0]
+		lineto			%[curx, y, r, r*sgnx]
+		%currentpoint == ==
+		3 index			%[curx, y, r, r*sgnx, curx]
+		add				%[curx, y, r, x2]
+		2 index			%[curx, y, r, x2, y]
+		3 -1 roll		%[curx, y, x2, y, r]
+		%[curx, y, x2, y, r]
+		%[x1, y1, x2, y2, r]
+		%5 copy (r) == == (2) == == == (1) == == ==
+		arct
+	} def
+
+	/xlinearcup {
+		1 xlinearc
+	} def
+	/xlinearcdown {
+		-1 xlinearc
+	} def
+	/ylinearcleft {
+		-1 ylinearc
+	} def
+	
+	/ylinearcright {
+		1 ylinearc
+	} def
+	
+	%[r, right, top]
+	/o {
+		6 dict begin
+		
+			currentpoint	%[r, right, top, left, bottom]
+			/bottom exch def
+			/left exch def
+			/top exch def	%[right]
+			dup left add 2 div
+			/center exch def
+			/right exch def
+			/r exch def
+		
+			center bottom moveto
+			right r xlinearcup
+			top r ylinearcleft
+			left r xlinearcdown
+			bottom r ylinearcright
+			center bottom lineto
+		end
+	} def
+	
