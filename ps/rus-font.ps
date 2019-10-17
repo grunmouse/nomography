@@ -106,18 +106,92 @@
 	/e 6  %расстояние между словами
 	/d 1  % толщина линии
 	
-	/shared_config {
+	/shared_config{
+	}
+	
+	/setconfig {
+		/g exch def %определяем g
+		/right g 1 sub def %легаси
+		/m right 2 div def
+		
+		g a add  
+		0
+		% Width
+			
+		-2  
+		-3  
+		3 index  
+		h 2 add
+		% Bounding box
+		setcachedevice
 
-	}			
+		d setlinewidth
+		
+		0.5 0.5 translate
+		
+		2 setlinecap			
+		
+		%g (g) == ==
+
+	}
+	
+	%[g]
+	/lowerbegin {
+		0 dict begin
+			setconfig
+			/top c 1 sub def
+			/right g 1 sub def
+			/middle 3 def
+			/center right 2 div def
+	}	
+	
+	%[g]
+	/upperfloorbegin {
+		0 dict begin
+			setconfig
+			/top h 1 sub def
+			/right g 1 sub def
+			/middle 5 def
+			/center right 2 div def
+	}
+
+	%[g]
+	/upperceilbegin {
+		0 dict begin
+			setconfig
+			/top h 1 sub def
+			/right g 1 sub def
+			/middle 4 def
+			/center right 2 div def
+	}
+	
+	%[g]
+	/overupperbegin {
+		0 dict begin
+			/g exch def
+			/top 1 def
+			/right g 1 sub def
+			/center right 2 div def
+			0 h translate
+	}	
+	%[g]
+	/overlowerbegin {
+		0 dict begin
+			/g exch def
+			/top 1 def
+			/right g 1 sub def
+			/center right 2 div def
+			0 c translate
+	}
 
 	/font-params <<
 		
-		/h_ 9
-		/c_ 6
+		/top 9
+		/top 6
 		/ht 5
 		/hb 4
 		
-		/cm 3
+		/middle 3
 		
 		/top {
 			0.5 add
@@ -126,34 +200,12 @@
 			0.5 sub
 		}
 		%Принимает на вход ширину буквы, устанавливает setcachedevice
-		/setconfig {
-			/g exch def %определяем g
-			/g_ g 1 sub def
-			/m g_ 2 div def
-			
-			g a add  
-			0
-			% Width
-				
-			-2  
-			-3  
-			3 index  
-			h 2 add
-			% Bounding box
-			setcachedevice
 
-			d setlinewidth
-			
-			0.5 0.5 translate
-			
-			2 setlinecap			
-
-		}
 		
 		
 		%[w]
 		/x {
-			0 h_ moveto
+			0 top moveto
 			0 0 lineto
 			%[w] 
 			1 xlinearcup
@@ -163,12 +215,12 @@
 		
 		%[w]
 		/xc {
-			0 c_ moveto
+			0 top moveto
 			0 0 lineto
 			%[w] 
 			1 xlinearcup
-			cm 1 ylinearcleft
-			0 cm lineto
+			middle 1 ylinearcleft
+			0 middle lineto
 		}
 		
 		
@@ -177,547 +229,446 @@
 	/CharProcs <<
 		/.notdef {}
 		/space {			
-			/font-params get
+			font-params
 			begin
 				e
 				setconfig
 			end
 		}
 		/A {
-			/font-params get
-			begin
-				7
-				setconfig
+			7 upperceilbegin
 				1 setlinejoin
 				0 0 moveto
-				m h_ lineto
-				g_ 0 lineto
-				1 2 moveto
-				g_ 1 sub 2 lineto
+				center top lineto
+				right 0 lineto
+				center top div 2 mul dup 2 moveto
+				right exch sub 2 lineto
 				stroke
 			end
 		}
 		/B {
-			/font-params get
-			begin
-				6
-				setconfig
-				g_ x %нарисовать мягкий знак
-				0 h_ moveto
-				g_ 1 sub 0 rlineto
+			6 upperfloorbegin
+				0 top moveto
+				0 0 lineto
+				1 right middle glifrc
+				0 top moveto
+				right 1 sub 0 rlineto
 				stroke
 			end
 		}
 		/W {
-			/font-params get
-			begin
-				6
-				setconfig
-				g_ x
-				0 h_ moveto
-				g_ 1 sub 1 xlinearcdown
-				ht 2 ylinearcleft
+			6 upperfloorbegin
+				0 top moveto
+				0 0 lineto
+				1 right middle glifrc
+				0 top moveto
+				right 1 sub 1 xlinearcdown
+				middle 2 ylinearcleft
 				stroke
 			end
 		}
 		/G {
-			/font-params get
-			begin
-				4
-				setconfig
+			4 upperfloorbegin
 				0 0 moveto
-				0 h_ lineto
-				g h_ lineto
+				0 top lineto
+				right 1 add top lineto
 				stroke
 			end
 		}
 		/D {
-			/font-params get
-			begin
-				5
-				setconfig
+			5 upperfloorbegin
 				-1 -1 moveto
 				-1 0 lineto
-				g 0 lineto
-				g -1 lineto
+				right 1 add 0 lineto
+				0 -1 rlineto
 				0 0 moveto
 				1 setlinejoin 
-				1  h_ lineto
-				g_ h_  lineto
+				1  top lineto
+				right top  lineto
 				0 setlinejoin 
-				g_ 0 lineto
+				right 0 lineto
 				stroke
 			end
 		}
 		/JE {
-			/font-params get
-			begin
-				5
-				setconfig
-				g_ 0 moveto
+			5 upperfloorbegin
+				right 0 moveto
 				0 0 lineto
-				0 h_ lineto
-				g_ h_ lineto
-				0 
-				ht moveto
+				0 top lineto
+				right top lineto
+				0 middle moveto
 				3 0 rlineto
 				stroke
 			end
 		}
 		/JO {
-			dup dup
-			/CharProcs get /JE get exec
-			/font-params get
-			begin
+			CharProcs /JE get exec
+			5 overupperbegin
 				1 setlinejoin 
 				0 setlinecap
-				0.5 h_ 2 add moveto
+				0.5 top moveto
 				1 0 rlineto
 				1 0 rmoveto
 				1 0 rlineto
 				stroke
 			end
-		
 		}
 		/V {
-			/font-params get
-			begin
-				8
-				setconfig
-					
-				2 setlinecap
+			8 upperfloorbegin
 				
-				m 0 moveto
-				m h_ lineto
+				center 0 moveto
+				center top lineto
 				
-				m ht moveto
-				g_ h_ lineto
-				m ht moveto
-				0 h_ lineto
+				center middle moveto
+				right top lineto
+				center middle moveto
+				0 top lineto
 				
-				m ht moveto 1 1 rmoveto
-				g_ 0 lineto
+				center middle moveto 
+				top middle sub center div dup
+				1 exch rmoveto
+				right 0 lineto
 				
-				m ht moveto -1 1 rmoveto
+				center middle moveto
+				-1 exch rmoveto
 				0 0 lineto
 				stroke
 			end
 		}
 		/Z {
-			/font-params get
-			begin
-				5
-				setconfig
+			5 upperfloorbegin
 				1 setlinecap
 				0 1 moveto
 				1 1 -1 arcty
-				g_ 2 xlinearcup
-				ht 2 ylinearcleft
+				right 2 xlinearcup
+				middle 2 ylinearcleft
 				-1 0 rlineto
 				1 0 rmoveto
 				2 1 1 arctx
-				h_ 1 ylinearcleft
+				top 1 ylinearcleft
 				0 1 xlinearcdown
 				stroke
 			end
 		}
 		/I {
-			/font-params get
-			begin
-				6
-				setconfig
+			6 upperfloorbegin
 				1 setlinejoin 
-				0 h_ moveto
+				0 top moveto
 				0 0 lineto
-				g_ h_ lineto
-				g_ 0 lineto
+				right top lineto
+				right 0 lineto
 				stroke
 			end
 		}
 		/J {
-			dup dup
-			/CharProcs get /I get exec
-			/font-params get
-			begin
+			CharProcs /I get exec
+			6 overupperbegin
 				0 setlinecap
-				1 h_ 2 add moveto
+				1 top moveto
 				3 0 rlineto
 				stroke
 			end
 		}
 		/K {
-			/font-params get
-			begin
-				5
-				setconfig
+			5 upperfloorbegin
 				0 0 moveto
-				0 h_ lineto
-				0 ht moveto
-				g_ h_ lineto
-				0 ht moveto 1 1 rmoveto
-				g_ 0 lineto
+				0 top lineto
+				0 middle moveto
+				right top lineto
+				0 middle moveto 1 top middle sub middle div 1 rmoveto
+				right 0 lineto
 				stroke
+			end
 		}
 		/L {
-			/font-params get
-			begin
-				6
-				setconfig
+			6 upperfloorbegin
 				0 0 moveto
-				2 h_ lineto
-				g_ h_ lineto
-				g_ 0 lineto
+				2 top lineto
+				right top lineto
+				right 0 lineto
 				stroke
 			end
 		}
 		/M {
-			/font-params get
-			begin
-				7
-				setconfig
+			7 upperfloorbegin
 				1 setlinejoin 
 				0 0 moveto
-				0 h_ lineto
-				g_ 2 div h_ 2 div lineto
-				g_ h_ lineto
-				g_ 0 lineto
+				0 top lineto
+				center middle lineto
+				right top lineto
+				right 0 lineto
 				stroke
+			end
 		}
 		/N {
-			/font-params get
-			begin
-				6
-				setconfig
+			6 upperfloorbegin
 				0 0 moveto
-				0 h_ rlineto
+				0 top rlineto
 				
-				g_ 0 moveto
-				0 h_ rlineto
+				right 0 moveto
+				0 top rlineto
 				
-				0 ht moveto
-				g_ 0 rlineto
+				0 middle moveto
+				right 0 rlineto
 				stroke
 			end
 		}
 		/O {
-			/font-params get
-			begin
-				6
-				setconfig
+			6 upperfloorbegin
 				0 0 moveto
-				2 g_ h_ o
+				2 right top glifo
 				stroke
 			end
 		}
 		/P {
-			/font-params get
-			begin
-				6
-				setconfig
+			6 upperfloorbegin
 				0 0 moveto
-				0 h_ lineto
-				g_ h_ lineto
-				g_ 0 lineto
+				0 top lineto
+				right top lineto
+				right 0 lineto
 				stroke
 			end
 		}
 		/R {
-			/font-params get
-			begin
-				6
-				setconfig
+			6 upperceilbegin
 				0 0 moveto
-				0 h_ lineto
-				g_ 1 xlinearcdown
-				hb 1 ylinearcleft
-				0 hb lineto
+				0 top lineto
+				0 middle moveto
+				1 right top glifrc
 				stroke
 			end
 		}
 		/S {
-			/font-params get
-			begin
-				5
-				setconfig
-				g_ 0 moveto
-				0  2 xlinearcup
-				h_ 2 ylinearcright
-				g_ h_ lineto
+			6 upperceilbegin
+				right top moveto
+				1 0 0 glifc
 				stroke
 			end
 		}
 		/T {
-			/font-params get
-			begin
-				6
-				setconfig
-				m 0 moveto
-				0 h_ rlineto
-				0 h_ moveto
-				g_ 0 rlineto
+			6 upperceilbegin
+				center 0 moveto
+				0 top rlineto
+				0 top moveto
+				right 0 rlineto
 				stroke
 			end
 		}
 		/U {
-			/font-params get
-			begin
-				6
-				setconfig
-				0 h_ moveto
-				hb 1 ylinearcright
-				g_ hb lineto
-				g_ h_ moveto
+			6 upperceilbegin
+				0 top moveto
+				middle 1 ylinearcright
+				right middle lineto
+				right top moveto
 				0 2 ylinearcleft
 				1 0 lineto
 				stroke
 			end
 		}
 		/F {
-			/font-params get
-			begin
-				8
-				setconfig
-				m 0 moveto
-				0 h_ rlineto
+			8 upperceilbegin
+				center 0 moveto
+				0 top rlineto
 				0 2 moveto
-				2 g_ h_ 2 sub o
+
+					2 
+					right 
+					top 2 sub 
+				glifo
 				stroke
 			end
 		}
 		/H {
-			/font-params get
-			begin
-				7
-				setconfig
+			7 upperceilbegin
 				0 0 moveto
-				g_ h_ lineto
-				0 h_ moveto
-				g_ 0 lineto
+				right top lineto
+				0 top moveto
+				right 0 lineto
 				stroke
 			end
 		}
 		/C {
-			/font-params get
-			begin
-				6
-				setconfig
-				0 h_  moveto
+			6 upperceilbegin
+				0 top  moveto
 				0 0 lineto
 				g 0 lineto
 				0 -1 rlineto
-				g_ h_ moveto
-				g_ 0 lineto
+				right top moveto
+				right 0 lineto
 				stroke
 			end
 		}
 		/CH {
-			/font-params get
-			begin
-				6
-				setconfig
-				0 h_ moveto
-				hb 1 ylinearcright
-				g_ hb lineto
-				g_ h_ moveto
-				g_ 0 lineto
+			6 upperceilbegin
+				0 top moveto
+				middle 1 ylinearcright
+				right middle lineto
+				right top moveto
+				right 0 lineto
 				stroke
 			end
 		}
 		/SH {
-			/font-params get
-			begin
-				8
-				setconfig
-				0 h_ moveto
+			8 upperceilbegin
+				0 top moveto
 				0 0 lineto
-				g_ 0 lineto
-				g_ h_ lineto
-				m 0 moveto
-				0 h_ rlineto
+				right 0 lineto
+				right top lineto
+				center 0 moveto
+				0 top rlineto
 				stroke
 			end
 		}
 		/SHX {
-			dup dup
-			/CharProcs get /SH get exec
-			/font-params get
-			begin
-				2 setlinecap
-				g 0 moveto
+			8 upperceilbegin
+				0 top moveto
+				0 0 lineto
+				right 0 lineto
+				right top lineto
+				center 0 moveto
+				0 top rlineto
+				right 1 add 0 moveto
 				0 -1 rlineto
 				stroke
 			end
 		}
 		/ER {
-			/font-params get
-			begin
-				6
-				setconfig
-				g_ x
-				2 setlinecap
-				0 h_ moveto
+			6 upperfloorbegin
+				0 0 moveto
+				1 right middle glifrc
+				0 0 moveto
+				0 top lineto
 				-2 0 rlineto
 				stroke
 			end
 		}
 		/Y {
-			/font-params get
-			begin
-				7
-				setconfig
-				4 x %нарисовать узкий мягкий знак
-				g_ h_ moveto
-				g_ 0 lineto
+			7 upperfloorbegin
+				0 0 moveto
+				1 4 middle glifrc
+				0 0 moveto
+				0 top lineto
+				right top moveto
+				right 0 lineto
 				stroke
 			end		
 		}
 		/X {
-			/font-params get
-			begin
-				6
-				setconfig
-				g_ x
+			6 upperfloorbegin
+				0 0 moveto
+				1 right middle glifrc
+				0 0 moveto
+				0 top lineto
 				stroke
-			end		
+			end
 		}
 		/E {
-			/font-params get
-			begin
-				6
-				setconfig
+			6 upperceilbegin
 				0 0 moveto
-				g_ 1 xlinearcup
-				h_ 1 ylinearcleft
-				0 h_ lineto
-				g_ ht moveto
-				2 ht lineto
+				1 right top glifrc
+				right middle moveto
+				center middle lineto
 				stroke
 			end
 		}
 		/JU {
-			/font-params get
-			begin
-				7
-				setconfig
-				0 0 moveto
-				0 h_ lineto
-				0 ht moveto
-				2 ht lineto
+			7 upperfloorbegin
+				0 0 moveto 0 top lineto
+				0 middle moveto	2 0 rlineto
 				2 0 moveto
-				2 g_ h_ o
+				2 right top glifo
 				stroke
 			end
 		}
 		/JA {
-			/font-params get
-			begin
-				6
-				setconfig
-				2 setlinecap
-				g_ h_ moveto
-				0 1 xlinearcdown
-				hb 1 ylinearcright
-				g_ hb lineto
-				g_ h_ moveto
-				g_ 0 lineto
-				m hb moveto
+			6 upperceilbegin
+				1 setlinecap
+				right 0 moveto
+				right top lineto
+				
+				1 0 middle glifc
+				center middle moveto
+				
 				0 0 lineto
 				stroke
 			end
 		}
 		/a {
-			/font-params get
-			begin
-				5 setconfig
-				g_ c_ moveto
+			5 lowerbegin
+				right top moveto
 				0 1 xlinearcdown
 				0 1 ylinearcright
-				g_ 1 xlinearcup
-				g_ c_ lineto
-				g_ 1 moveto
+				right 1 xlinearcup
+				right top lineto
+				right 1 moveto
 				1 -1 rlineto
 				stroke
 			end
 		}
 		/b {
-			/font-params get
-			begin
-				5 setconfig
+			5 lowerbegin
 				1 setlinejoin
-				g_ c_ moveto 0 3 rmoveto
-				0 c_ 3 add lineto
-				g_ 1 sub c_ lineto
-				g_ 1 xlinearcdown
-				0 1 ylinearcleft
-				0 1 xlinearcup
-				c_ 1 ylinearcright
-				g_ 1 sub c_ lineto
+				right 1 sub dup top moveto
+				neg 3 rlineto
+				right 0 rlineto
+				0 0 moveto
+				1 right top glifo
 				stroke
 			end
 		}
 		/w {
-			/font-params get
-			begin
-				5 setconfig
-				0 c_ moveto
-				g_ 1 xlinearcdown
+			5 lowerbegin
+				0 top moveto
+				right 1 xlinearcdown
 				0 1 ylinearcleft
 				0 1 xlinearcup
-				c_ 3 add 1 ylinearcright
+				top 3 add 1 ylinearcright
 				2 1 xlinearcdown
-				1 c_ lineto
+				1 top lineto
 				stroke
 			end
 		}
 		/g {
-			/font-params get
-			begin
-				4 setconfig
+			4 lowerbegin
 				1 setlinejoin
 				1 setlinecap
-				0 c_ moveto 0 -1 rmoveto
+				0 top moveto 0 -1 rmoveto
 				1 1 1 arcty
-				g_ 1 xlinearcdown
+				right 1 xlinearcdown
 				0 2 lineto
 				0 1 ylinearcright
-				g_ 0.5 add 1 xlinearcup
+				right 0.5 add 1 xlinearcup
 				stroke
 			end
 		}
 		/d {
-			/font-params get
-			begin
-				5 setconfig
-				0 c_ moveto 1 3 rmoveto
-				g_ 1 xlinearcdown
+			5 lowerbegin
+				0 top moveto 1 3 rmoveto
+				right 1 xlinearcdown
 				0 1 ylinearcleft
 				0 1 xlinearcup
-				c_ 1 ylinearcright
-				g_ 1 xlinearcdown
+				top 1 ylinearcright
+				right 1 xlinearcdown
 				stroke
 			end
 		}
 		/je {
-			/font-params get
-			begin
-				5 setconfig
-				g_ 0 moveto
+			5 lowerbegin
+				right 0 moveto
 				0 1 xlinearcup
-				c_ 1 ylinearcright
-				g_ 1 xlinearcdown
-				cm 1 ylinearcleft
-				0 cm lineto
+				top 1 ylinearcright
+				right 1 xlinearcdown
+				middle 1 ylinearcleft
+				0 middle lineto
 				stroke
 			end
 		}
 		/jo {
-			dup dup
-			/CharProcs get /je get exec
-			/font-params get
-			begin
+			CharProcs /je get exec
+			5 overlowerbegin
 				1 setlinejoin 
 				0 setlinecap
-				0.5 c_ 2 add moveto
+				0.5 top moveto
 				1 0 rlineto
 				1 0 rmoveto
 				1 0 rlineto
@@ -725,333 +676,274 @@
 			end		
 		}
 		/v {
-			/font-params get
-			begin
-				7
-				setconfig
-				m  0  moveto
-				m  c_ lineto
+			7 lowerbegin
+				center  0  moveto
+				center  top lineto
 				
-				m  cm moveto
-				g_ c_ lineto
+				center  middle moveto
+				right top lineto
 
-				m  cm moveto
-				0  c_ lineto
+				m  middle moveto
+				0  top lineto
 
-				m  cm moveto 0.5 0.5 rmoveto
-				g_ 0  lineto
-				m  cm moveto -0.5 0.5 rmoveto
+				center  middle moveto 0.5 0.5 rmoveto
+				right 0  lineto
+				center  middle moveto -0.5 0.5 rmoveto
 				0  0  lineto
 				stroke
 			end
 		}
 		/z {
-			/font-params get
-			begin
-				4 setconfig
+			4 lowerbegin
 				1 setlinecap
 				0 1 moveto
 				1 1 -1 arcty
-				g_ 1 xlinearcup
-				cm 1 ylinearcleft
+				right 1 xlinearcup
+				middle 1 ylinearcleft
 				-1 0 rlineto
 				1 0 rmoveto
 				1 1 1 arctx
-				c_ 1 ylinearcleft
+				top 1 ylinearcleft
 				0 1 xlinearcdown
 				stroke
 			end
 		}
 		/i {
-			/font-params get
-			begin
-				5
-				setconfig
-				0 c_ moveto
+			5 lowerbegin
+				0 top moveto
 				0 1 ylinearcright
-				g_ 0 lineto
-				g_ c_ lineto
+				right 0 lineto
+				right top lineto
 				stroke
 			end
 		}
 		/j {
-			dup dup
-			/CharProcs get /i get exec
-			/font-params get
-			begin
+			CharProcs /i get exec
+			5 overlowerbegin
 				%0 setlinecap
-				1 c_ 2 add moveto
+				1 top moveto
 				2 0 rlineto
 				stroke
 			end		
 		}
 		/k {
-			/font-params get
-			begin
-				5
-				setconfig
+			5 lowerbegin
 				0 0 moveto
-				0 c_ lineto
-				0 cm 1 sub moveto
-				g_ c_ lineto
-				0 cm moveto 2 0.5 rmoveto
-				g_ 0 lineto
+				0 top lineto
+				0 middle 1 sub moveto
+				right top lineto
+				0 middle moveto 2 middle right div 2 mul 1 sub rmoveto
+				right 0 lineto
 				stroke
 			end
 		}
 		/l {
-			/font-params get
-			begin
-				5
-				setconfig
+			5 lowerbegin
 				1 setlinejoin
 				0 0 moveto
-				2 c_ lineto
+				2 top lineto
 				0 setlinejoin
-				g_ c_ lineto
-				g_ 0 lineto
+				right top lineto
+				right 0 lineto
 				stroke
 			end
 		}
 		/m {
-			/font-params get
-			begin
-				6
-				setconfig
+			5 lowerbegin
 				1 setlinejoin
 				0 0 moveto
-				0 c_ lineto
-				m cm lineto
-				g_ c_ lineto
-				g_ 0 lineto
+				0 top lineto
+				center middle lineto
+				right top lineto
+				right 0 lineto
 				stroke
 			end
 		}
 		/n {
-			/font-params get
-			begin
-				5
-				setconfig
+			5 lowerbegin
 				0 0 moveto
-				0 c_ lineto
-				0 cm moveto
-				g_ cm lineto
-				g_ 0 moveto
-				g_ c_ lineto
+				0 top lineto
+				0 middle moveto
+				right middle lineto
+				right 0 moveto
+				right top lineto
 				stroke
 			end
 		}
 		/o {
-			/font-params get
-			begin
-				5 setconfig
-				0 cm moveto
-				0 1 ylinearcright
-				g_ 1 xlinearcup
-				c_ 1 ylinearcleft
-				0 1 xlinearcdown
-				closepath
+			5 lowerbegin
+				0 0 moveto
+				1 right top glifo
 				stroke
 			end
 		}
 		/p {
-			/font-params get
-			begin
-				5 setconfig
+			5 lowerbegin
 				0 0 moveto
-				0 c_ lineto
-				g_ 1 xlinearcdown
-				g_ 0 lineto
+				0 top lineto
+				right 1 xlinearcdown
+				right 0 lineto
 				stroke
 			end
 		}
 		/r {
-			/font-params get
-			begin
-				5 setconfig
-				0 c_ moveto
+			5 lowerbegin
+				0 top moveto
 				0 -3 lineto
-				0 c_ moveto
-				g_ 1 xlinearcdown
-				0 1 ylinearcleft
-				0 0 lineto
+				0 0 moveto
+				1 right top glifrc
 				stroke
 			end
 		}
 		/s {
-			/font-params get
-			begin
-				4 setconfig
-				g_ c_ moveto
-				0 1 xlinearcdown
-				0 1 ylinearcright
-				g_ 0 lineto
+			4 lowerbegin
+				right top moveto
+				1 0 0 glifc
 				stroke
 			end
 		}
 		/t {
-			/font-params get
-			begin
-				7
-				setconfig
+			7 lowerbegin
 				0 0 moveto
-				0 c_ lineto
-				g_ 1 xlinearcdown
-				g_ 0 lineto
-				m c_ moveto
+				0 top lineto
+				right 1 xlinearcdown
+				right 0 lineto
+				m top moveto
 				m 0 lineto
 				stroke
 			end
 		}
 		/u {
-			/font-params get
-			begin
-				5
-				setconfig
-				0 c_ moveto
+			5 lowerbegin
+				0 top moveto
 				0 1 ylinearcright
-				g_ 0 lineto
-				g_ c_ moveto
+				right 0 lineto
+				right top moveto
 				-3 2 ylinearcleft
 				1 -3 lineto
 				stroke
 			end
 		}
 		/f {
-			/font-params get
-			begin
-				7 setconfig
+			7 lowerbegin
 				0 0 moveto
-				1 g_ c_ o
-				m c_ moveto 0 2 rmoveto 
-				m -3 lineto
+				1 right top glifo
+				center top moveto 0 2 rmoveto 
+				center -3 lineto
 				stroke
 			end
 		}
 		/h {
-			/font-params get
-			begin
-				5
-				setconfig
+			5 lowerbegin
 				0 0 moveto
-				g_ c_ lineto
-				g_ 0 moveto
-				0 c_ lineto
+				right top lineto
+				right 0 moveto
+				0 top lineto
 				stroke
 			end
 		}
 		/c {
-			/font-params get
-			begin
-				4
-				setconfig
-				0 c_ moveto
+			4 lowerbegin
+				0 top moveto
 				0 0 lineto
-				g 0 lineto
-				g -1 lineto
-				g_ c_ moveto
-				g_ 0 lineto
+				right 1 add 0 lineto
+				0 -1 rlineto
+				right top moveto
+				right 0 lineto
 				stroke
 			end
 		}
 		/ch {
-			/font-params get
-			begin
-				5
-				setconfig
-				0 c_ moveto
-				cm 1 ylinearcright
-				g_ cm lineto
-				g_ c_ moveto
-				g_ 0 lineto
+			5 lowerbegin
+				0 top moveto
+				middle 1 ylinearcright
+				right middle lineto
+				right top moveto
+				right 0 lineto
 				stroke
 			end
 		}
 		/sh {
-			/font-params get
-			begin
-				7 setconfig
-				0 c_ moveto
+			7 lowerbegin
+				0 top moveto
 				0 1 ylinearcright
-				g_ 0 lineto
-				g_ c_ lineto
-				m 0 moveto
-				m c_ lineto
+				right 0 lineto
+				right top lineto
+				center 0 moveto
+				center top lineto
 				stroke
 			end
 		}
 		/shx {
-			dup dup dup
-			/CharProcs get /sh get exec
-			/font-params get
-			begin
-				g 0 moveto
-				g -1 lineto
+			7 lowerbegin
+				0 top moveto
+				0 1 ylinearcright
+				right 0 lineto
+				right top lineto
+				center 0 moveto
+				center top lineto
+				right 1 add 0 moveto
+				0 -1 rlineto
 				stroke
 			end
 		}
 		/er {
-			/font-params get
-			begin
-				5 setconfig
-				g_ xc
-				0 c_ moveto
+			5 lowerbegin
+				0 0 moveto
+				1 right middle glifrc
+				0 0 moveto
+				0 top lineto
 				-1 0 rlineto
 				stroke
 			end
 		}
 		/y {
-			/font-params get
-			begin
-				6 setconfig
-				3 xc
-				g_ 0 moveto
-				g_ c_ lineto
+			6 lowerbegin
+				0 0 moveto
+				1 3 middle glifrc
+				0 0 moveto
+				0 top lineto
+				right 0 moveto
+				right top lineto
 				stroke
 			end
 		}
 		/x {
-			/font-params get
-			begin
-				5 setconfig
-				g_ xc
+			5 lowerbegin
+				0 0 moveto
+				1 right middle glifrc
+				0 0 moveto
+				0 top lineto
 				stroke
 			end
 		}
 		/e {
-			/font-params get
-			begin
-				5 setconfig
+			5 lowerbegin
 				0 0 moveto
-				g_ 1 xlinearcup
-				c_ 1 ylinearcleft
-				0 c_ lineto
-				g_ cm moveto
+				1 right top glifrc
+				right middle moveto
 				-2 0 rlineto
 				stroke
 			end
 		}
 		/ju {
-			/font-params get
-			begin
-				6 setconfig
-				0 0 moveto 0 c_ lineto
-				0 cm moveto 2 cm lineto
+			6 lowerbegin
+				0 0 moveto 0 top lineto
+				0 middle moveto 2 0 rlineto
 				2 0 moveto
-				1 g_ c_ o
+				1 right top glifo
 				stroke
 			end
 		}
 		/ja {
-			/font-params get
-			begin
-				5 setconfig
-				g_ 0 moveto
-				g_ c_ lineto
-				0 1 xlinearcdown
-				cm 1 ylinearcright
-				g_ cm lineto
-				m cm moveto
+			5 lowerbegin
+
+				right 0 moveto
+				right top lineto
+				
+				1 0 middle glifc
+				center middle moveto
+				
 				0 0 lineto
 				stroke
 			end

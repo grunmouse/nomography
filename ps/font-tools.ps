@@ -76,6 +76,7 @@
 		%x1 = x; y1 = cury
 		%x2 = x; y2 = cury + sgny*r
 		1 index
+		%2 copy (x) == == ==
 		mul				%[x, r, r*sgny]
 		
 		2 index
@@ -107,6 +108,7 @@
 		%y1 = y; x1 = curx
 		%y2 = y; x2 = curx + sgnx*r
 		1 index
+		%2 copy (y) == == ==
 		mul				%[y, r, r*sgnx]
 		
 		2 index
@@ -149,7 +151,8 @@
 	} def
 	
 	%[r, right, top]
-	/o {
+	/glifo {
+		%(o) ==
 		6 dict begin
 		
 			currentpoint	%[r, right, top, left, bottom]
@@ -170,3 +173,33 @@
 		end
 	} def
 	
+	%[r, left, bottom]
+	/glifc {
+		4 dict begin
+			currentpoint
+			pop
+			/right exch def
+			/bottom exch def
+			/left exch def
+			/r exch def
+
+			left r xlinearcdown
+			bottom r ylinearcright
+			right bottom lineto
+		end
+	} def
+	
+	%[r, right, top]
+	/glifrc {
+		4 dict begin
+			currentpoint
+			pop
+			/left exch def
+			/top exch def
+			/right exch def
+			/r exch def
+			right r xlinearcup
+			top r ylinearcleft
+			left top lineto
+		end
+	} def
