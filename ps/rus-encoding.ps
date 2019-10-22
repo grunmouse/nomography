@@ -1,0 +1,55 @@
+
+
+%Для именования букв используется следующая схема:
+
+% Часть букв взята как в KOI8 и как на флагах МСС
+% j - й или йотирование гласной в сочетании
+% v - ж
+% w - в
+% x - ь
+% y - ы
+% Йотированные гласные пишутся с буквы j
+% je - е
+% jo - ё
+% ju - ю
+% ja - я
+% Буква э - транслитерируется 
+% э - e
+% Для шипящих и твёрдого знакавведены собственные названия
+% sh - ш как в "шинус"
+% shx - щ - ш с мягким знаком
+% ch - ч как в "чосинус".
+% er - ъ, "еръ"
+	
+%Кодировка будет отображать введёные буквы первой половины таблицы ASCII на русские буквы
+%Из-за этого выпадают первые 32 символа
+% За основу бралась KOI8, но сделаны отступления
+/rus-translit-encoding [
+	%Oct 000 - 177 == 00 - 7F == 0 - 127
+	%.0			.1			.2			.3			.4			.5			.6			.7
+	%управляющие символы ASCII
+	 /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%00.
+	 /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%01.
+	%управляющие символы ASCII
+	 /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%02.
+	 /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%03.
+
+	 /space		/.notdef	/.notdef	/JO			/jo			/.notdef	/.notdef	/er			%04.
+	 /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%05.
+
+	 /.notdef	/.notdef	/.notdef	/jo			/.notdef	/.notdef	/.notdef	/.notdef	%06.
+	 /.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	/.notdef	%07.
+	 
+	 /JU		/A			/B			/C			/D			/JE			/F			/G			%10.
+	 /H			/I			/J			/K			/L			/M			/N			/O			%11.
+
+	 /P			/JA			/R			/S			/T			/U			/V			/W			%12.
+	 /X			/Y			/Z			/SH			/E			/SHX		/CH			/ER			%13.
+
+	 /ju		/a			/b			/c			/d			/je			/f			/g			%14.
+	 /h			/i			/j			/k			/l			/m			/n			/o			%15.
+
+	 /p			/ja			/r			/s			/t			/u			/v			/w			%16.
+	 /x			/y			/z			/sh			/e			/shx		/ch			/er			%17.
+
+] def
