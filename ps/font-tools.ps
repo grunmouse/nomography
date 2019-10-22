@@ -219,3 +219,46 @@
 			left top lineto
 		end
 	} def
+	
+	%[right, top]
+	/glifx {
+		4 dict begin
+			currentpoint
+			/bottom exch def
+			/left exch def
+			2 copy
+			/top exch def
+			/right exch def
+			lineto
+			0 left moveto
+			right 0 lineto
+		end
+	} def
+	
+	/glifz {
+		4 dict begin
+			currentpoint
+			/top exch def
+			/left exch def
+			/bottom exch def
+			/right exch def
+			
+			right top lineto
+			left bottom lineto
+			right bottom lineto
+		end
+	} def
+	
+	/glifn {
+		4 dict begin
+			currentpoint
+			/top exch def
+			/left exch def
+			/bottom exch def
+			/right exch def
+			
+			right top lineto
+			left bottom lineto
+			right bottom lineto
+		end
+	}
