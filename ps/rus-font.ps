@@ -138,6 +138,11 @@
 			1 0 rmoveto
 			1 0 rlineto
 		}
+		/breve {
+			0 setlinecap
+			1 top moveto
+			right 1 sub top lineto
+		}
 	>>
 
 	/font-params <<
@@ -314,9 +319,7 @@
 			CharProcs /I get exec
 			stroke
 			overbegin
-				0 setlinecap
-				1 top moveto
-				3 0 rlineto
+				subglyph /breve get exec
 			end
 		}
 		/K {
@@ -509,11 +512,10 @@
 				1 right middle glifrc
 				0 0 moveto
 				0 top lineto
-				
 			end
 		}
 		/E {
-			6 upperceilbegin
+			6 upperfloorbegin
 				0 0 moveto
 				1 right top glifrc
 				right middle moveto
@@ -664,10 +666,7 @@
 		/j {
 			CharProcs /i get exec
 			overbegin
-				%0 setlinecap
-				1 top moveto
-				2 0 rlineto
-				
+				subglyph /breve get exec
 			end		
 		}
 		/k {
