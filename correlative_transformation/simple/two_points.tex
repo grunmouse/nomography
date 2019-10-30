@@ -1,0 +1,48 @@
+\subsection{Две точки}
+\paragraph{}Даны две различные точки $P$ и $Q$.
+\subparagraph{}Они преобразуются в прямые
+$$\bar{p}:\: P_x \bar{x} + P_y \bar{y} + 1 = 0;$$
+$$\bar{q}:\: Q_x \bar{x} + Q_y \bar{y} + 1 = 0;$$
+Найдём координаты точки их пересечения
+\subparagraph{}
+\begin{minipage}{0.4\textwidth}
+$$\Delta =
+\begin{vmatrix}
+	P_x & P_y \\
+	Q_x & Q_y
+\end{vmatrix}
+= P_x Q_y - P_y Q_x;
+$$
+$$
+\Delta_x =
+\begin{vmatrix}
+	-1 & P_y \\
+	-1 & Q_y 
+\end{vmatrix}
+= - Q_y + P_y;
+$$
+$$
+\Delta_y =
+\begin{vmatrix}
+	P_x & -1 \\
+	Q_x & -1
+\end{vmatrix}
+= - P_x + Q_x;
+$$
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+$$\bar{x} = \frac{\Delta_x}{\Delta} = \frac{P_y - Q_y}{P_x Q_y - P_y Q_x},$$
+$$\bar{y} = \frac{\Delta_y}{\Delta} = \frac{Q_x - P_x}{P_x Q_y - P_y Q_x};$$
+\end{minipage}
+\subparagraph{} Если подставить эту точку в уравнение $x\bar{x} + y\bar{y} + 1 = 0$, мы получим уравнение прямой в основной плоскости.
+\subparagraph{} Подставляя в него коордитаты точек $P$ и $Q$, убедимся, что они лежат на этой прямой.
+$$\frac{P_y - Q_y}{P_x Q_y - P_y Q_x}P_x + \frac{Q_x - P_x}{P_x Q_y - P_y Q_x}P_y + 1 
+= \frac{P_x P_y - P_x Q_y + P_y Q_x - P_x P_y}{P_x Q_y - P_y Q_x} + 1 
+= \frac{- P_x Q_y + P_y Q_x}{P_x Q_y - P_y Q_x} + 1 
+= -1 + 1 = 0.$$
+$$\frac{P_y - Q_y}{P_x Q_y - P_y Q_x}Q_x + \frac{Q_x - P_x}{P_x Q_y - P_y Q_x}Q_y + 1 
+= \frac{P_yQ_x - Q_yQ_x + Q_x Q_y- P_xQ_y}{P_x Q_y - P_y Q_x} + 1 
+= \frac{P_yQ_x - P_xQ_y}{P_x Q_y - P_y Q_x} + 1 
+= -1 + 1 =0.$$
+
+Две точки отображаются в две прямые, причём точка их пересечения - соответствует прямой, которая проходит через эти две точки.
