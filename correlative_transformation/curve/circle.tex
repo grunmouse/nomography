@@ -1,0 +1,44 @@
+\subsection{Окружность}
+$$r: \: 
+\left\{ \begin{gathered}
+	x = R\sin{t}+a,
+	y = R\cos{t}+b.
+\end{gathered} \right.
+$$
+
+$$f = R\sin{t}+a; \; g = R\cos{t}+b;$$
+$$f' = R\cos{t}; \; g' = -R\sin{t}.$$
+
+$$\bar{r}:
+\:
+\left\{
+\begin{gathered}
+	\bar{x} =  -\frac{g'}{f g' - g f'},\\
+	\bar{y} =  \frac{f'}{f g' - g f'}.
+\end{gathered}
+\right.
+$$
+Их общий знаменатель равен
+$$f g' - g f' = (R\sin{t}+a)(-R\sin{t}) - (R\cos{t}+b) R\cos{t} = -\left(R^2\sin^2{t}+aR\sin{t} + R^2\cos^2{t} +bR\cos{t}\right);$$
+$$-(f g' - g f') = R^2 + aR\sin{t} + bR\cos{t} = R\left(R + \sqrt{a^2+b^2}\left(\frac{a}{\sqrt{a^2+b^2}}\sin{t} + \frac{b}{\sqrt{a^2+b^2}}\cos{t}\right)\right);$$
+$$-\frac{f g' - g f'}{R} = R + a\sin{t} + b\cos{t};$$
+
+$$-\frac{f g' - g f'}{R} = R + \sqrt{a^2+b^2}\left(\frac{a}{\sqrt{a^2+b^2}}\sin{t} + \frac{b}{\sqrt{a^2+b^2}}\cos{t}\right);$$
+$$\frac{a}{\sqrt{a^2+b^2}} =\cos\varphi, \; \frac{b}{\sqrt{a^2+b^2}} = \sin\varphi;$$
+$$-\frac{f g' - g f'}{R} = R + \sqrt{a^2+b^2}\left(\sin{t}\cos\varphi + \cos{t}\sin\varphi\right) = R + \sqrt{a^2+b^2}\sin{\left(t + \varphi \right)};$$
+$$\frac{f g' - g f'}{R} = - \left( R + \sqrt{a^2+b^2}\sin{\left(t + \varphi \right)} \right);$$
+
+
+\subparagraph{}
+\begin{minipage}{0.4\textwidth}
+$$\bar{x} =  -\frac{g'}{f g' - g f'};$$
+$$\bar{x} =  \frac{R \sin{t}}{f g' - g f'};$$
+$$\bar{x} =  -\frac{\sin{t}}{R + a\sin{t} + b\cos{t}};$$
+
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+$$\bar{y} =  \frac{f'}{f g' - g f'};$$
+$$\bar{y} =  \frac{R \cos{t}}{f g' - g f'};$$
+$$\bar{y} =  -\frac{\sin{t}}{R + a\sin{t} + b\cos{t}};$$
+
+\end{minipage}

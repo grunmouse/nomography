@@ -1,0 +1,170 @@
+\subsection{Отображение кривой}
+Кривая $q$, представляет собой множество точек $Q_t$, каждая из которых должна отобразиться в прямую. Таким образом, получается семейство прямых $\bar{\mathbf{Q}}$, в общем случае, не имеющих общей точки пересечения.
+\paragraph{Пусть}
+$$q:\: 
+\left\{
+\begin{array}{l}
+	x = f(t),\\
+	y = g(t);
+\end{array}
+\right.
+$$
+где функции $f(t)$, $g(t)$ гладкие. Обозначим их производные по $t$: $f' = \frac{\partial f}{\partial t}$, $g' = \frac{\partial g}{\partial t}$.
+$$\mathbf{\bar{Q}}:
+\:
+f(t)\bar{x} + g(t)\bar{y} + 1 = 0.$$
+\subsubsection{Огибающая $\bar{q}$ семейства прямых $\mathbf{\bar{Q}}$}
+\paragraph{}Убедимся в существовании огибающей этого семейства прямых и найдём её.
+\subparagraph{Введём функцию:}
+$h(\bar{x}, \bar{y}, t) = f(t)\bar{x} + g(t)\bar{y} + 1.$
+
+Найдём её частные производные
+\subparagraph{}
+\begin{minipage}{0.3\textwidth}
+	$$\frac{\partial h}{\partial t} = f'\bar{x} + g'\bar{y};$$
+	$$\frac{\partial^2 h}{\partial t^2} = f''\bar{x} + g''\bar{y};$$
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+	$$\frac{\partial h}{\partial\bar{x}} = f;$$
+	$$\frac{\partial h}{\partial\bar{y}} = g;$$
+\end{minipage}
+\begin{minipage}{0.3\textwidth}
+	$$\frac{\partial^2 h}{\partial t \partial\bar{x}} = f';$$
+	$$\frac{\partial^2 h}{\partial t \partial\bar{y}} = g';$$
+\end{minipage}
+
+\subparagraph{Необходимое условие:}
+$$
+\left\{
+\begin{gathered}
+	h = 0, \\
+	\frac{\partial h}{\partial t} = 0;
+\end{gathered}
+\right.
+\Rightarrow
+\left\{
+\begin{gathered}
+	f\bar{x} + g\bar{y} + 1 = 0, \\
+	f'\bar{x} + g'\bar{y} = 0;
+\end{gathered}
+\right.
+\Rightarrow
+\begin{pmatrix}
+	f & g \\
+	f' & g'
+\end{pmatrix}
+\begin{pmatrix}
+	\bar{x} \\
+	\bar{y}
+\end{pmatrix}
+=
+\begin{pmatrix}
+	-1 \\
+	0
+\end{pmatrix}
+$$
+Применим метод Крамера:
+$$
+\Delta = 
+\begin{vmatrix}
+	f & g \\
+	f' & g'
+\end{vmatrix}
+= f g' - g f';
+$$
+$$\Delta_{\bar{x}} = 
+\begin{vmatrix}
+	-1 & g \\
+	0 & g'
+\end{vmatrix}
+= - g';
+$$
+$$\Delta_{\bar{y}} = 
+\begin{vmatrix}
+	f & -1 \\
+	f' & 0
+\end{vmatrix}
+= f';
+$$
+$$\bar{x} = \frac{\Delta_{\bar{x}}}{\Delta} = -\frac{g'}{f g' - g f'};$$
+$$\bar{y} = \frac{\Delta_{\bar{y}}}{\Delta} = \frac{f'}{f g' - g f'}.$$
+
+\subparagraph{Достаточное условие:}
+$$
+\begin{vmatrix}
+	\frac{\partial h}{\partial \bar{x}} & \frac{\partial h}{\partial \bar{y}} \\
+	\frac{\partial^2 h}{\partial t \partial\bar{x}} & \frac{\partial^2 h}{\partial t \partial\bar{y}}
+\end{vmatrix}
+\ne 0ж
+\Rightarrow
+\begin{vmatrix}
+	f & g \\
+	f' & g'
+\end{vmatrix}
+\ne 0;
+$$
+Это условие совпадает с условием разрешимости системы уравнений необходимого условия.
+$$
+\frac{\partial^2 h}{\partial t^2} \ne 0;
+\Rightarrow
+f''\bar{x} + g''\bar{y} \ne 0;
+\Rightarrow
+\left[
+\begin{gathered}
+	f'' \ne 0, \\
+	g'' \ne 0;
+\end{gathered}
+\right.
+$$
+Это условие выполняется, если $q$ - не прямая.
+\paragraph{Уравнение $\bar{q}$ в параметрическом виде}
+$$\bar{q}:
+\:
+\left\{
+\begin{gathered}
+	\bar{x} =  -\frac{g'}{f g' - g f'},\\
+	\bar{y} =  \frac{f'}{f g' - g f'}.
+\end{gathered}
+\right.
+$$
+\subsubsection{Точка касания}
+\paragraph{Пусть} дана прямая $\bar{q}_s$, в которую отображается точка $Q_s (x(s); y(s))$. Найдём параметр $t$ точки её касания с кривой $\bar{q}$.
+$$x(s) = f(s);\; y(s)= g(s);$$
+$$\bar{q}_s: \: f(s)\bar{x} + g(s)\bar{y} + 1 = 0;$$
+$$-f(s)\frac{g'}{f g' - g f'} + g(s)\frac{f'}{f g' - g f'} + 1 = 0;$$
+$$\frac{g(s) f' - f(s) g'}{f g' - g f'} = -1;$$
+$$f(s) g' - g(s) f' = f g' - g f';$$
+$$(f(s) - f) g' = (g(s) - g) f';$$
+$$\left[
+\begin{gathered}
+	t = s,\\
+	\frac{f(s) - f}{g(s) - g} = \frac{f'}{g'};
+\end{gathered}
+\right.
+$$
+Решение $t = s$ - существует всегда.
+
+\subsubsection{Касательная к $q$}
+Назовём касательную в точке $Q_t$ прямой $q_t$ (по аналогии с $\bar{q}_t$.
+$$q_t:\: \frac{x - f}{f'} = \frac{y - g}{g'};$$
+$$g'x - g'f - f'y + f'g = 0;$$
+$$\frac{g'}{f'g - g'f}x - \frac{f'}{f'g - g'f}y + 1 = 0.$$
+Эта прямая отображается в точку 
+$$
+\left\{
+\begin{gathered}
+	\bar{x} = \frac{g'}{f'g - g'f}, \\
+	\bar{y} = - \frac{f'}{f'g - g'f};
+\end{gathered}
+\right.
+\Rightarrow
+\left\{
+\begin{gathered}
+	\bar{x} = - \frac{g'}{g'f - f'g}, \\
+	\bar{y} = \frac{f'}{g'f - f'g}.
+\end{gathered}
+\right.
+$$
+Легко видеть, что это та же самая точка $\bar{Q}_t = \bar{q}(t)$.
+
+\paragraph{Следовательно:} Если кривая отображается в семейство прямых, имеющих общую огибающую, то касательная к этой кривой в некоторой точке и точка касания отображаются соответственно в точку на огибающей и касательную к ней в этой точке.
