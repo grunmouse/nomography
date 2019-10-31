@@ -39,12 +39,31 @@ $$\bar{x} =  -\frac{\sin{t}}{R + a\sin{t} + b\cos{t}};$$
 \begin{minipage}{0.4\textwidth}
 $$\bar{y} =  \frac{f'}{f g' - g f'};$$
 $$\bar{y} =  \frac{R \cos{t}}{f g' - g f'};$$
-$$\bar{y} =  -\frac{\sin{t}}{R + a\sin{t} + b\cos{t}};$$
+$$\bar{y} =  -\frac{\cos{t}}{R + a\sin{t} + b\cos{t}};$$
 
 \end{minipage}
 
 \subparagraph{} Введём полярную систему координат
-$$\bar{x} = \bar{\rho}\cos{bar{varphi}},$$
-$$\bar{y} = \bar{\rho}\sin{bar{varphi}};$$
+$$\bar{x} = \bar{\rho}\cos{\bar{\varphi}},$$
+$$\bar{y} = \bar{\rho}\sin{\bar{\varphi}};$$
 $$\bar{\rho}^2 = \bar{x}^2 + \bar{y}^2,$$
 $$\bar{\varphi} = \sign{\bar{y}}\acos{\frac{\bar{x}}{\bar{\rho}}};$$
+
+$$\bar{x}^2 + \bar{y}^2 
+= \frac{\sin^2{t} + \cos^2{t}}{\brkt{R + a\sin{t} + b\cos{t}}^2}
+= \frac{1}{\brkt{R + a\sin{t} + b\cos{t}}^2};$$
+$$\bar{\rho} = \frac{1}{\abs{R + a\sin{t} + b\cos{t}}}.$$
+
+Обозначим: $D = R + a\sin{t} + b\cos{t}$. От знака этой величины будут зависеть свойства кривой.
+
+$$\sign{y} = -\sign\brkt{\cos{t}}\sign{D};$$
+$$\frac{\bar{x}}{\bar{\rho}} = -\sign{D}\sin{t};$$
+$$\bar{\varphi} = -\sign\brkt{\cos{t}}\sign{D}\acos\brkt{-\sign{D}\sin{t}};$$
+
+$$\psi = -\frac{\pi}{2}-t;$$
+$$\sin{\psi} = -\cos{t};$$
+$$\cos{\psi} = -\sin{t}.$$
+
+$$D = R - a\cos{\psi} - b\sin{\psi},$$
+$$\bar{\rho} = \frac{1}{\abs{D}},$$
+$$\bar{\varphi} = \sign\brkt{\sin{\psi}}\sign{D}\acos\brkt{\sign{D}\cos{\psi}}.$$
