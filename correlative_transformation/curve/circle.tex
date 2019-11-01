@@ -18,16 +18,10 @@ $$\bar{r}:
 \end{gathered}
 \right.
 $$
-Их общий знаменатель равен
+Их общий знаменатель 
 $$f g' - g f' = (R\sin{t}+a)(-R\sin{t}) - (R\cos{t}+b) R\cos{t} = -\left(R^2\sin^2{t}+aR\sin{t} + R^2\cos^2{t} +bR\cos{t}\right);$$
 $$-(f g' - g f') = R^2 + aR\sin{t} + bR\cos{t};$$
 $$-\frac{f g' - g f'}{R} = R + a\sin{t} + b\cos{t};$$
-
-$$-\frac{f g' - g f'}{R} = R + \sqrt{a^2+b^2}\left(\frac{a}{\sqrt{a^2+b^2}}\sin{t} + \frac{b}{\sqrt{a^2+b^2}}\cos{t}\right);$$
-$$\frac{a}{\sqrt{a^2+b^2}} =\cos\varphi, \; \frac{b}{\sqrt{a^2+b^2}} = \sin\varphi;$$
-$$-\frac{f g' - g f'}{R} = R + \sqrt{a^2+b^2}\left(\sin{t}\cos\varphi + \cos{t}\sin\varphi\right) = R + \sqrt{a^2+b^2}\sin{\left(t + \varphi \right)};$$
-$$\frac{f g' - g f'}{R} = - \left( R + \sqrt{a^2+b^2}\sin{\left(t + \varphi \right)} \right);$$
-
 
 \subparagraph{}
 \begin{minipage}{0.4\textwidth}
@@ -67,3 +61,70 @@ $$\cos{\psi} = -\sin{t}.$$
 $$D = R - a\cos{\psi} - b\sin{\psi},$$
 $$\bar{\rho} = \frac{1}{\abs{D}},$$
 $$\bar{\varphi} = \sign\brkt{\sin{\psi}}\sign{D}\acos\brkt{\sign{D}\cos{\psi}}.$$
+
+Обозначим: $c = \sqrt{a^2 + b^2}$;
+$$D = R - c\left( \frac{a}{c}\cos{\psi} + \frac{b}{c}\sin{\psi} \right);$$
+Введём такой угол $\theta$
+$$\cos{\theta} = \frac{a}{c},\; \sin{\theta} = \frac{b}{c};$$
+$c$ и $\theta$ - полярные координаты центра окружности.
+$$D = R - c\left( \cos{\theta}\cos{\psi} + \sin{\theta}\sin{\psi} \right);$$
+$$D = R - c\cos\brkt{\psi - \theta};$$
+
+Функция $\varphi(t)$ оказывается кусочно заданной для $D>0$ и $D<0$, а при $D=0$ должен происходить предельный переход.
+
+\begin{minipage}{0.4\textwidth}
+$$D>0$$
+$$\bar{\rho} = \frac{1}{D},$$
+$$\bar{\varphi} = \sign\brkt{\sin{\psi}}\acos\brkt{\cos{\psi}};$$
+$$\bar{\varphi} = \psi;$$
+$$\bar{\rho} = \frac{1}{R - c\cos\brkt{\bar{\varphi} - \theta}};$$
+$$\bar{\rho} = \frac{\frac{1}{R}}{1 - \frac{c}{R}\cos\brkt{\bar{\varphi} - \theta}}.$$
+Это уравнение конического сечения с фокусом в точке O.
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+$$D<0$$
+$$\bar{\rho} = -\frac{1}{D},$$
+$$\bar{\varphi} = \sign\brkt{\cos{t}}\acos\brkt{\sin{t}};$$
+$$\sin{\varphi} = \cos(t),\; \cos{\varphi} = \sin{t};$$
+$$\bar{\varphi} = \frac{\pi}{2} - t = \psi + \pi;$$
+$$\psi = \bar{\varphi} - \pi;$$
+$$\bar{\rho} = -\frac{1}{R - c\cos\brkt{\bar{\varphi} - \pi - \theta}};$$
+$$\bar{\rho} = -\frac{\frac{1}{R}}{1 + \frac{c}{R}\cos\brkt{\bar{\varphi}  - \theta}}.$$
+Это уравнение левой ветви гиперболы.
+\end{minipage}
+
+\paragraph{Анализ свойств $D$}
+$$D = R - c\cos\brkt{\psi - \theta};$$
+Если $R>c$, то $D>0$. Если $R \le c$, то $D$ имеет переходы через 0 в точках
+$$\cos\brkt{\psi - \theta} = \frac{R}{c}.$$
+\begin{minipage}{0.4\textwidth}
+С положительной стороны:
+$$D>0;$$
+$$R - c\cos\brkt{\psi - \theta} > 0;$$
+$$R > c\cos\brkt{\psi - \theta};$$
+$$\cos\brkt{\bar{\varphi} - \theta} < \frac{R}{c};$$
+$$\acos{\frac{R}{c}} < \brkt{\bar{\varphi} - \theta} < 2\pi - \acos{\frac{R}{c}}.$$
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+С отрицательной стороны:
+$$D<0;$$
+$$R - c\cos\brkt{\psi - \theta} < 0;$$
+$$\cos\brkt{\bar{\varphi} - \pi - \theta} > \frac{R}{c};$$
+$$-\cos\brkt{\bar{\varphi} - \theta} > \frac{R}{c};$$
+$$\cos\brkt{\bar{\varphi} - \theta} < -\frac{R}{c};$$
+$$\acos\brkt{-\frac{R}{c}} < \brkt{\bar{\varphi} - \theta} < 2\pi - \acos\brkt{-\frac{R}{c}}.$$
+\end{minipage}
+
+Иными словами, зависимость $D(\varphi)$ неоднозначна, и выражается двумя функциями, с несколько разными областями определения.
+
+\paragraph{}Найдём соответствующие значения $t$:
+$$\cos\brkt{\psi - \theta} = \frac{R}{c},$$
+$$\psi = -\frac{\pi}{2}-t;$$
+$$\cos\brkt{-\frac{\pi}{2} - t - \theta} = \frac{R}{c};$$
+$$\cos\brkt{\frac{\pi}{2} + t + \theta} = \frac{R}{c};$$
+$$\sin\brkt{t + \theta} = \frac{R}{c};$$
+$$t + \theta = \frac{\pi}{2} \pm \acos\frac{R}{c};$$
+$D<0$, при $\asin\frac{R}{c} < t + \theta < \pi - \asin\frac{R}{c},$
+$D>0$, при $\pi - \asin\frac{R}{c} < t + \theta < 2\pi - \asin\frac{R}{c}.$
+
+$\asin\frac{R}{c}$ - это полуугол развала касательных к окружности $r$, проходящих, через начало координат. Поскольку прямая, проходящая через начало координат, отображается в несобственную точку, логично, что касательная, проходящая через начало координат, отображается в несобственную точку касания, а соответствующая ей точка касания - в асимптоту гиперболы или ось параболы.
