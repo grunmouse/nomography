@@ -5,10 +5,20 @@
 
 (rus-encoding.ps) run
 
+/testmark {
+	dup mark eq not
+} def
+
+% sin 75° = 0,9659258262890682867497431997289
+% csc 75° = 1,0352761804100830493955953504962
+% ctg 75° = 0,26794919243112270647255365849413
+% 0,13397459621556135323627682924706
+
 <<
 	%Required for all fonts
 	/FontType 3
-	/FontMatrix [0.1 0 0 0.1 0 0] %Наклонить потом
+	%/FontMatrix [0.1 0 0 0.1 0 0] %прямой
+	/FontMatrix [0.1 0 0.02679 0.1035 0 0] %наклонный
 	
 	%Required for base fonts
 	
@@ -35,16 +45,33 @@
 			if
 		
 			%[this, this.CharProcs, charName]
-			get
-			%[this, this.CharProcs.charName]
-			
-			shared_config
-			%[this, this.CharProcs.charName]
-			exec % Execute BuildGlyph procedure with [this]
-			stroke
-			pop
-			%pop
+			dup /.notdef eq
+			{
+				pop pop pop
+				%/.notdef ==
+			}
+			{
+				%[this, this.CharProcs, charName]
+				get
+				%[this, this.CharProcs.charName]
+				
+				%[this, this.CharProcs.charName]
+				beforeGliph
+				exec % Execute BuildGlyph procedure with [this]
+				afterGliph
+				
+				%[this]
+				pop
+			}
+			ifelse
 		end
+		
+	}
+	
+	/beforeGliph{}
+	/afterGliph{
+		stroke
+		pop
 	}
 	
 	%Устаревшая схема, для совместимости
@@ -66,9 +93,7 @@
 	/e 6  %расстояние между словами
 	/d 1  % толщина линии
 	
-	/shared_config{
-	}
-	
+	%[g]
 	/setconfig {
 		/g exch def %определяем g
 		/right g 1 sub def %легаси
@@ -90,15 +115,20 @@
 		
 		2 setlinecap			
 		
-		%g (g) == ==
-
 	}
+	%[]
 	
 	%[g]
 	/dobegin {
-		0 dict dup 3 1 roll begin
+		0 dict dup 
+		%[g, -dict-config-, -dict-config-]
+		3 1 roll 
+		%[-dict-config-, g, -dict-config-]
+		begin
+			%[-dict-, g]
 			setconfig
 	}
+	%[-dict-config-]
 	
 	%[g]
 	/lowerbegin {
@@ -106,6 +136,7 @@
 			/top c 1 sub def
 			/middle 3 def
 	}	
+	%[-dict-config-]
 	
 	%[g]
 	/upperfloorbegin {
@@ -113,6 +144,7 @@
 			/top h 1 sub def
 			/middle 5 def
 	}
+	%[-dict-config-]
 
 	%[g]
 	/upperceilbegin {
@@ -120,14 +152,16 @@
 			/top h 1 sub def
 			/middle 4 def
 	}
+	%[-dict-config-]
 	
-	%[g]
+	%[-dict-config-]
 	/overbegin {
 		dup
 		begin
 			0 top 1 add translate
 			/top 1 def
-	}	
+	}
+	%[-dict-config-]
 	
 	/subglyph <<
 		/uml {
@@ -145,47 +179,6 @@
 		}
 	>>
 
-	/font-params <<
-		
-		/top 9
-		/top 6
-		/ht 5
-		/hb 4
-		
-		/middle 3
-		
-		/top {
-			0.5 add
-		}
-		/bot {
-			0.5 sub
-		}
-		%Принимает на вход ширину буквы, устанавливает setcachedevice
-
-		
-		
-		%[w]
-		/x {
-			0 top moveto
-			0 0 lineto
-			%[w] 
-			1 xlinearcup
-			ht 1 ylinearcleft
-			0 ht lineto
-		}
-		
-		%[w]
-		/xc {
-			0 top moveto
-			0 0 lineto
-			%[w] 
-			1 xlinearcup
-			middle 1 ylinearcleft
-			0 middle lineto
-		}
-		
-		
-	>>
 	
 	/CharProcs <<
 		/.notdef {}
@@ -194,6 +187,101 @@
 			dobegin
 			end
 		}
+		
+		/nil {
+			5 upperceilbegin
+				0 0 moveto
+				2 right top glifo
+			end
+		}
+		/un {
+			3 upperfloorbegin
+				1 setlinejoin
+				0 top 2 sub moveto
+				right top lineto
+				right 0 lineto
+			end
+		}
+		/bi {
+			5 upperceilbegin
+				right 0 moveto
+				0 0 lineto
+				right top 2 sub lineto
+				2 -1 1 arcty
+				0 2 xlinearcdown
+			end
+		}	
+		/tri {
+			5 upperfloorbegin
+				0 0 moveto
+				right 2 xlinearcup
+				middle 2 ylinearcleft
+				1 middle moveto
+				right 1.5 xlinearcup
+				top 1.5 ylinearcleft
+				0 top lineto
+		}
+		/quad {
+			5 upperceilbegin
+				right top moveto
+				0 2 lineto
+				right 1 add 2 lineto
+				right 0 moveto
+				right middle lineto
+			end
+		}
+		/pent {
+			5 upperfloorbegin
+				0 0 moveto
+				right 2 xlinearcup
+				middle 2 ylinearcleft
+				0 middle lineto
+				0 top lineto
+				right top lineto
+			end
+		}
+		/hex {
+			5 upperfloorbegin
+				right 1 sub top moveto
+				0 3 xlinearcdown
+				0 1 ylinearcright
+				right 1 xlinearcup
+				middle 1 ylinearcleft
+				0 middle lineto
+			end
+		}
+		/sept {
+			5 upperceilbegin
+				1 0 moveto
+				right top lineto
+				0 top lineto
+				0 -1 rlineto
+			end
+		}
+		/oct {
+			5 upperfloorbegin
+				center middle moveto
+				right 2 xlinearcup
+				top 2 ylinearcleft
+				0 2 xlinearcdown
+				middle 2 ylinearcright
+				right 2 xlinearcdown
+				0 1.5 ylinearcleft
+				0 1.5 xlinearcup
+				middle 2 ylinearcright
+			end
+		}	
+		/en {
+			5 upperceilbegin
+				1 0 moveto
+				right 3 xlinearcup
+				top 1 ylinearcleft
+				0 1 xlinearcdown
+				middle 1 ylinearcright
+				right middle lineto
+			end
+		}
+		
 		/A {
 			7 upperceilbegin
 				1 setlinejoin
@@ -617,6 +705,7 @@
 		}
 		/jo {
 			CharProcs /je get exec
+			stroke
 			overbegin
 				subglyph /uml get exec
 			end		
@@ -665,6 +754,7 @@
 		}
 		/j {
 			CharProcs /i get exec
+			stroke
 			overbegin
 				subglyph /breve get exec
 			end		

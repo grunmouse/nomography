@@ -1,0 +1,16 @@
+%Готовые запчасти для шрифтов типа 3
+
+%Процедура, для вставки в свойство /BuildChar
+/legacy-build-char {
+	1 index /Encoding get
+	%[this, charCode, this.Encoding]
+	exch get
+	%[this, charName]
+	1 index /BuildGlyph get 
+	%[this, charName, this.BuildGlyph]
+	exec
+} def
+
+%Матрицы прямого и наклонного шрифтов ЕСКД Б
+/eskd-b-orto [0.1 0 0 0.1 0 0] def
+/eskd-b-oblique [0.1 0 0.02679 0.1035 0 0] def
