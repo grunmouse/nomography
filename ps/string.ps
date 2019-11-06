@@ -1,0 +1,95 @@
+%[a, b]
+/equ{
+	xor
+	not
+} def
+%[a equ b]
+
+%[a, b]
+/ipm{
+	1 index
+	%[a, b, a]
+	and
+	%[a, b and a]
+	equ
+} def
+%[a imp b]
+
+%[int]
+/utf8byte{
+	0
+	{
+		%[int, count]
+		1 7 2 index	sub bitshift
+		%[int, count, mask]
+		2 index and
+		%[int, count, int and mask]
+		0 eq
+		{
+			%[int, count]
+			exit
+		} if
+		%[int, count]
+		dup 4 eq
+		{
+			exit
+		}if
+		1 add
+		
+	} loop
+	%[int, count]
+	exch 
+	1 7 3 index sub
+	%[count, int, 1, 7 - count]
+	
+	bitshift 1 sub
+	%[count, int, mask]
+	and
+	exch
+	%[value, count]
+} def
+
+
+%[str]
+/utf8split{
+	0 dict begin
+		/str exch def
+		/q 0 def
+		/len str length def
+	
+		[ 
+			0 0
+			0 1 len
+			{
+				%[i]
+				str 1 index get
+				%[i, byte]
+				utf8byte
+				%[i, value, count]
+				[
+					{pop 0}
+					{pop q}	%ведомые всегда кладём в строку
+					{} %value
+					{pop 255}
+					{pop 255}
+				]
+				exch
+				get exec
+				%[i, newq]
+				dup q eq
+				{
+					%[start, end, i, newq]
+					pop exch pop
+					%[start, i]
+				}
+				{
+					%[start, end, i, newq]
+					/q exch def
+					dup
+					%[start, end, i, i]
+				}
+			}for
+		]
+	end
+} def
+
