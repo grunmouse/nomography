@@ -145,7 +145,7 @@ $$
 Решение $t = s$ - существует всегда.
 
 \subsubsection{Касательная к $q$}
-Назовём касательную в точке $Q_t$ прямой $q_t$ (по аналогии с $\bar{q}_t$.
+Назовём касательную в точке $Q_t$ прямой $q_t$ (по аналогии с $\bar{q}_s$).
 $$q_t:\: \frac{x - f}{f'} = \frac{y - g}{g'};$$
 $$g'x - g'f - f'y + f'g = 0;$$
 $$\frac{g'}{f'g - g'f}x - \frac{f'}{f'g - g'f}y + 1 = 0.$$
@@ -168,3 +168,34 @@ $$
 Легко видеть, что это та же самая точка $\bar{Q}_t = \bar{q}(t)$.
 
 \paragraph{Следовательно:} Если кривая отображается в семейство прямых, имеющих общую огибающую, то касательная к этой кривой в некоторой точке и точка касания отображаются соответственно в точку на огибающей и касательную к ней в этой точке.
+
+\subsubsection{Полярная система координат:}
+$$\left\{
+\begin{gathered}
+	\bar{x} = \bar{\rho}\cos{\bar{\varphi}}, \\
+	\bar{y} = \bar{\rho}\sin{\bar{\varphi}};$$
+\end{gathered}
+\right.
+$$
+Обозначим
+$$D = f g' - g f';$$
+$$\bar{\rho}^2 = \bar{x}^2 + \bar{y}^2;$$
+$$\bar{\rho}^2 = \frac{(g')^2 + (f')^2}{D^2};$$
+$$\bar{\rho} = \frac{\sqrt{(g')^2 + (f')^2}}{\abs{D}}.$$
+
+$$\bar{\varphi} = \sign{\bar{y}}\acos{\frac{\bar{x}}{\bar{\rho}}};$$
+$$\sign{\bar{y}} = \sign{\frac{f'}{D}} = \sign{f'}\sign{D};$$
+
+$$\frac{\bar{x}}{\bar{\rho}} = \frac{
+	(-g')\abs{D}
+}{
+	D\sqrt{(g')^2 + (f')^2}
+} = -\frac{g'\sign{D}}{\sqrt{(g')^2 + (f')^2}};$$
+$$\bar{\varphi} = \sign{f'}\sign{D}\acos\brkt{-\frac{g'\sign{D}}{\sqrt{(g')^2 + (f')^2}}};$$
+$$\bar{\varphi} = \sign{f'}\sign{D}\left(\frac{\pi}{2} - \asin\brkt{-\frac{g'\sign{D}}{\sqrt{(g')^2 + (f')^2}}}\right);$$
+$$\bar{\varphi} = \sign{f'}\sign{D}\left(\frac{\pi}{2} + \sign{D}\asin{\frac{g'}{\sqrt{(g')^2 + (f')^2}}}\right);$$
+$$\bar{\varphi} = \sign{f'}\left(\frac{\pi}{2}\sign{D} + \asin{\frac{g'}{\sqrt{(g')^2 + (f')^2}}}\right).$$
+
+Введём угол $\phi$;
+$$\sin\phi = \frac{g'}{\sqrt{(g')^2 + (f')^2}};$$
+$$\bar{\varphi} = \sign{f'}\left(\frac{\pi}{2}\sign{D} + \phi \right).$$
