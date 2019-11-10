@@ -1,20 +1,5 @@
-%[a, b]
-/equ{
-	xor
-	not
-} def
-%[a equ b]
-
-%[a, b]
-/ipm{
-	1 index
-	%[a, b, a]
-	and
-	%[a, b and a]
-	equ
-} def
-%[a imp b]
-
+%Расшифровывает байт кодировки utf8, выделяя количество ведущих единиц
+% и значение смысловой части
 %[int]
 /utf8byte{
 	0
@@ -48,48 +33,33 @@
 	exch
 	%[value, count]
 } def
+%[value, count]
 
-
+%Преобразовывает utf8-строку в массив кодовых точек utf
 %[str]
-/utf8split{
-	0 dict begin
-		/str exch def
-		/q 0 def
-		/len str length def
-	
-		[ 
-			0 0
-			0 1 len
+/utf8points {
+	[
+		exch
+		{
+			%[prev, byte]
+			utf8byte
+			%[prev, value, count]
+			1 eq
 			{
-				%[i]
-				str 1 index get
-				%[i, byte]
-				utf8byte
-				%[i, value, count]
-				[
-					{pop 0}
-					{pop q}	%ведомые всегда кладём в строку
-					{} %value
-					{pop 255}
-					{pop 255}
-				]
+				%then
+				%[prev, value]
 				exch
-				get exec
-				%[i, newq]
-				dup q eq
-				{
-					%[start, end, i, newq]
-					pop exch pop
-					%[start, i]
-				}
-				{
-					%[start, end, i, newq]
-					/q exch def
-					dup
-					%[start, end, i, i]
-				}
-			}for
-		]
-	end
+				6 bitshift
+				or
+				%[{prev|value}]
+			}
+			{
+				%else
+				%[prev, value]
+			}
+			ifelse
+		}
+		forall
+	]
 } def
-
+%[array]
