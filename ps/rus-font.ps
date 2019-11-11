@@ -4,11 +4,6 @@
 (font-matrix-eskd.ps) run
 (rus-encoding.ps) run
 
-% sin 75° = 0,9659258262890682867497431997289
-% csc 75° = 1,0352761804100830493955953504962
-% ctg 75° = 0,26794919243112270647255365849413
-% 0,13397459621556135323627682924706
-
 <<
 	%Required for all fonts
 	/FontType 3
@@ -126,27 +121,43 @@
 	}
 	%[-dict-config-]
 	
+	/uppertop {
+		/top h 1 sub def
+	}
+	
+	/lowertop {
+		/top c 1 sub def
+	}
+	
+	/middlefloor {
+		/middle top 2 div floor def
+	}
+	
+	/middleceil {
+		/middle top 2 div ceiling def
+	}
+	
 	%[g]
 	/lowerbegin {
 		dobegin
-			/top c 1 sub def
-			/middle 3 def
+			lowertop
+			middleceil
 	}	
 	%[-dict-config-]
 	
 	%[g]
 	/upperfloorbegin {
 		dobegin
-			/top h 1 sub def
-			/middle 5 def
+			uppertop
+			middleceil
 	}
 	%[-dict-config-]
 
 	%[g]
 	/upperceilbegin {
 		dobegin
-			/top h 1 sub def
-			/middle 4 def
+			uppertop
+			middlefloor
 	}
 	%[-dict-config-]
 	
