@@ -1,16 +1,90 @@
+%[{array|string|dict}source, proc]
+/forallpairs {
+	exch
+	
+	%[proc, source]
+	dup type (dicttype) eq
+	{
+		%[proc, source]
+		dup
+		{
+			%[proc, source, key, value]
+			exch
+			3 index exec
+		} forall
+	}
+	{
+		%[proc, source]
+		0 1 
+		2 index length 1 sub
+		{
+			%[proc, source, i]
+			2 copy get
+			%[proc, source, i, value]
+			exch
+			%[proc, source, value, i]
+			3 index exec
+		} for
+	}
+	ifelse
+	pop
+	pop
+} def
 
-/d1 <<
-	/a 1
-	/b 1
-	/c 1
->> def
 
-/d2 <<
-	/d 2
-	/e 2
-	/c 2
->> def
+%[{array|string|dict}source, proc, {array|string|dict}result]
+/mappairs {
+	3 -1 roll
+	%[proc, result, source]
+		
+	%[source]
+	{
+		%[proc, result, thisproc, source, value, key]
+		5 index 
+		exec %proc
+		%[proc, result, thisproc, source, newvalue, newkey]
+		4 index 
+		3 1 roll
+		exch
+		put
+	}
+	forallpairs
+	%[proc, result]
+	exch pop
+} def
 
-d1 d2 copy
+/==dict {
+	(<<) ==
+	{
+		exch == ==
+	}forall
+	(>>) ==
+} def
 
-d2 {== ==} forall
+[1 2 3] 
+{
+	%[val, i]
+	exch
+	65 add
+	exch
+}
+3 string
+mappairs
+==
+
+<<
+	/0 3
+	/1 4
+	/2 5
+>>
+{
+	%[val, key]
+	2 string cvs cvi
+	exch
+	65 add
+	exch
+	
+}
+3 string
+mappairs
+==

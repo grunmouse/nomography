@@ -63,3 +63,78 @@
 	]
 } def
 %[array]
+
+% codePoints - массив кодовых точек преобразуемой строки
+% encoding - словарь, оторбражающий номер кодовой точки на значение байта однобайтовой кодировки
+%[codePoints, encoding]
+/utfToOneByte {
+	0 dict begin{
+		/encoding exch def
+		/arr exch def
+		[
+			arr
+			{
+				encoding exch
+				intcvn
+				safeGet
+			}
+			forall
+		]
+	}
+} def
+%[
+
+%[dict, key]
+/safeGet {
+	2 copy known not
+	{pop pop 0}
+	{get}
+	ifelse
+} def
+
+%преобразует число в имя, используется для словарей с числовыми ключами
+/intcvn {
+	16 string cvs cvn
+} def
+
+%[array]
+/invertArray {
+	0 dict begin
+		/arr exch def
+		/len arr length def
+		/result len dict def
+		0 1 len 1 sub
+		{
+			/i exch def
+			
+			result
+			arr i get intcvn
+			i
+			put
+		}
+		for
+		result
+	end
+} def
+
+%[arr]
+/makestring {
+	0 dict begin
+		/arr exch def
+		/len arr length def
+		/result len string def
+		0 1 len 1 sub
+		{
+			/i exch def
+			
+			result
+			i
+			arr i get 
+			put
+		}
+		for
+		result
+	end
+} def
+
+0 dict type ==
