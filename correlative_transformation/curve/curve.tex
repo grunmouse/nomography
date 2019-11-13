@@ -9,31 +9,57 @@ $$q:\:
 \end{array}
 \right.
 $$
-где функции $f(t)$, $g(t)$ гладкие. Обозначим их производные по $t$: $f' = \frac{\partial f}{\partial t}$, $g' = \frac{\partial g}{\partial t}$.
+где функции $f(t)$, $g(t)$ гладкие. Обозначим их производные по $t$: $\displaystyle f' = \frac{\partial f}{\partial t}$, $\displaystyle g' = \frac{\partial g}{\partial t}$.
 $$\mathbf{\bar{Q}}:
 \:
 f(t)\bar{x} + g(t)\bar{y} + 1 = 0.$$
 \subsubsection{Огибающая $\bar{q}$ семейства прямых $\mathbf{\bar{Q}}$}
-\paragraph{}Убедимся в существовании огибающей этого семейства прямых и найдём её.
-\subparagraph{Введём функцию:}
+\paragraph{Введём функцию:}
 $h(\bar{x}, \bar{y}, t) = f(t)\bar{x} + g(t)\bar{y} + 1.$
 
 Найдём её частные производные
-\subparagraph{}
-\begin{minipage}{0.3\textwidth}
-	$$\frac{\partial h}{\partial t} = f'\bar{x} + g'\bar{y};$$
-	$$\frac{\partial^2 h}{\partial t^2} = f''\bar{x} + g''\bar{y};$$
-\end{minipage}
-\begin{minipage}{0.3\textwidth}
-	$$\frac{\partial h}{\partial\bar{x}} = f;$$
-	$$\frac{\partial h}{\partial\bar{y}} = g;$$
-\end{minipage}
-\begin{minipage}{0.3\textwidth}
-	$$\frac{\partial^2 h}{\partial t \partial\bar{x}} = f';$$
-	$$\frac{\partial^2 h}{\partial t \partial\bar{y}} = g';$$
-\end{minipage}
+$$
+\begin{aligned}
+	\frac{\partial h}{\partial t} &= f'\bar{x} + g'\bar{y};
+	&
+	\frac{\partial h}{\partial\bar{x}} &= f;
+	&
+	\frac{\partial h}{\partial\bar{y}} &= g;
+	\\
+	\frac{\partial^2 h}{\partial t^2} &= f''\bar{x} + g''\bar{y};
+	&
+	\frac{\partial^2 h}{\partial t \partial\bar{x}} &= f';
+	&
+	\frac{\partial^2 h}{\partial t \partial\bar{y}} &= g'.
+\end{aligned}
+$$
 
-\subparagraph{Необходимое условие:}
+\paragraph{Параметрические уравнения огибающей определяются системой уравнений:}
+[http://www.math24.ru/огибающая-семейства-кривых.html]
+$$
+\left\{
+\begin{gathered}
+	h = 0, \\
+	\frac{\partial h}{\partial t} = 0;
+\end{gathered}
+\right.
+$$
+при дополнительном условии
+$$\frac{\partial^2 h}{\partial t^2} \ne 0.$$
+$$
+\frac{\partial^2 h}{\partial t^2} \ne 0;
+\Rightarrow
+f''\bar{x} + g''\bar{y} \ne 0;
+\Rightarrow
+\left[
+\begin{gathered}
+	f'' \ne 0, \\
+	g'' \ne 0;
+\end{gathered}
+\right.
+$$
+Это условие выполняется, если $q$ - не прямая.
+
 $$
 \left\{
 \begin{gathered}
@@ -61,11 +87,10 @@ $$
 \begin{pmatrix}
 	-1 \\
 	0
-\end{pmatrix}
+\end{pmatrix}.
 $$
 Применим метод Крамера:
-$$
-\Delta = 
+$$\Delta = 
 \begin{vmatrix}
 	f & g \\
 	f' & g'
@@ -78,60 +103,35 @@ $$\Delta_{\bar{x}} =
 	0 & g'
 \end{vmatrix}
 = - g';
-$$
-$$\Delta_{\bar{y}} = 
+\;
+\Delta_{\bar{y}} = 
 \begin{vmatrix}
 	f & -1 \\
 	f' & 0
 \end{vmatrix}
 = f';
 $$
-$$\bar{x} = \frac{\Delta_{\bar{x}}}{\Delta} = -\frac{g'}{f g' - g f'};$$
-$$\bar{y} = \frac{\Delta_{\bar{y}}}{\Delta} = \frac{f'}{f g' - g f'}.$$
-
-\subparagraph{Достаточное условие:}
 $$
-\begin{vmatrix}
-	\frac{\partial h}{\partial \bar{x}} & \frac{\partial h}{\partial \bar{y}} \\
-	\frac{\partial^2 h}{\partial t \partial\bar{x}} & \frac{\partial^2 h}{\partial t \partial\bar{y}}
-\end{vmatrix}
-\ne 0ж
-\Rightarrow
-\begin{vmatrix}
-	f & g \\
-	f' & g'
-\end{vmatrix}
-\ne 0;
-$$
-Это условие совпадает с условием разрешимости системы уравнений необходимого условия.
-$$
-\frac{\partial^2 h}{\partial t^2} \ne 0;
-\Rightarrow
-f''\bar{x} + g''\bar{y} \ne 0;
-\Rightarrow
-\left[
-\begin{gathered}
-	f'' \ne 0, \\
-	g'' \ne 0;
-\end{gathered}
-\right.
-$$
-Это условие выполняется, если $q$ - не прямая.
-\paragraph{Уравнение $\bar{q}$ в параметрическом виде}
-$$\bar{q}:
-\:
 \left\{
 \begin{gathered}
-	\bar{x} =  -\frac{g'}{f g' - g f'},\\
-	\bar{y} =  \frac{f'}{f g' - g f'}.
+	\bar{x} = \frac{\Delta_{\bar{x}}}{\Delta},\\
+	\bar{y} = \frac{\Delta_{\bar{y}}}{\Delta};
+\end{gathered}
+\right.
+\Rightarrow
+\left\{
+\begin{gathered}
+	\bar{x} = -\frac{g'}{\Delta},\\
+	\bar{y} = \frac{f'}{\Delta}.
 \end{gathered}
 \right.
 $$
+
 \subsubsection{Точка касания}
 \paragraph{Пусть} дана прямая $\bar{q}_s$, в которую отображается точка $Q_s (x(s); y(s))$. Найдём параметр $t$ точки её касания с кривой $\bar{q}$.
 $$x(s) = f(s);\; y(s)= g(s);$$
 $$\bar{q}_s: \: f(s)\bar{x} + g(s)\bar{y} + 1 = 0;$$
-$$-f(s)\frac{g'}{f g' - g f'} + g(s)\frac{f'}{f g' - g f'} + 1 = 0;$$
+$$-f(s)\frac{g'}{\Delta} + g(s)\frac{f'}{\Delta} + 1 = 0;$$
 $$\frac{g(s) f' - f(s) g'}{f g' - g f'} = -1;$$
 $$f(s) g' - g(s) f' = f g' - g f';$$
 $$(f(s) - f) g' = (g(s) - g) f';$$
@@ -173,29 +173,36 @@ $$
 $$\left\{
 \begin{gathered}
 	\bar{x} = \bar{\rho}\cos{\bar{\varphi}}, \\
-	\bar{y} = \bar{\rho}\sin{\bar{\varphi}};$$
+	\bar{y} = \bar{\rho}\sin{\bar{\varphi}}.
 \end{gathered}
 \right.
 $$
-Обозначим
-$$D = f g' - g f';$$
+
 $$\bar{\rho}^2 = \bar{x}^2 + \bar{y}^2;$$
-$$\bar{\rho}^2 = \frac{(g')^2 + (f')^2}{D^2};$$
-$$\bar{\rho} = \frac{\sqrt{(g')^2 + (f')^2}}{\abs{D}}.$$
+$$\bar{\rho}^2 = \frac{(g')^2 + (f')^2}{\Delta^2};$$
+$$\bar{\rho} = \frac{\sqrt{(g')^2 + (f')^2}}{\abs{\Delta}}.$$
 
 $$\bar{\varphi} = \sign{\bar{y}}\acos{\frac{\bar{x}}{\bar{\rho}}};$$
-$$\sign{\bar{y}} = \sign{\frac{f'}{D}} = \sign{f'}\sign{D};$$
+$$\sign{\bar{y}} = \sign{\frac{f'}{\Delta}} = \sign{f'}\sign{\Delta};$$
 
 $$\frac{\bar{x}}{\bar{\rho}} = \frac{
-	(-g')\abs{D}
+	(-g')\abs{\Delta}
 }{
-	D\sqrt{(g')^2 + (f')^2}
-} = -\frac{g'\sign{D}}{\sqrt{(g')^2 + (f')^2}};$$
-$$\bar{\varphi} = \sign{f'}\sign{D}\acos\brkt{-\frac{g'\sign{D}}{\sqrt{(g')^2 + (f')^2}}};$$
-$$\bar{\varphi} = \sign{f'}\sign{D}\left(\frac{\pi}{2} - \asin\brkt{-\frac{g'\sign{D}}{\sqrt{(g')^2 + (f')^2}}}\right);$$
-$$\bar{\varphi} = \sign{f'}\sign{D}\left(\frac{\pi}{2} + \sign{D}\asin{\frac{g'}{\sqrt{(g')^2 + (f')^2}}}\right);$$
-$$\bar{\varphi} = \sign{f'}\left(\frac{\pi}{2}\sign{D} + \asin{\frac{g'}{\sqrt{(g')^2 + (f')^2}}}\right).$$
+	\Delta\sqrt{(g')^2 + (f')^2}
+} = -\frac{g'\sign{\Delta}}{\sqrt{(g')^2 + (f')^2}};$$
+$$\bar{\varphi} = \sign{f'}\sign{\Delta}\acos\brkt{-\frac{g'\sign{\Delta}}{\sqrt{(g')^2 + (f')^2}}};$$
+$$\bar{\varphi} = \sign{f'}\sign{\Delta}\left(\frac{\pi}{2} - \asin\brkt{-\frac{g'\sign{\Delta}}{\sqrt{(g')^2 + (f')^2}}}\right);$$
+$$\bar{\varphi} = \sign{f'}\sign{\Delta}\left(\frac{\pi}{2} + \sign{\Delta}\asin{\frac{g'}{\sqrt{(g')^2 + (f')^2}}}\right);$$
+$$\bar{\varphi} = \sign{f'}\left(\frac{\pi}{2}\sign{\Delta} + \asin{\frac{g'}{\sqrt{(g')^2 + (f')^2}}}\right).$$
 
 Введём угол $\phi$;
 $$\sin\phi = \frac{g'}{\sqrt{(g')^2 + (f')^2}};$$
-$$\bar{\varphi} = \sign{f'}\left(\frac{\pi}{2}\sign{D} + \phi \right).$$
+$$\bar{\varphi} = \sign{f'}\left(\frac{\pi}{2}\sign{\Delta} + \phi \right).$$
+
+$$\left\{
+\begin{gathered}
+	\bar{\rho} = \frac{\sqrt{(g')^2 + (f')^2}}{\abs{\Delta}}\\
+	\bar{\varphi} = \sign{f'}\left(\frac{\pi}{2}\sign{\Delta} + \phi \right).
+\end{gathered}
+\right.
+$$

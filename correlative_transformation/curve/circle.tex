@@ -13,42 +13,48 @@ $$\bar{s}:
 \:
 \left\{
 \begin{gathered}
-	\bar{x} =  -\frac{g'}{f g' - g f'},\\
-	\bar{y} =  \frac{f'}{f g' - g f'}.
+	\bar{x} =  -\frac{g'}{\Delta},\\
+	\bar{y} =  \frac{f'}{\Delta}.
 \end{gathered}
 \right.
 $$
-Их общий знаменатель 
-$$f g' - g f' = (R\sin{t}+a)(-R\sin{t}) - (R\cos{t}+b) R\cos{t} = -\left(R^2\sin^2{t}+aR\sin{t} + R^2\cos^2{t} +bR\cos{t}\right);$$
-$$-(f g' - g f') = R^2 + aR\sin{t} + bR\cos{t};$$
-$$-\frac{f g' - g f'}{R} = R + a\sin{t} + b\cos{t};$$
+
+$$\Delta = f g' - g f' = (R\sin{t}+a)(-R\sin{t}) - (R\cos{t}+b) R\cos{t} $$
+$$\Delta = -\left(R^2\sin^2{t}+aR\sin{t} + R^2\cos^2{t} +bR\cos{t}\right);$$
+$$-\Delta = R^2 + aR\sin{t} + bR\cos{t};$$
+$$-\frac{\Delta}{R} = R + a\sin{t} + b\cos{t};$$
+Обозначим 
+$$D = -\frac{\Delta}{R}.$$
+
+\begin{multicols}{2}
+\subparagraph{}
+$$\bar{x} =  -\frac{g'}{\Delta};$$
+$$\bar{x} =  \frac{R \sin{t}}{\Delta};$$
+$$\bar{x} =  -\frac{\sin{t}}{D};$$
 
 \subparagraph{}
-\begin{minipage}{0.4\textwidth}
-$$\bar{x} =  -\frac{g'}{f g' - g f'};$$
-$$\bar{x} =  \frac{R \sin{t}}{f g' - g f'};$$
-$$\bar{x} =  -\frac{\sin{t}}{R + a\sin{t} + b\cos{t}};$$
-
-\end{minipage}
-\begin{minipage}{0.4\textwidth}
-$$\bar{y} =  \frac{f'}{f g' - g f'};$$
-$$\bar{y} =  \frac{R \cos{t}}{f g' - g f'};$$
-$$\bar{y} =  -\frac{\cos{t}}{R + a\sin{t} + b\cos{t}};$$
-
-\end{minipage}
+$$\bar{y} =  \frac{f'}{\Delta};$$
+$$\bar{y} =  \frac{R \cos{t}}{\Delta};$$
+$$\bar{y} =  -\frac{\cos{t}}{D};$$
+\end{multicols}
 
 \subparagraph{} Введём полярную систему координат
-$$\bar{x} = \bar{\rho}\cos{\bar{\varphi}},$$
-$$\bar{y} = \bar{\rho}\sin{\bar{\varphi}};$$
-$$\bar{\rho}^2 = \bar{x}^2 + \bar{y}^2,$$
-$$\bar{\varphi} = \sign{\bar{y}}\acos{\frac{\bar{x}}{\bar{\rho}}};$$
+$$\left\{
+\begin{gathered}
+	\bar{\rho} = \frac{\sqrt{(g')^2 + (f')^2}}{\abs{\Delta}},\\
+	\bar{\varphi} = \sign{f'}\left(\frac{\pi}{2}\sign{\Delta} + \phi \right).
+\end{gathered}
+\right.
+$$
 
-$$\bar{x}^2 + \bar{y}^2 
-= \frac{\sin^2{t} + \cos^2{t}}{\brkt{R + a\sin{t} + b\cos{t}}^2}
-= \frac{1}{\brkt{R + a\sin{t} + b\cos{t}}^2};$$
-$$\bar{\rho} = \frac{1}{\abs{R + a\sin{t} + b\cos{t}}}.$$
+$$\sqrt{(g')^2 + (f')^2} =  \sqrt{(R\cos{t})^2 + (R\sin{t})^2} = \sqrt{R^2\left( (\cos{t})^2 + (\sin{t})^2 \right)} = \abs{R};$$
+$$\bar{\rho} = \frac{\abs{R}}{\abs{\Delta}};$$
+$$\bar{\rho} = \frac{1}{\abs{D}}.$$
 
-Обозначим: $D = R + a\sin{t} + b\cos{t}$. От знака этой величины будут зависеть свойства кривой.
+$$\bar{\varphi} = \sign\brkt{R\cos{t}}\left(\frac{\pi}{2}\sign{\Delta} + \phi \right).$$
+
+$$\sign{\Delta} = -\sign{D}.$$
+
 
 $$\sign{y} = -\sign\brkt{\cos{t}}\sign{D};$$
 $$\frac{\bar{x}}{\bar{\rho}} = -\sign{D}\sin{t};$$
