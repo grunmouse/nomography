@@ -1,17 +1,28 @@
+\section{Утверждения}
+
 \subsection{Аксиомы}
-$$\forall A \; \exists \bar a^1:\: A \mapsto \bar a^1$$
+\paragraph{Закон преобразования}
+$$\forall A \; \exists \bar a:\: \bar a' =1;\; A \mapsto \bar a.$$
 
-\subsection{Теоремы, доказанные выше}
-%$$\forall A \; \exists \bathbr{A}
+\paragraph{Правила интерпретации}
+Для каждой точки существует пучок прямых с центром в ней.
+$$\forall A \; \exists \mathbf{A}: \forall a \in \mathbf{A} \; A \in a.$$
+Пучёк прямых эквивалентен точке, являющейся её центром.
+$$\mathbf{A}:\{ \exists A \forall a \in \mathbf{A} \; A \in a \} \Leftrightarrow A.$$
+Для каждой кривой существует множество касательных
+$$\forall c,\; c'\ne 1 \; \exists \mathbf{C} :\: \forall a \in \mathbf{C} \; a \overline\cap c.$$
+Множество прямых, имеющее огибающу, эквивалентно своей огибающей.
+$$\mathbf{A}:\{\exists c \forall a \in \mathbf{A} \; a \overline\cap c\} \Leftrightarrow c.$$
 
-\paragraph{} Точка $A$ отображается в прямую $\bar{a}$.
-\paragraph{} Точка $A$ может интерпретироваться как пучок прямых $\mathbf{A}$, с центром в этой точке.
-\paragraph{} Закон отображения - симмертричен. Повторное отображение даёт исходный объект.
-\paragraph{} Пучок параллельных прямых может интерпретироваться как несобственная точка
-\paragraph{} Прямая $a$ отображается в точку $\bar{A}$.
-\paragraph{} Прямая, проходящая через начало координат отображается в несобственную точку.
-\paragraph{} Начало координат отображается в несобственную прямую.
-\paragraph{} Кривая может интерпретироваться как геометрическое место множества точек или как огибающая множества прямых.
-\paragraph{} Кривая отображается в кривую, каждая касательная к которой является отображением точки исходнной кривой.
-\paragraph{} Если кривая $a \mapsto \bar{a}$, а прямая $b$ касается $a$ в точке $C$, то прямая $\bar{c}$ касается $\bar{a}$ в точке $\bar{B}$.
-\paragraph{} Если кривая $a$ $O \in a$, то кривая $\bar{a}$ имеет точку на бесконечности (касание с несобственной прямой).
+\subsection{Следствия}
+$$\forall a \; \exists \mathbf{\bar A} :\: a \mapsto \mathbf{\bar A}$$
+$$\forall a \; \exists \bar A: \: a \mapsto \bar A$$
+$$\exists a,\bar A: \: a \mapsto \bar A \: \Rightarrow \; \bar A \mapsto a.$$
+$$\forall a: O \in a; \; \exists \bar A :\: a \mapsto \bar A, \bar A \in \bar o.$$
+$$O \mapsto \bar o;\; \bar O \mapsto o.$$
+
+$$\exists c, \bar c:\: c \mapsto \bar c \Rightarrow \forall A \in c \exists \bar a:\: A \mapsto \bar a,\; \bar a \overline\cap \bar c$$
+$$\exists c, \bar c:\: c \mapsto \bar c;\; \exists A, a:\: a \overline\cap c = A \Rightarrow \exists \bar A, \bar a:\: A\mapsto \bar a, a \mapsto \bar A;\; \bar a \overline\cap \bar c = \bar A.$$
+%\paragraph{} Если кривая $a \mapsto \bar{a}$, а прямая $b$ касается $a$ в точке $C$, то прямая $\bar{c}$ касается $\bar{a}$ в точке $\bar{B}$.
+$$\exists c, \bar c:\: c \mapsto \bar c;\; O in \c \Righarrow \bar c \overline\cap \bar o$$.
+%\paragraph{} Если кривая $a$ $O \in a$, то кривая $\bar{a}$ имеет точку на бесконечности (касание с несобственной прямой).
