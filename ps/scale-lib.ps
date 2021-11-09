@@ -1,0 +1,247 @@
+{(../../ps-math/) stealfolder} /2sub ifnotkey
+{(../../ps-unicode/) stealfolder} /utf8show ifnotkey
+
+
+/fontheight { 
+	currentfont /ScaleMatrix get 3 get
+} def
+
+% Рисует штрих
+%
+% длина, угол, подпись
+% 
+/scalemark {
+	3 dict begin
+		/len exch def % длина штриха вверх
+		/dir exch def % направление возрастания шкалы
+		/str exch def % подпись штриха
+		
+		% предполагаем, что помеченная точка находится в 0;0.
+		
+		gsave
+			dir rotate
+			newpath
+			0 0 moveto
+			0 len lineto
+			gsave
+				stroke
+			grestore
+			currentpoint translate
+			dir neg rotate
+			
+	end
+} def
+
+
+% для строки возвращает пару длина высота шрифта
+% [str]
+/utf8stringsize {
+	utf8stringwidth pop
+	fontheight
+} def
+%[width, height]
+
+% Вектора, отображающие пару длина/высота строки на одну из координат точки прицеливания
+% {width height}
+/mnemonic 
+8 dict dup begin
+	/start { 0 0 } def % абсцисса начала строки
+	/first { 0 0.5 } def % абсцисса середины первого символа
+	/center { 0.5 0 } def % абсцисса середины строки
+	/last { 1 -0.5 } def % абсцисса середины последнего символа
+	/finish { 1 0 } def % абсцисса конца строки
+	/top {0 1} def % ордината линии прописных
+	/middle {0 0.5} def % средняя ордината
+	/bottom {0 0} def % ордината базовой линии
+end def
+
+%[width, height, xw, xh, yw, yh]
+/makepoint {
+	2 2index 2cdot % y
+	%[width, height, xw, xh, y]
+	5 1 roll
+	%[y, width, height, xw, xh]
+	2cdot % x
+	exch
+} def
+%[x, y]
+
+% Выводит строку, помещая переданную относительную позицию в строке с текущими координатами
+% [str, xw, xh, yw, yh]
+/posshow {
+	4 index
+	utf8stringsize
+	3 1 2roll makepoint
+	2neg rmoveto
+	utf8show
+} def
+
+% Расчитывает вектор отступа от текущей точки в точку, на границе прямоугольника.
+% @param w - ширина отступа
+% @param h - высота отступа
+% @param a - направление отступа в градусах
+%[w, h, a] - ширина, высота, направление отступа
+/sizevector {
+	0 dict begin 
+		/a exch def
+		/h exch def
+		/w exch def
+		/s a sin def
+		/c a cos def
+		s 0 eq {
+			w c mul
+			0
+		}
+		{
+			c 0 eq
+			{
+				0
+				h s mul
+			}
+			{
+				c s abs div
+				h mul
+				w abs_lim	
+				% x
+				s c abs div
+				w mul
+				h abs_lim	
+				%y
+			}
+			ifelse
+			
+		} ifelse
+	end
+} def
+%[x, y]
+
+% Ограничивает число x по модулю числом y
+% -y, при x < -y
+% х, при -y <= x <= y
+% y, при x > y
+% [x, y]
+/abs_lim {
+
+	2 dict begin
+		abs /y exch def
+		/x exch def
+		x y gt
+		{ y }
+		{
+			x y neg lt
+			{ y neg }
+			{ x }
+			ifelse
+		}
+		ifelse
+	end
+} def
+
+% Ограничивает число двумя лимитами
+% [x, min, max]
+/two_lim {
+	3 dict begin
+		/max exch def
+		/min exch def
+		/x exch def
+		x max gt
+		{ max }
+		{
+			x min lt
+			{ min }
+			{ x }
+			ifelse
+		}
+		ifelse
+	end
+} def
+
+% возвращает 
+% neg, при cond < 0
+% pos, при cond >= 0
+% [cond, neg, pos]
+/select_by_0 {
+	2 dict begin
+		/p exch def
+		/n exch def
+		0 lt
+		{ n }
+		{ p }
+		ifelse
+	end
+} def
+
+% Находит абсциссу точки на границе прямоугольной области при заданных ограничениях
+% cos, sin - указывают направление на искомую точку (направляющие косинусы)
+% xneg - абсцисса левой границы области
+% xpos - абсцисса правой границы области
+% yneg - ордината нижней границы области
+% ypos - ордината верхней границы области
+%[cos, sin, xneg, xpos, yneg, ypos] 
+/sizex {
+	0 dict begin
+		/ypos exch def
+		/yneg exch def
+		/xpos exch def
+		/xneg exch def
+		/s exch def
+		/c exch def
+	
+		c 0 eq {
+			0
+		}
+		{
+			s 0 eq
+			{
+				c xneg xpos select_by_0
+			}
+			{
+				/t c s div def % котангенс
+				/x
+					t
+					s yneg ypos select_by_0
+					mul
+				def
+				
+				x xneg xpos two_lim
+			}
+			ifelse
+		}
+		ifelse
+	end
+} def
+
+%Рассчитывает вектор смещения точки прицеливания относительно точки входа в прямоугольную область
+% a - курс входа
+% targetX, targetY - относительные координаты точки прицеливания внутри прямоугольной области (от её левого нижнего угла)
+% width, height - размеры прямоугольной области
+% [width, height, targetX, targetY, a]
+/bordervector {
+	0 dict begin
+		/a exch def
+		/target 2edef
+		/size 2edef
+		% рассчитаем границы
+		target 2neg
+		/yneg exch def
+		/xneg exch def
+		size target 2sub
+		/ypos exch def
+		/xpos exch def
+		
+		/s a sin neg def
+		/c a cos neg def
+		
+		/x
+			c s xneg xpos yneg ypos
+			sizex
+		def
+		
+		/y %та же функция зеркально относительно биссектрисы
+			s c yneg ypos xneg xpos
+			sizex
+		def
+		
+		x y
+	end
+} def

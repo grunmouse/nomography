@@ -8,15 +8,15 @@ $$A f_1 f_2 f_3 + B_1 f_2 f_3 + B_2 f_3 f_1 + B_3 f_1 f_2 + C_1 f_1 + C_2 f_2 + 
 $$
 	\left (
 		A f_1 f_2
-		+ B_1 f_2
-		+ B_2 f_1 
-		+ C_3 
+		+B_1 f_2
+		+B_2 f_1 
+		+C_3 
 	\right ) f_3
-	+ 	\left (
+	+\left (
 		B_3 f_1 f_2 
-		+ C_1 f_1 
-		+ C_2 f_2 
-		+ D 
+		+C_1 f_1 
+		+C_2 f_2 
+		+D 
 	\right )
 = 0$$
 
@@ -24,15 +24,15 @@ $$
 \left.
 \begin{array}{l}
 	A f_1 f_2
-	+ B_1 f_2
-	+ B_2 f_1 
-	+ C_3 
+	+B_1 f_2
+	+B_2 f_1 
+	+C_3 
 	= x,
 \\
 	B_3 f_1 f_2 
-	+ C_1 f_1 
-	+ C_2 f_2 
-	+ D 
+	+C_1 f_1 
+	+C_2 f_2 
+	+D 
 	= y;
 \end{array}
 \right \}

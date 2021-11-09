@@ -1,0 +1,67 @@
+%!PS-Adobe-3.0
+
+
+%ps2pdf -dNOSAFER 
+
+(../../ps-steal/steal.ps) run
+
+(../../ps-eskd/) stealfolder
+(../../ps-eskd-font/) stealfolder
+(./)(scale-lib.ps) steal
+
+/cross {
+	gsave
+		currentpoint translate
+		-5 0 moveto
+		5 0 lineto
+		0 -5 moveto
+		0 5 lineto
+		stroke
+	grestore
+} def
+
+
+in2mm
+
+%[str, xw, xh, yw, yh, a]
+/showlabel {
+	0 dict begin
+		/a exch def
+		/ty 2edef
+		/tx 2edef
+		%str
+		dup 
+		utf8stringsize % size
+		2dup
+		tx ty makepoint %size, target
+		2dup /target 2edef
+		a %угол
+		bordervector 2neg
+		rmoveto %cross
+		target 2neg
+		rmoveto utf8show
+	end
+} def
+
+0.2 setlinewidth
+/eskd-b-font  findfont	8 scalefont setfont
+
+
+100 140 moveto cross
+(Строка 3) 
+dup 
+utf8stringsize % size
+2dup
+0.5 0 0 0.5 makepoint %size, target
+2dup /target 2edef
+90 %угол
+bordervector 2neg
+%2pop
+rmoveto cross
+target 2neg
+rmoveto utf8show
+
+100 160 moveto cross
+(Строка 4) 0.5 0 0 0.5 90 showlabel
+
+showpage
