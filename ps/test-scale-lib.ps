@@ -37,7 +37,7 @@ in2mm
 		2dup /target 2edef
 		a %угол
 		bordervector 2neg
-		rmoveto %cross
+		rmoveto cross
 		target 2neg
 		rmoveto utf8show
 	end
@@ -63,5 +63,18 @@ rmoveto utf8show
 
 100 160 moveto cross
 (Строка 4) 0.5 0 0 0.5 90 showlabel
+
+100 100 moveto cross
+/a 30 def
+/b 10 def
+gsave
+	currentpoint translate
+	a rotate
+	5 0 lineto
+	2 0 rmoveto
+	b neg rotate
+	cross
+	(Строка 5) 0.5 0 0 0.5 b showlabel
+grestore
 
 showpage
