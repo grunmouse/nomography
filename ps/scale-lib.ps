@@ -6,32 +6,6 @@
 	currentfont /ScaleMatrix get 3 get
 } def
 
-% Рисует штрих
-%
-% длина, угол, подпись
-% 
-/scalemark {
-	3 dict begin
-		/len exch def % длина штриха вверх
-		/dir exch def % направление возрастания шкалы
-		/str exch def % подпись штриха
-		
-		% предполагаем, что помеченная точка находится в 0;0.
-		
-		gsave
-			dir rotate
-			newpath
-			0 0 moveto
-			0 len lineto
-			gsave
-				stroke
-			grestore
-			currentpoint translate
-			dir neg rotate
-			
-	end
-} def
-
 
 % для строки возвращает пару длина высота шрифта
 % [str]
@@ -45,11 +19,11 @@
 % {width height}
 /mnemonic 
 8 dict dup begin
-	/start { 0 0 } def % абсцисса начала строки
+	/left { 0 0 } def % абсцисса начала строки
 	/first { 0 0.5 } def % абсцисса середины первого символа
 	/center { 0.5 0 } def % абсцисса середины строки
 	/last { 1 -0.5 } def % абсцисса середины последнего символа
-	/finish { 1 0 } def % абсцисса конца строки
+	/right { 1 0 } def % абсцисса конца строки
 	/top {0 1} def % ордината линии прописных
 	/middle {0 0.5} def % средняя ордината
 	/bottom {0 0} def % ордината базовой линии
@@ -65,77 +39,6 @@ end def
 	exch
 } def
 %[x, y]
-
-% Выводит строку, помещая переданную относительную позицию в строке с текущими координатами
-% [str, xw, xh, yw, yh]
-/posshow {
-	4 index
-	utf8stringsize
-	3 1 2roll makepoint
-	2neg rmoveto
-	utf8show
-} def
-
-% Расчитывает вектор отступа от текущей точки в точку, на границе прямоугольника.
-% @param w - ширина отступа
-% @param h - высота отступа
-% @param a - направление отступа в градусах
-%[w, h, a] - ширина, высота, направление отступа
-/sizevector {
-	0 dict begin 
-		/a exch def
-		/h exch def
-		/w exch def
-		/s a sin def
-		/c a cos def
-		s 0 eq {
-			w c mul
-			0
-		}
-		{
-			c 0 eq
-			{
-				0
-				h s mul
-			}
-			{
-				c s abs div
-				h mul
-				w abs_lim	
-				% x
-				s c abs div
-				w mul
-				h abs_lim	
-				%y
-			}
-			ifelse
-			
-		} ifelse
-	end
-} def
-%[x, y]
-
-% Ограничивает число x по модулю числом y
-% -y, при x < -y
-% х, при -y <= x <= y
-% y, при x > y
-% [x, y]
-/abs_lim {
-
-	2 dict begin
-		abs /y exch def
-		/x exch def
-		x y gt
-		{ y }
-		{
-			x y neg lt
-			{ y neg }
-			{ x }
-			ifelse
-		}
-		ifelse
-	end
-} def
 
 % Ограничивает число двумя лимитами
 % [x, min, max]
@@ -219,29 +122,96 @@ end def
 /bordervector {
 	0 dict begin
 		/a exch def
-		/target 2edef
-		/size 2edef
 		% рассчитаем границы
-		target 2neg
+		2dup %target 
+		2neg
 		/yneg exch def
 		/xneg exch def
-		size target 2sub
+		%size target 
+		2sub
 		/ypos exch def
 		/xpos exch def
 		
 		/s a sin neg def
 		/c a cos neg def
 		
-		/x
-			c s xneg xpos yneg ypos
-			sizex
-		def
+		%x
+		c s xneg xpos yneg ypos
+		sizex
 		
-		/y %та же функция зеркально относительно биссектрисы
-			s c yneg ypos xneg xpos
-			sizex
-		def
+		%y 
+		%та же функция зеркально относительно биссектрисы
+		s c yneg ypos xneg xpos
+		sizex
 		
-		x y
 	end
+} def
+
+% Выводит строку в нужной позиции относительно текущей точки
+% xw, xh, yw, yh - матрица точки прицеливания
+% a - курс входа
+%[str, xw, xh, yw, yh, a]
+/showlabel {
+	0 dict begin
+		/a exch def
+		/ty 2edef
+		/tx 2edef
+		%str
+		dup 
+		utf8stringsize % size
+		2dup
+		tx ty makepoint %size, target
+		2dup /target 2edef
+		a %угол
+		bordervector 2neg
+		rmoveto %cross
+		target 2neg
+		rmoveto utf8show
+	end
+} def
+
+% Поворачивает координаты в направление dir, рисует штрих, а потом делает отступ
+% dir - направление штриха в градусах
+% length - длина штриха
+% space - длина отступа
+%[ space, length, dir ]
+/rendermark {
+	rotate
+	0 rlineto
+	0 rmoveto
+	gsave stroke grestore
+} def
+
+% Рисует надписанный штрих
+% str - строка
+% xw, xh, yw, yh - матрица точки прицеливания
+% a - курс входа в прямоугольную область
+% dir - направление штриха в градусах
+% length - длина штриха
+% space - длина отступа
+% [str, xw, xh, yw, yh, a, dir, space, length]
+/labelmark {
+	3 -1 roll
+	gsave
+		rotate
+		0 rlineto
+		0 rmoveto
+		gsave stroke grestore
+
+		dup neg rotate
+
+		showlabel
+	grestore
+} def
+
+% Рисует немой штрих
+% dir - направление штриха в градусах
+% length - длина штриха
+%[ length, dir ]
+/mutemark {
+	gsave
+		rotate
+		0 rlineto
+		stroke
+	grestore
 } def
