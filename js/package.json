@@ -7,5 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "@grunmouse/math-matrix": "link:..\\..\\math-matrix",
+    "@grunmouse/math-vector": "link:..\\..\\math-vector"
+  }
 }

@@ -1,0 +1,191 @@
+\section{Проективное преобразование по четырём точкам в общем виде}
+
+Обозначим однородние координаты  буквами $u$, $v$ и $w$, так, чтобы
+$$x = \frac{u}{w};\; y = frac{v}{w}.$$
+
+
+В однородных координатах:
+$$
+\lambda
+\begin{pmatrix}	u' \\ v' \\ w' \end{pmatrix}
+= 
+\begin{pmatrix}
+	c_{11} & c_{12} & c_{13} \\
+	c_{21} & c_{22} & c_{23} \\
+	c_{31} & c_{32} & c_{33}
+\end{pmatrix}
+\begin{pmatrix}	u \\ v \\ w \end{pmatrix}
+.
+$$
+
+
+Обозначим для краткости 
+\begin{eqnarray*}
+	c_x = \begin{pmatrix}	c_{11} \\  c_{12} \\ c_{13} \end{pmatrix};\; 
+	c_y = \begin{pmatrix}	c_{21} \\  c_{22} \\ c_{23} \end{pmatrix};\; 
+	c_w = \begin{pmatrix}	c_{31} \\  c_{32} \\ c_{33} \end{pmatrix};\; 
+\\
+\lambda
+\begin{pmatrix}	u' \\ v' \\ w' \end{pmatrix}
+= 
+\begin{pmatrix}
+	c_x^T\\
+	c_y^T\\
+	c_w^T
+\end{pmatrix}
+\begin{pmatrix}	u \\ v \\ w \end{pmatrix}
+\end{eqnarray*}
+
+Получим систему
+\begin{equation*}
+	\begin{cases}
+		A_x' = \frac{A_u'}{A_w'},\\
+		A_y' = \frac{A_v'}{A_w'},\\
+		B_x' = \frac{B_u'}{B_w'},\\
+		B_y' = \frac{B_v'}{B_w'},\\
+		C_x' = \frac{C_u'}{C_w'},\\
+		C_y' = \frac{C_v'}{C_w'},\\
+		D_x' = \frac{D_u'}{D_w'},\\
+		D_y' = \frac{D_v'}{D_w'};
+	\end{cases}
+	\Leftrightarrow
+	\begin{cases}
+		A_x' = \frac{\bar A\cdot c_x}{\bar A \cdot c_w},\\
+		A_y' = \frac{\bar A\cdot c_y}{\bar A \cdot c_w},\\
+		B_x' = \frac{\bar B\cdot c_x}{\bar B \cdot c_w},\\
+		B_y' = \frac{\bar B\cdot c_y}{\bar B \cdot c_w},\\
+		C_x' = \frac{\bar C\cdot c_x}{\bar C \cdot c_w},\\
+		C_y' = \frac{\bar C\cdot c_y}{\bar C \cdot c_w},\\
+		D_x' = \frac{\bar D\cdot c_x}{\bar D \cdot c_w},\\
+		D_y' = \frac{\bar D\cdot c_y}{\bar D \cdot c_w};
+	\end{cases}
+	\Leftrightarrow
+	\begin{cases}
+		A_x'\left( \bar A \cdot c_w \right) = \bar A\cdot c_x,\\
+		A_y'\left( \bar A \cdot c_w \right) = \bar A\cdot c_y,\\
+		B_x'\left( \bar B \cdot c_w \right) = \bar B\cdot c_x,\\
+		B_y'\left( \bar B \cdot c_w \right) = \bar B\cdot c_y,\\
+		C_x'\left( \bar C \cdot c_w \right) = \bar C\cdot c_x,\\
+		C_y'\left( \bar C \cdot c_w \right) = \bar C\cdot c_y,\\
+		D_x'\left( \bar D \cdot c_w \right) = \bar D\cdot c_x,\\
+		D_y'\left( \bar D \cdot c_w \right) = \bar D\cdot c_y;
+	\end{cases}	
+	\Leftrightarrow
+\end{equation*}
+\begin{equation*}
+	\Leftrightarrow
+	\begin{cases}
+		A_x'\left( A_u c_{31} + A_v c_{32} + A_w c_{33} \right) = A_u c_{11} + A_v c_{12} + A_w c_{13},\\
+		B_x'\left( B_u c_{31} + B_v c_{32} + B_w c_{33} \right) = B_u c_{11} + B_v c_{12} + B_w c_{13},\\
+		C_x'\left( C_u c_{31} + C_v c_{32} + C_w c_{33} \right) = C_u c_{11} + C_v c_{12} + C_w c_{13},\\
+		D_x'\left( D_u c_{31} + D_v c_{32} + D_w c_{33} \right) = D_u c_{11} + D_v c_{12} + D_w c_{13},\\
+		A_y'\left( A_u c_{31} + A_v c_{32} + A_w c_{33} \right) = A_u c_{21} + A_v c_{22} + A_w c_{23},\\
+		B_y'\left( B_u c_{31} + B_v c_{32} + B_w c_{33} \right) = B_u c_{21} + B_v c_{22} + B_w c_{23},\\
+		C_y'\left( C_u c_{31} + C_v c_{32} + C_w c_{33} \right) = C_u c_{21} + C_v c_{22} + C_w c_{23},\\
+		D_y'\left( D_u c_{31} + D_v c_{32} + D_w c_{33} \right) = D_u c_{21} + D_v c_{22} + D_w c_{23};
+	\end{cases}
+	\Leftrightarrow
+\end{equation*}
+\begin{equation*}
+	\Leftrightarrow
+	\begin{cases}
+		A_x'A_u c_{31} + A_x'A_v c_{32} + A_x' A_w c_{33} = A_u c_{11} + A_v c_{12} + A_w c_{13},\\
+		B_x'B_u c_{31} + B_x'B_v c_{32} + B_x' B_w c_{33} = B_u c_{11} + B_v c_{12} + B_w c_{13},\\
+		C_x'C_u c_{31} + C_x'C_v c_{32} + C_x' C_w c_{33} = C_u c_{11} + C_v c_{12} + C_w c_{13},\\
+		D_x'D_u c_{31} + D_x'D_v c_{32} + D_x' D_w c_{33} = D_u c_{11} + D_v c_{12} + D_w c_{13},\\
+		A_y'A_u c_{31} + A_y'A_v c_{32} + A_y' A_w c_{33} = A_u c_{21} + A_v c_{22} + A_w c_{23},\\
+		B_y'B_u c_{31} + B_y'B_v c_{32} + B_y' B_w c_{33} = B_u c_{21} + B_v c_{22} + B_w c_{23},\\
+		C_y'C_u c_{31} + C_y'C_v c_{32} + C_y' C_w c_{33} = C_u c_{21} + C_v c_{22} + C_w c_{23},\\
+		D_y'D_u c_{31} + D_y'D_v c_{32} + D_y' D_w c_{33} = D_u c_{21} + D_v c_{22} + D_w c_{23};
+	\end{cases}
+	\Leftrightarrow
+\end{equation*}
+\begin{equation*}
+	\Leftrightarrow
+	\begin{cases}
+		A_u c_{11} + A_v c_{12} + A_w c_{13} - A_x'A_u c_{31} - A_x'A_v c_{32} = A_x'A_w c_{33},\\
+		B_u c_{11} + B_v c_{12} + B_w c_{13} - B_x'B_u c_{31} - B_x'B_v c_{32} = B_x'B_w c_{33},\\
+		C_u c_{11} + C_v c_{12} + C_w c_{13} - C_x'C_u c_{31} - C_x'C_v c_{32} = C_x'C_w c_{33},\\
+		D_u c_{11} + D_v c_{12} + D_w c_{13} - D_x'D_u c_{31} - D_x'D_v c_{32} = D_x'D_w c_{33},\\
+		A_u c_{21} + A_v c_{22} + A_w c_{23} - A_y'A_u c_{31} - A_y'A_v c_{32} = A_y'A_w c_{33},\\
+		B_u c_{21} + B_v c_{22} + B_w c_{23} - B_y'B_u c_{31} - B_y'B_v c_{32} = B_y'B_w c_{33},\\
+		C_u c_{21} + C_v c_{22} + C_w c_{23} - C_y'C_u c_{31} - C_y'C_v c_{32} = C_y'C_w c_{33},\\
+		D_u c_{21} + D_v c_{22} + D_w c_{23} - D_y'D_u c_{31} - D_y'D_v c_{32} = D_y'D_w c_{33}.
+	\end{cases}
+\end{equation*}
+\begin{equation*}
+	\begin{pmatrix}
+		A_u & A_v & A_w & 0   & 0   & 0   & -A_x'A_u & -A_x'A_v \\
+		B_u & B_v & B_w & 0   & 0   & 0   & -B_x'B_u & -B_x'B_v \\
+		C_u & C_v & C_w & 0   & 0   & 0   & -C_x'C_u & -C_x'C_v \\
+		D_u & D_v & D_w & 0   & 0   & 0   & -D_x'D_u & -D_x'D_v \\
+		0   & 0   & 0   & A_u & A_v & A_w & -A_y'A_u & -A_y'A_v \\
+		0   & 0   & 0   & B_u & B_v & B_w & -B_y'B_u & -B_y'B_v \\
+		0   & 0   & 0   & C_u & C_v & C_w & -C_y'C_u & -C_y'C_v \\
+		0   & 0   & 0   & D_u & D_v & D_w & -D_y'D_u & -D_y'D_v
+	\end{pmatrix}
+	\begin{pmatrix}
+		c_{11}\\
+		c_{12}\\
+		c_{13}\\
+		c_{21}\\
+		c_{22}\\
+		c_{23}\\
+		c_{31}\\
+		c_{32}
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		A_x'A_w c_{33}\\
+		B_x'B_w c_{33}\\
+		C_x'C_w c_{33}\\
+		D_x'D_w c_{33}\\
+		A_y'A_w c_{33}\\
+		B_y'B_w c_{33}\\
+		C_y'C_w c_{33}\\
+		D_y'D_w c_{33}
+	\end{pmatrix}
+\end{equation*}
+
+Положим для упрощения, что 
+$$
+A_w = 1;\;
+B_w = 1;\;
+C_w = 1;\;
+D_w = 1;\;
+c_{33} = 1.
+$$
+
+\begin{equation}\label{proySys1}
+	\begin{pmatrix}
+		A_x & A_y & 1 & 0   & 0   & 0 & -A_x'A_x & -A_x'A_y \\
+		B_x & B_y & 1 & 0   & 0   & 0 & -B_x'B_x & -B_x'B_y \\
+		C_x & C_y & 1 & 0   & 0   & 0 & -C_x'C_x & -C_x'C_y \\
+		D_x & D_y & 1 & 0   & 0   & 0 & -D_x'D_x & -D_x'D_y \\
+		0   & 0   & 0 & A_x & A_y & 1 & -A_y'A_x & -A_y'A_y \\
+		0   & 0   & 0 & B_x & B_y & 1 & -B_y'B_x & -B_y'B_y \\
+		0   & 0   & 0 & C_x & C_y & 1 & -C_y'C_x & -C_y'C_y \\
+		0   & 0   & 0 & D_x & D_y & 1 & -D_y'D_x & -D_y'D_y
+	\end{pmatrix}
+	\begin{pmatrix}
+		c_{11}\\
+		c_{12}\\
+		c_{13}\\
+		c_{21}\\
+		c_{22}\\
+		c_{23}\\
+		c_{31}\\
+		c_{32}
+	\end{pmatrix}
+	=
+	\begin{pmatrix}
+		A_x'\\
+		B_x'\\
+		C_x'\\
+		D_x'\\
+		A_y'\\
+		B_y'\\
+		C_y'\\
+		D_y'
+	\end{pmatrix}
+\end{equation}

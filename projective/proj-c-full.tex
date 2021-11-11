@@ -1,0 +1,183 @@
+\section{Проецируем точку C}
+
+Задача: найти проективное преобразование, отображающее точку $C_a(C_{a,x};C_{a,y})$ в точку $C_p(1;1)$ и оставляющее на своих местах точки $A(0;0)$, $B(0;1)$ и $D(1;0)$
+
+Запишем
+$$ A_{p,x} = A_{a,x} = 0;\; A_{p,y} = A_{a,y} = 0;$$
+$$ B_{p,x} = B_{a,x} = 0;\; B_{p,y} = B_{a,y} = 1;$$
+$$ D_{p,x} = D_{a,x} = 1;\; D_{p,y} = D_{a,y} = 0;$$
+$$ C_{p,x} = 1;\; C_{p,y} = 1;$$
+
+
+Обозначим однородние координаты  буквами $u$, $v$ и $w$, так, чтобы
+$$x = \frac{u}{w};\; y = frac{v}{w}.$$
+
+
+В проективное преобразование однородных координатах:
+$$
+\lambda
+\begin{pmatrix}	u' \\ v' \\ w' \end{pmatrix}
+= 
+\begin{pmatrix}
+	c_{11} & c_{12} & c_{13} \\
+	c_{21} & c_{22} & c_{23} \\
+	c_{31} & c_{32} & c_{33}
+\end{pmatrix}
+\begin{pmatrix}	u \\ v \\ w \end{pmatrix}
+.
+$$
+
+Чтобы устранить неопределённость, примем $\lambda = 1$ и $c_{33} = 1$
+
+Составим систему
+\begin{equation*}
+	\begin{cases}
+		A_{p,x} = \frac{A_{p,u}}{A_{p,w}},\\
+		A_{p,y} = \frac{A_{p,v}}{A_{p,w}},\\
+		B_{p,x} = \frac{B_{p,u}}{B_{p,w}},\\
+		B_{p,y} = \frac{B_{p,v}}{B_{p,w}},\\
+		C_{p,x} = \frac{C_{p,u}}{C_{p,w}},\\
+		C_{p,y} = \frac{C_{p,v}}{C_{p,w}},\\
+		D_{p,x} = \frac{D_{p,u}}{D_{p,w}},\\
+		D_{p,y} = \frac{D_{p,v}}{D_{p,w}};
+	\end{cases}
+	\Leftrightarrow
+	\begin{cases}
+		A_{p,x} A_{p,w} = A_{p,u},\\
+		A_{p,y} A_{p,w} = A_{p,v},\\
+		B_{p,x} B_{p,w} = B_{p,u},\\
+		B_{p,y} B_{p,w} = B_{p,v},\\
+		C_{p,x} C_{p,w} = C_{p,u},\\
+		C_{p,y} C_{p,w} = C_{p,v},\\
+		D_{p,x} D_{p,w} = D_{p,u},\\
+		D_{p,y} D_{p,w} = D_{p,v};
+	\end{cases}
+	\Leftrightarrow
+\end{equation*}
+\begin{equation*}
+	\Leftrightarrow
+	\begin{cases}
+		A_{p,x}\left( A_{a,u} c_{31} + A_{a,v} c_{32} + A_{a,w} \right) = A_{a,u} c_{11} + A_{a,v} c_{12} + A_{a,w} c_{13},\\
+		B_{p,x}\left( B_{a,u} c_{31} + B_{a,v} c_{32} + B_{a,w} \right) = B_{a,u} c_{11} + B_{a,v} c_{12} + B_{a,w} c_{13},\\
+		C_{p,x}\left( C_{a,u} c_{31} + C_{a,v} c_{32} + C_{a,w} \right) = C_{a,u} c_{11} + C_{a,v} c_{12} + C_{a,w} c_{13},\\
+		D_{p,x}\left( D_{a,u} c_{31} + D_{a,v} c_{32} + D_{a,w} \right) = D_{a,u} c_{11} + D_{a,v} c_{12} + D_{a,w} c_{13},\\
+		A_{p,y}\left( A_{a,u} c_{31} + A_{a,v} c_{32} + A_{a,w} \right) = A_{a,u} c_{21} + A_{a,v} c_{22} + A_{a,w} c_{23},\\
+		B_{p,y}\left( B_{a,u} c_{31} + B_{a,v} c_{32} + B_{a,w} \right) = B_{a,u} c_{21} + B_{a,v} c_{22} + B_{a,w} c_{23},\\
+		C_{p,y}\left( C_{a,u} c_{31} + C_{a,v} c_{32} + C_{a,w} \right) = C_{a,u} c_{21} + C_{a,v} c_{22} + C_{a,w} c_{23},\\
+		D_{p,y}\left( D_{a,u} c_{31} + D_{a,v} c_{32} + D_{a,w} \right) = D_{a,u} c_{21} + D_{a,v} c_{22} + D_{a,w} c_{23};
+	\end{cases}
+\end{equation*}
+
+Однородные координаты точек $A_a$, $B_a$, $C_a$, $D_a$ получаем по схеме $u=x,\,v=y,\,w=1$.
+
+Подставим:
+\begin{equation*}
+	\begin{cases}
+		A_{p,x}\left( A_{a,x} c_{31} + A_{a,y} c_{32} + 1 \right) = A_{a,x} c_{11} + A_{a,y} c_{12} + c_{13},\\
+		B_{p,x}\left( B_{a,x} c_{31} + B_{a,y} c_{32} + 1 \right) = B_{a,x} c_{11} + B_{a,y} c_{12} + c_{13},\\
+		C_{p,x}\left( C_{a,x} c_{31} + C_{a,y} c_{32} + 1 \right) = C_{a,x} c_{11} + C_{a,y} c_{12} + c_{13},\\
+		D_{p,x}\left( D_{a,x} c_{31} + D_{a,y} c_{32} + 1 \right) = D_{a,x} c_{11} + D_{a,y} c_{12} + c_{13},\\
+		A_{p,y}\left( A_{a,x} c_{31} + A_{a,y} c_{32} + 1 \right) = A_{a,x} c_{21} + A_{a,y} c_{22} + c_{23},\\
+		B_{p,y}\left( B_{a,x} c_{31} + B_{a,y} c_{32} + 1 \right) = B_{a,x} c_{21} + B_{a,y} c_{22} + c_{23},\\
+		C_{p,y}\left( C_{a,x} c_{31} + C_{a,y} c_{32} + 1 \right) = C_{a,x} c_{21} + C_{a,y} c_{22} + c_{23},\\
+		D_{p,y}\left( D_{a,x} c_{31} + D_{a,y} c_{32} + 1 \right) = D_{a,x} c_{21} + D_{a,y} c_{22} + c_{23};
+	\end{cases}
+\end{equation*}
+
+Подставим значения:
+\begin{equation*}
+	\begin{cases}
+		0 = c_{13},\\
+		0 = c_{23},\\
+		0 = c_{12} + c_{13},\\
+		c_{32} + 1 = c_{22} + c_{23},\\
+		C_{a,x} c_{31} + C_{a,y} c_{32} + 1 = C_{a,x} c_{11} + C_{a,y} c_{12} + c_{13},\\
+		C_{a,x} c_{31} + C_{a,y} c_{32} + 1 = C_{a,x} c_{21} + C_{a,y} c_{22} + c_{23},\\
+		c_{31} + 1 = c_{11} + c_{13},\\
+		0 = c_{21} + c_{23};
+	\end{cases}
+\end{equation*}
+
+Отсюда имеем очевидные 
+\begin{equation*}
+	\begin{cases}
+		c_{12} = 0,\\
+		c_{13} = 0,\\
+		c_{21} = 0,\\
+		c_{23} = 0;\\
+	\end{cases}
+\end{equation*}
+и подсистему
+\begin{equation*}
+	\begin{cases}
+		c_{11} - c_{31} = 1,\\
+		c_{22} - c_{32} = 1,\\
+		C_{a,x} c_{11} - C_{a,x} c_{31} - C_{a,y} c_{32} = 1,\\
+		C_{a,y} c_{22} - C_{a,x} c_{31} - C_{a,y} c_{32} = 1;\\
+	\end{cases}
+\end{equation*}
+Решим её методом Гаусса:
+$$
+\begin{pmatrix}
+	1 & 0 & -1 & 0\\
+	0 &	1 &  0 & -1\\
+	C_{a,x} &  0 & - C_{a,x} & - C_{a,y}\\
+	0 &	C_{a,y} & - C_{a,x} & - C_{a,y}\\
+\end{pmatrix}
+\begin{pmatrix}
+	c_{11} \\ c_{22} \\ c_{31} \\ c_{32}
+\end{pmatrix}
+=
+\begin{pmatrix}
+	1 \\ 1 \\ 1 \\ 1
+\end{pmatrix}
+$$
+
+$$
+\begin{pmatrix}
+	1       & 0       & -1       &  0       & \vrule & 1\\
+	0       & 1       &  0       & -1       & \vrule & 1\\
+	C_{a,x} & 0       & -C_{a,x} & -C_{a,y} & \vrule & 1\\
+	0       & C_{a,y} & -C_{a,x} & -C_{a,y} & \vrule & 1\\
+\end{pmatrix}
+$$
+$$
+\begin{pmatrix}
+	1 & 0 & -1       &  0       & \vrule & 1\\
+	0 & 1 &  0       & -1       & \vrule & 1\\
+	0 & 0 &  0       & -C_{a,y} & \vrule & 1 - C_{a,x}\\
+	0 & 0 & -C_{a,x} & 0        & \vrule & 1 - C_{a,y}\\
+\end{pmatrix}
+$$
+$$
+\begin{pmatrix}
+	1 & 0 & -1 &  0 & \vrule & 1\\
+	0 & 1 &  0 & -1 & \vrule & 1\\
+	0 & 0 &  0 &  1 & \vrule & -\frac{1 - C_{a,x}}{C_{a,y}}\\
+	0 & 0 &  1 &  0 & \vrule & -\frac{1 - C_{a,y}}{C_{a,x}}\\
+\end{pmatrix}
+$$
+
+И получим:
+$$
+\begin{cases}
+	c_{12} = 0,\\
+	c_{13} = 0,\\
+	c_{21} = 0,\\
+	c_{23} = 0,\\
+	c_{32} = \frac{C_{a,x} - 1}{C_{a,y}},\\
+	c_{31} = \frac{C_{a,y} - 1}{C_{a,x}},\\
+	c_{11} = c_{31} - 1,\\
+	c_{22} = c_{32} - 1;
+\end{cases}
+$$
+
+Тогда:
+$$
+\Psi = 
+\begin{pmatrix}
+	\frac{C_{a,y}-1}{C_{a,x}} + 1 & 0 & 0 \\
+	0 & \frac{C_{a,x}-1}{C_{a,y}}+1 & 0 \\
+	\frac{C_{a,y}-1}{C_{a,x}} & \frac{C_{a,x}-1}{C_{a,y}} & 1
+\end{pmatrix}
+$$

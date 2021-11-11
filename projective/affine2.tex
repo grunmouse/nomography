@@ -1,0 +1,59 @@
+\section{Аффинное преобразование, перемещающее две точки в (0;1) и (1;0)}
+
+Даны точки $B_s(B_{s,x}, B_{s,y})$ и $D_s(D_{s,x}, D_{s,y})$.
+
+Найти аффинное преобразование их в точки $B_a(0, 1)$ и $D_a(1, 0)$.
+
+$$
+\begin{pmatrix}
+	1 & 0 \\
+	0 & 1
+\end{pmatrix}
+= 
+M
+\begin{pmatrix}
+	D_{s,x} & B_{s,x} \\
+	D_{s,y} & B_{s,y}
+\end{pmatrix}
+$$
+
+$$
+\begin{pmatrix}
+	D_{s,x} & B_{s,x} \\
+	D_{s,y} & B_{s,y}
+\end{pmatrix} ^ {-1}
+= 
+M
+$$
+
+
+$$
+	M = 
+	\begin{pmatrix}
+		\frac{B_{s_y}}{B_{s,y} D_{s,x}-B_{s,x} D_{s,y}} & -\frac{B_{s,x}}{B_{s,y} D_{s,x}-B_{s,x} D_{s,y}}\\
+		-\frac{D_{s,y}}{B_{s,y} D_{s,x}-B_{s,x} D_{s,y}} & \frac{D_{s,x}}{B_{s,y} D_{s,x}-B_{s,x} D_{s,y}}
+	\end{pmatrix}
+$$
+
+Обозначим
+
+$$ \det DB = B_{s,y} D_{s,x}-B_{s,x} D_{s,y}$$
+
+$$
+	M = 
+	\begin{pmatrix}
+		\frac{B_{s_y}}{det DB} & -\frac{B_{s,x}}{det DB}\\
+		-\frac{D_{s,y}}{det DB} & \frac{D_{s,x}}{det DB}
+	\end{pmatrix}
+$$
+
+Расширенная матрица:
+
+$$
+	\Alpha = 
+	\begin{pmatrix}
+		\frac{B_{s_y}}{det DB} & -\frac{B_{s,x}}{det DB} & 0 \\
+		-\frac{D_{s,y}}{det DB} & \frac{D_{s,x}}{det DB} & 0 \\
+		0 & 0 & 1
+	\end{pmatrix}.
+$$

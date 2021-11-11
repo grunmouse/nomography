@@ -1,0 +1,73 @@
+\section{Порядок рещения}
+
+Дано: $\vec A$, $\vec B$, $\vec C$, $\vec D$.
+
+$$S = \begin{pmatrix}
+	1 & 0 & -A_x \\
+	0 & 1 & -A_y \\
+	0 & 0 & 1
+\end{pmatrix}.$$
+
+$$S^{-1} = \begin{pmatrix}
+	1 & 0 & A_x \\
+	0 & 1 & A_y \\
+	0 & 0 & 1
+\end{pmatrix}.$$
+
+$$\vec B_s = \vec B - \vec A;$$
+$$\vec C_s = \vec C - \vec A;$$
+$$\vec D_s = \vec D - \vec A.$$
+
+$$ \Delta = B_{s,y} D_{s,x}-B_{s,x} D_{s,y} = \vec D_s \times \vec B_s;$$
+
+$$	\Alpha = 
+	\begin{pmatrix}
+		\frac{B_{s_y}}{\Delta} & -\frac{B_{s,x}}{\Delta} & 0 \\
+		-\frac{D_{s,y}}{\Delta} & \frac{D_{s,x}}{\Delta} & 0 \\
+		0 & 0 & 1
+	\end{pmatrix}.
+$$
+
+$$ \Alpha^{-1} =
+\begin{pmatrix}
+	D_{s,x} & B_{s,x} & 0 \\
+	D_{s,y} & B_{s,y} & 0 \\
+	0 & 0 & 1
+\end{pmatrix}.
+$$
+
+$$C_a = \Alpha \cdot S \cdot C.$$
+
+$$\Psi = 
+\begin{pmatrix}
+	\frac{C_{a,y}-1}{C_{a,x}} + 1 & 0 & 0 \\
+	0 & \frac{C_{a,x}-1}{C_{a,y}}+1 & 0 \\
+	\frac{C_{a,y}-1}{C_{a,x}} & \frac{C_{a,x}-1}{C_{a,y}} & 1
+\end{pmatrix}
+$$
+
+$$\Psi^{-1} =
+\begin{pmatrix}
+	\frac{C_{a,x}}{C_{a,y}+C_{a,x}-1} & 0 & 0\\
+	0 & \frac{C_{a,y}}{C_{a,y}+C_{a,x}-1} & 0\\
+	-\frac{C_{a,y}-1}{C_{a,y}+C_{a,x}-1} & -\frac{C_{a,x}-1}{C_{a,y}+C_{a,x}-1} & 1
+\end{pmatrix}
+$$
+
+$$R = \Psi \cdot A \cdot S $$.
+
+Теперь для любой точки $H$
+$$\begin{pmatrix}
+	H_{p,u}\\
+	H_{p,v}\\
+	H_{p,w}
+\end{pmatrix}
+= R
+\begin{pmatrix}
+	H_{x}\\
+	H_{y}\\
+	1
+\end{pmatrix}
+$$
+$$H_{p,x} = \frac{H_{p,u}}{H_{p,w}};$$
+$$H_{p,y} = \frac{H_{p,v}}{H_{p,w}};$$

@@ -1,0 +1,39 @@
+load("eigen");
+
+A:transpose(matrix([A_x,A_y,1]))$
+B:transpose(matrix([B_x,B_y,1]))$
+C:transpose(matrix([C_x,C_y,1]))$
+D:transpose(matrix([D_x,D_y,1]))$
+
+S:matrix([1,0,-A_x],[0,1,-A_y],[0,0,1])$
+
+B_s:S.B$
+D_s:S.D$
+
+B_sx:B_s[1][1]$
+B_sy:B_s[2][1]$
+D_sx:D_s[1][1]$
+D_sy:D_s[2][1]$
+
+Delta:B_sy*D_sx-B_sx*D_sy$
+
+Alpha:matrix(
+    [B_sy/Delta, -B_sx/Delta, 0],
+    [-D_sy/Delta, D_sx/Delta, 0],
+    [0,0,1]
+)$
+
+C_a:Alpha.S.C$
+
+C_ax:C_a[1][1]$
+C_ay:C_a[2][1]$
+
+Psi:matrix(
+    [(C_ay-1)/C_ax + 1, 0, 0],
+    [0, (C_ax-1)/C_ay+1, 0],
+    [(C_ay-1)/C_ax, (C_ax-1)/C_ay, 1]
+)$
+
+R:Psi.Alpha.S$
+
+
