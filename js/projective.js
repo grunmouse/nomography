@@ -49,12 +49,12 @@ function getConvertMatrix(from, to){
 
 function makefun({R}){
 	return function(P){
-		console.log();
-		console.log('source ',P)
+		//console.log();
+		//console.log('source ',P)
 		const Pp = R.mul(P.toProjective());
-		console.log('proj ',Pp)
+		//console.log('proj ',Pp)
 		const ret = Pp.fromProjective();
-		console.log('result ',ret);
+		//console.log('result ',ret);
 		return ret;
 	}
 }
@@ -62,5 +62,5 @@ function makefun({R}){
 module.exports = {
 	algo,
 	makefun,
-	convertMatrix
+	getConvertMatrix
 };

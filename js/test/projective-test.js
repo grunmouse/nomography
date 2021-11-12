@@ -15,11 +15,12 @@ describe('algo', ()=>{
 		const invR = R.inverse();
 		const fun = makefun(param);
 		
-		console.log(param);
 		assert(fun(A).eq(Vector.O(2)));
 		assert(fun(B).eq(new Vector(0, 1)));
 		assert(fun(D).eq(new Vector(1, 0)));
-		//assert(fun(C).eq(new Vector(1, 1)));
+		let diff = Math.max(...fun(C).sub(new Vector(1, 1)).map(Math.abs));
+		console.log(diff);
+		assert(Math.log(diff)<10);
 		
 		console.log(invR.mul(new Vector(1, 0, 1)).fromProjective()); 
 	});
