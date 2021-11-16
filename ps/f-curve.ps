@@ -1,0 +1,62 @@
+{(../../ps-math/) stealfolder} /2sub ifnotkey
+
+%
+%
+% [fun, a, b, step]
+/f-curve {
+	0 dict begin
+		/step exch def
+		/b exch def
+		/a exch def
+		/fun exch def
+		
+		newpath
+		mark
+		a a fun
+		b b fun
+		moveto
+		/currentargument exch def
+		
+		{
+			dup mark eq {exit} if % если дошли до маркера - выходим из цикла
+			% [t, Px, Py]
+			2dup currentpoint 2sub 2abs %считаем расстояние следующей точки от текущей
+			% [t, Px, Py, l]
+			step le
+			{
+				% расстояние не больше шага, рисуем линию
+				% [t, Px, Py]
+				lineto
+				/currentargument exch def
+				%[]
+			}
+			{
+				% расстояние больше шага, добавляем промежуточную точку
+				% add middle arg
+				% [t, Px, Py]
+				2 index currentargument add 2 div % рассчитаем средний аргумент
+				dup fun
+				% [t, Px, Py, t', Px', Py']
+			}
+			ifelse
+			
+		} loop
+		
+		pop % вытряхнуть маркер
+		stroke
+	end
+} def
+
+% [fun, a, b]
+/f-line {
+	0 dict begin
+		/b exch def
+		/a exch def
+		/fun exch def
+		
+		newpath
+		a fun moveto
+		b fun lineto
+		stroke
+	end
+} def

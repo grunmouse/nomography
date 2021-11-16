@@ -215,3 +215,22 @@ end def
 		stroke
 	grestore
 } def
+
+% Выводит надпись к точке
+% str - строка
+% xw, xh, yw, yh - матрица точки прицеливания
+% a - курс входа в прямоугольную область
+% dir - направление отступа в градусах
+% space - длина отступа
+% [str, xw, xh, yw, yh, a, dir, space]
+/label {
+	exch
+	gsave
+		rotate
+		0 rmoveto
+
+		dup neg rotate
+
+		showlabel
+	grestore
+} def
