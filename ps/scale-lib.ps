@@ -2,18 +2,7 @@
 {(../../ps-unicode/) stealfolder} /utf8show ifnotkey
 
 
-/fontheight { 
-	currentfont /ScaleMatrix get 3 get
-} def
 
-
-% для строки возвращает пару длина высота шрифта
-% [str]
-/utf8stringsize {
-	utf8stringwidth pop
-	fontheight
-} def
-%[width, height]
 
 % Вектора, отображающие пару длина/высота строки на одну из координат точки прицеливания
 % {width height}

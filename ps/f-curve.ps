@@ -60,3 +60,19 @@
 		stroke
 	end
 } def
+
+% Угол положительного направления шкалы, в градусах
+% [fun, t, dt]
+/df-angle {
+	0 dict begin
+		/dt exch def
+		/t exch def
+		/fun exch def
+		
+		t dt add fun
+		t fun
+		2sub
+		exch
+		atan
+	end
+} def
