@@ -1,7 +1,18 @@
 {(../../ps-math/) stealfolder} /2sub ifnotkey
-{(../../ps-unicode/) stealfolder} /utf8show ifnotkey
+%{(../../ps-unicode/) stealfolder} /stringsize ifnotkey
 
+{
+	/fontheight { 
+		currentfont /ScaleMatrix get 3 get
+	} bind def
 
+	% для строки возвращает пару длина высота шрифта
+	% [str]
+	/stringsize {
+		stringwidth pop
+		fontheight
+	} bind def
+} /stringsize ifnotkey
 
 
 % Вектора, отображающие пару длина/высота строки на одну из координат точки прицеливания
@@ -147,7 +158,7 @@ end def
 		/tx 2edef
 		%str
 		dup 
-		utf8stringsize % size
+		stringsize % size
 		2dup
 		tx ty makepoint %size, target
 		2dup /target 2edef
@@ -155,7 +166,7 @@ end def
 		bordervector 2neg
 		rmoveto %cross
 		target 2neg
-		rmoveto utf8show
+		rmoveto show
 	end
 } def
 
