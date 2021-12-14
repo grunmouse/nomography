@@ -1,0 +1,193 @@
+%[nom, den]
+/part {
+	0 dict begin
+		/den exch def
+		/nom exch def
+		
+		/element-fontscale 0.7 def %размер шрифта элементов по сравнению с основным
+		
+		
+		% рабочие процедуры
+		
+		% отрисовать себя в текущей позиции
+		% сместить текущую точку вправо на ширину отрисованного
+		/doshow {
+			0 dict begin
+				/fraction-line-y fontheight 2 div def % положение черты деления от базовой линии
+				/fraction-line-width fontheight 14 div def % положение черты деления от базовой линии
+				/space fontheight 0.25 mul def %отступы от черты деления и удлинение её концов
+				
+				/font currentfont def
+				currentfont element-fontscale scalefont setfont %уменишить шрифт
+					
+					%рассчитываем характерные размеры элементов
+					nom struct-baseline
+					/nom-baseline exch def
+					nom struct-size
+					/nom-height exch def
+					/nom-width exch def
+
+					den struct-baseline
+					/den-baseline exch def
+					den struct-size
+					/den-height exch def
+					/den-width exch def
+					
+					
+					%рассчитываем общую ширину дроби
+					/width 
+						nom-width
+						den-width
+						max
+						exch
+						pop
+						
+						space 2 mul add
+					def
+					
+					gsave
+						currentpoint 
+						translate
+
+						%Устанавливаем начало координат на начало линии
+						0 fraction-line-y 
+						translate
+
+						fraction-line-width setlinewidth
+						0 0 moveto
+						width 0 lineto
+						stroke
+
+						%Устанавливаем начало координат на середину линии
+						width 2 div 0
+						translate
+
+						nom-width 2 div neg
+						space nom-baseline add %отступаем отступ и высоту базовой линии
+						moveto
+						nom struct-show
+						
+						den-width 2 div neg
+						space den-height den-baseline sub add neg %отступаем отступ и разность высоты и базовой линии
+						moveto
+						den struct-show
+						
+					grestore
+				font setfont
+				
+				width 0 rmoveto
+			end
+		} def
+		
+		%вернуть свои высоту, ширину и положение базовой линии
+		/getparams {
+			0 dict begin
+				/fraction-line-y fontheight 2 div def % положение черты деления от базовой линии
+				/space fontheight 0.25 mul def %отступы от черты деления и удлинение её концов
+
+				/font currentfont def
+					currentfont element-fontscale scalefont setfont %уменишить шрифт
+					
+					%рассчитываем характерные размеры элементов
+					nom struct-size
+					/nom-height exch def
+					/nom-width exch def
+
+					den struct-size
+					/den-height exch def
+					/den-width exch def
+					
+					%рассчитываем общую ширину дроби
+					/width 
+						nom-width
+						den-width
+						max
+						exch
+						pop
+						
+						space 2 mul add
+					def
+					
+					/height
+						nom-height
+						den-height
+						add
+						space 2 mul add
+					def
+					
+					/baseline
+						den-height space add
+						fraction-line-y sub
+					def
+				font setfont
+				
+				width heigth baseline
+			end
+		} def
+				%вернуть свои высоту и ширину
+		/getsize {
+			0 dict begin
+				/fraction-line-y fontheight 2 div def % положение черты деления от базовой линии
+				/space fontheight 0.25 mul def %отступы от черты деления и удлинение её концов
+
+				/font currentfont def
+					currentfont element-fontscale scalefont setfont %уменишить шрифт
+					
+					%рассчитываем характерные размеры элементов
+					nom struct-size
+					/nom-height exch def
+					/nom-width exch def
+
+					den struct-size
+					/den-height exch def
+					/den-width exch def
+					
+					%рассчитываем общую ширину дроби
+					/width 
+						nom-width
+						den-width
+						max
+						exch
+						pop
+						
+						space 2 mul add
+					def
+					
+					/height
+						nom-height
+						den-height
+						add
+						space 2 mul add
+					def
+				
+				font setfont
+				
+				width height
+			end
+		} def
+		
+		%вернуть положение своей базовой линии (от низа контейнера)
+		/getbaseline {
+			0 dict begin
+				/fraction-line-y fontheight 2 div def % положение черты деления от базовой линии
+				/space fontheight 0.25 mul def %отступы от черты деления и удлинение её концов
+
+				/font currentfont def
+					currentfont element-fontscale scalefont setfont %уменишить шрифт
+					
+					%рассчитываем характерные размеры элементов
+					den struct-size
+					/den-height exch def
+					/den-width exch def
+					
+				font setfont
+				
+				den-height space add
+				fraction-line-y sub
+
+			end			
+		} def
+		
+		currentdict % вернуть полученный словарь - он теперь структура
+	end
+} def

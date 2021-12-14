@@ -1,0 +1,97 @@
+%[f]
+/grid-env {
+	0 dict begin
+		/fun exch def % Запоминаемая функция бинарного поля
+		
+		% функция первого аргумента при заданном втором
+		/fun-b {
+			0 dict begin
+				/b exch def
+				[ 
+					b 
+					/fun cvx
+				] cvx
+			end
+		} def
+		
+		/fun-a {
+			0 dict begin
+				/a exch def
+				[
+					a 
+					exch cvx
+					fun cvx
+				] cvx
+			end
+		} def
+		
+		/step 1 def % Шаг черчения кривой
+		/tostring {12 string cvs} def % Функция преобразования значения параметра в текст подписи
+		/target { 0.5 0 0 0.5} def % Матрица расчёта точки прицеливания
+		/space 2 def
+		/level0 0.4 def
+		/dlevel 0.1 def
+		/a {} def % функция, вычисляющая курс входа по направлению штриха
+		
+		%[level]
+		/line-width {
+			dlevel mul neg
+			level0 add
+		} def
+		
+		% Установить новую матрицу точки прицеливания
+		/settarget {
+			4 array astore cvx 
+			/target exch def
+		} def
+		
+		/setlimits-a {
+			/max-a exch def
+			/min-a exch def
+		} def
+
+		/setlimits-a {
+			/max-b exch def
+			/min-b exch def
+		} def
+		
+		%[a, level]
+		/curve-a {
+			gsave
+				line-width setlinewidth
+				fun-a
+				min-b max-b f-curve
+			grestore
+		} def
+		
+		%[b, level]
+		/curve-b {
+			gsave
+				line-width setlinewidth
+				fun-b
+				min-b max-b f-curve
+			grestore
+		} def
+
+		
+		% Перейти в точку, заданную агрументом функции
+		/movepos {
+			2dup /currentarg 2edef % Сохраняем текущий аргумент
+			fun moveto
+		} def
+		
+		% Элементы оператора относительных координат точки прицеливания
+		/left { 0 0 } def % абсцисса начала строки
+		/first { 0 0.5 } def % абсцисса середины первого символа
+		/center { 0.5 0 } def % абсцисса середины строки
+		/last { 1 -0.5 } def % абсцисса середины последнего символа
+		/right { 1 0 } def % абсцисса конца строки
+		/top {0 1} def % ордината линии прописных
+		/middle {0 0.5} def % средняя ордината
+		/bottom {0 0} def % ордината базовой линии
+
+
+	
+		currentdict
+	end
+} def

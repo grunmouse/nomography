@@ -1,3 +1,5 @@
+const {Vector2} = require('@grunmouse/math-vector');
+
 /**
  * Функция для заданной шкалы находит точки для надписанных и немых штрихов 
  * @param f : Object - уравнение шкалы
@@ -30,7 +32,9 @@ function createTable(f, D, step){
 	return table;
 }
 
-
+/**
+ * Генерирует пары значений массива от начала к концу
+ */
 function * pairsUp(arr){
 	let len = arr.length-1;
 	for(let i=0; i<len; ++i){
@@ -39,6 +43,9 @@ function * pairsUp(arr){
 	}	
 }
 
+/**
+ * Генерирует пары значений массива от конца к началу
+ */
 function * pairsDown(arr){
 	let len = arr.length-1;
 	for(let i=len-1; i--;){

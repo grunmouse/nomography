@@ -1,0 +1,230 @@
+\section{Уравнение 3-го номографического порядка в общем виде}
+
+\begin{equation}\label{eq3full}
+A f_1 f_2 f_3 + B_1 f_2 f_3 + B_2 f_3 f_1 + B_3 f_1 f_2 + C_1 f_1 + C_2 f_2 + C_3 f_3 + D = 0.
+\end{equation}
+
+Выносим за скобки одну из функций, чтобы получить линейное уравнение
+
+$$
+	\left (
+		A f_1 f_2
+		+B_1 f_2
+		+B_2 f_1 
+		+C_3 
+	\right ) f_3
+	+\left (
+		B_3 f_1 f_2 
+		+C_1 f_1 
+		+C_2 f_2 
+		+D 
+	\right )
+= 0$$
+
+\begin{eqnarray}
+	A f_1 f_2
+	+B_1 f_2
+	+B_2 f_1 
+	+C_3 
+	= x.\label{eq3x}\\
+	B_3 f_1 f_2 
+	+C_1 f_1 
+	+C_2 f_2 
+	+D 
+	= y.\label{eq3y}\\
+	f_3 x + y = 0.\label{eq3line}
+\end{eqnarray}
+
+Из (\ref{eq3x}):
+\begin{equation}\label{f_2_x}
+	f_2 = - \frac{B_2 f_1 + C_3 - x}{Af_1 + B_1}.
+\end{equation}
+Подставив (\ref{f_2_x}) в (\ref{eq3y}):
+
+$$-B_3 f_1 \frac{B_2 f_1 + C_3 - x}{Af_1 + B_1}
++ C_1 f_1 - C_2 \frac{B_2 f_1 + C_3 - x}{Af_1 + B_1} + D = y;$$
+$$-B_3 f_1 \brkt{B_2 f_1 + C_3 - x}
++ C_1 f_1 \brkt{Af_1 + B_1} - C_2 \brkt{B_2 f_1 + C_3 - x} + D\brkt{Af_1 + B_1} 
+= y\brkt{Af_1 + B_1};$$
+$$-B_3 f_1 \brkt{B_2 f_1 + C_3} + B_3 f_1 x
++ C_1 f_1 \brkt{A f_1 + B_1} 
+- C_2 \brkt{B_2 f_1 + C_3} + C_2 x
++ D\brkt{Af_1 + B_1} 
+= y\brkt{Af_1 + B_1};$$
+$$\brkt{B_3 f_1 + C_2} x
+- \brkt{Af_1 + B_1}y
+- B_2 B_3 f_1^2 - B_3 C_3 f_1
+- B_2 C_2 f_1 - C_2 C_3 
++ A C_1 f_1^2 + B_1 C_1 f_1
++ A D f_1 + B_1 D
+= 0;$$
+\begin{equation}
+\brkt{B_3 f_1 + C_2} x
+- \brkt{Af_1 + B_1}y
++ \brkt{A C_1 - B_2 B_3} f_1^2 
++ \brkt{
+A D
++ B_1 C_1
+- B_3 C_3
+- B_2 C_2 
+} f_1 
++ \brkt{B_1 D
+- C_2 C_3}.
+\end{equation}
+
+Аналогично из (\ref{eq3y}):
+\begin{equation}\label{f_1_y}
+	f_1 = - \frac{C_2 f_2 + D - y}{B_3 f_2 + C_1}.
+\end{equation}
+
+Подставив (\ref{f_1_y}) в (\ref{eq3x}):
+$$
+- A f_2 \frac{C_2 f_2 + D - y}{B_3 f_2 + C_1}
+- B_2 \frac{C_2 f_2 + D - y}{B_3 f_2 + C_1}
++ B_1 f_2
++ C_3 
+= x;
+$$
+$$
+- A f_2 \brkt{C_2 f_2 + D - y}
+- B_2 \brkt{C_2 f_2 + D - y}
++ B_1 f_2\brkt{B_3 f_2 + C_1}
++ C_3 \brkt{B_3 f_2 + C_1}
+- x\brkt{B_3 f_2 + C_1}
+= 0;
+$$
+$$
+\brkt{A f_2 + B_2} y
+- \brkt{B_3 f_2 + C_1}x
++ \brkt{
+- C_2 A 
++ B_1 B_3
+}f_2^2 
++ \brkt{
+- A D 
+- B_2 C_2 
++ B_1 C_1
++ B_3 C_3 
+} f_2
++ \brkt{C_1 C_3 - B_2 D}
+= 0;
+$$
+\begin{equation}
+\brkt{B_3 f_2 + C_1}x
+- \brkt{A f_2 + B_2} y
++ \brkt{ C_2 A - B_1 B_3 }f_2^2 
++ \brkt{A D + B_2 C_2 - B_1 C_1 - B_3 C_3 } f_2
++ \brkt{B_2 D - C_1 C_3}
+= 0.
+\end{equation}
+
+Обозначим:
+\begin{eqnarray}
+m_1 = \brkt{A C_1 - B_2 B_3} f_1^2 
+	+ \brkt{A D + B_1 C_1 - B_2 C_2 - B_3 C_3} f_1 
+	+ \brkt{B_1 D - C_2 C_3}.\\
+m_2 = \brkt{A C_2 - B_1 B_3}f_2^2 
+	+ \brkt{A D + B_2 C_2 - B_1 C_1 - B_3 C_3} f_2
+	+ \brkt{B_2 D - C_1 C_3}.
+\end{eqnarray}
+
+Тогда форма ($\pi$):
+\begin{equation}
+	\begin{vmatrix}
+		\brkt{B_3 f_1 + C_2} &
+		- \brkt{Af_1 + B_1} &
+		m_1 \\
+		\brkt{B_3 f_2 + C_1} &
+		-\brkt{A f_2 + B_2} &
+		m_2 \\
+		f_3 & 1 & 0
+	\end{vmatrix} = 0.
+\end{equation}
+
+Обозначим:
+\begin{eqnarray}
+	k_1 = \frac{m_1}{A f_1 + B_1};\\
+	k_2 = \frac{m_2}{A f_2 + B_2}.
+\end{eqnarray}
+
+и разделим строки на элементы второго столбца:
+$$
+	\begin{vmatrix}
+		- \frac{B_3 f_1 + C_2}{A f_1 + B_1} &
+		1 &
+		-k_1 \\
+		-\frac{B_3 f_2 + C_1}{A f_2 + B_2} &
+		1 &
+		-k_2 \\
+		f_3 & 1 & 0
+	\end{vmatrix} = 0;
+	\Leftrightarrow
+	\begin{vmatrix}
+		\frac{B_3 f_1 + C_2}{A f_1 + B_1} &
+		1 &
+		k_1 \\
+		\frac{B_3 f_2 + C_1}{A f_2 + B_2} &
+		1 &
+		k_2 \\
+		-f_3 & 1 & 0
+	\end{vmatrix} = 0.
+$$
+Переставим столбцы и получим форму ($\pi'$)
+\begin{equation}\label{pi'}
+	\begin{vmatrix}
+		\frac{B_3 f_1 + C_2}{A f_1 + B_1} & k_1 & 1 \\
+		\frac{B_3 f_2 + C_1}{A f_2 + B_2} & k_2 & 1 \\
+		-f_3 & 0 & 1
+	\end{vmatrix} = 0.
+\end{equation}
+
+Отсюда уравнения шкал:
+\begin{eqnarray}
+	z_1:\: x = \frac{B_3 f_1 + C_2}{A f_1 + B_1},\, y = \frac{m_1}{A f_1 + B_1}.\label{z1t}\\
+	z_2:\: x = \frac{B_3 f_2 + C_1}{A f_2 + B_2},\, y = \frac{m_2}{A f_2 + B_2}.\label{z2t}\\
+	z_3:\: x = -f_3,\ y = 0.\label{z3t}
+\end{eqnarray}
+
+Определим форму шкал.
+Исключим $f_1$ из (\ref{z1t}):
+$$x = \frac{B_3 f_1 + C_2}{A f_1 + B_1};$$
+$$A x f_1 - B_3 f_1 = - B_1 x + C_2;$$
+$$f_1  = \frac{C_2 - B_1 x}{A x - B_3}.$$
+$$y = \frac{
+	\brkt{A C_1 - B_2 B_3} \brkt{\frac{C_2 - B_1 x}{A x - B_3}}^2 
+	+ \brkt{ A D + B_1 C_1 - B_3 C_3 - B_2 C_2 } \frac{C_2 - B_1 x}{A x - B_3} 
+	+ \brkt{B_1 D - C_2 C_3}
+}{A \frac{C_2 - B_1 x}{A x - B_3} + B_1};$$
+
+\begin{multline}\label{eqz1}
+\brkt{A C_2 - B_1 B_3}
+\cdot \\ \cdot
+\brkt{
+B_3(y-D)+x(A(D-y)+B_3 C_3-B_2 C_2-B_1 C_1)+(B_1 B_2-A C_3) x^2+C_1 C_2
+}  = 0.
+\end{multline}
+
+Аналогично, исключим $f_2$ из (\ref{z2t}):
+
+\begin{multline}\label{eqz2}
+\brkt{A C_1 - B_2 B_3}
+\cdot \\ \cdot
+\brkt{
+B_3(y-D)+x(A(D-y)+B_3 C_3 - B_2 C_2 - B_1 C_1)+(B_1 B_2-A C_3) x^2+C_1 C_2
+}  = 0.
+\end{multline}
+
+Если $\brkt{A C_2 - B_1 B_3} \ne 0$ $\brkt{A C_1 - B_2 B_3} \ne 0$, то (\ref{eqz1}) и (\ref{eqz2}) можно разделить на эти множители и получить одно и тоже уравнение
+
+$$B_3(y-D)+x(A(D-y)+B_3 C_3-B_2 C_2-B_1 C_1)+(B_1 B_2-A C_3) x^2+C_1 C_2 = 0;$$
+$$B_3 y - B_3 D+x(A D - A y + B_3 C_3 - B_2 C_2 - B_1 C_1)+(B_1 B_2-A C_3) x^2+C_1 C_2 = 0;$$
+\begin{equation}
+(B_1 B_2-A C_3) x^2 
+- A x y 
++ (A D + B_3 C_3 - B_2 C_2 - B_1 C_1)x
++ B_3 y 
+- B_3 D + C_1 C_2 
+= 0.
+\end{equation}
+
+Т.е. у шкал $z_1$ и $z_2$ общий носитель - кривая второй степени.

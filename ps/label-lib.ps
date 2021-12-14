@@ -1,33 +1,6 @@
 {(../../ps-math/) stealfolder} /2sub ifnotkey
-%{(../../ps-unicode/) stealfolder} /stringsize ifnotkey
+(struct-show.ps) stealfile
 
-{
-	/fontheight { 
-		currentfont /ScaleMatrix get 3 get
-	} bind def
-
-	% для строки возвращает пару длина высота шрифта
-	% [str]
-	/stringsize {
-		stringwidth pop
-		fontheight
-	} bind def
-} /stringsize ifnotkey
-
-
-% Вектора, отображающие пару длина/высота строки на одну из координат точки прицеливания
-% {width height}
-/mark-target 
-8 dict dup begin
-	/left { 0 0 } def % абсцисса начала строки
-	/first { 0 0.5 } def % абсцисса середины первого символа
-	/center { 0.5 0 } def % абсцисса середины строки
-	/last { 1 -0.5 } def % абсцисса середины последнего символа
-	/right { 1 0 } def % абсцисса конца строки
-	/top {0 1} def % ордината линии прописных
-	/middle {0 0.5} def % средняя ордината
-	/bottom {0 0} def % ордината базовой линии
-end def
 
 %[width, height, xw, xh, yw, yh]
 /makepoint {
@@ -158,7 +131,7 @@ end def
 		/tx 2edef
 		%str
 		dup 
-		stringsize % size
+		struct-size % size
 		2dup
 		tx ty makepoint %size, target
 		2dup /target 2edef
@@ -166,21 +139,10 @@ end def
 		bordervector 2neg
 		rmoveto %cross
 		target 2neg
-		rmoveto show
+		rmoveto struct-show
 	end
 } def
 
-% Поворачивает координаты в направление dir, рисует штрих, а потом делает отступ
-% dir - направление штриха в градусах
-% length - длина штриха
-% space - длина отступа
-%[ space, length, dir ]
-/rendermark {
-	rotate
-	0 rlineto
-	0 rmoveto
-	gsave stroke grestore
-} def
 
 % Рисует надписанный штрих
 % str - строка
@@ -190,7 +152,7 @@ end def
 % length - длина штриха
 % space - длина отступа
 % [str, xw, xh, yw, yh, a, dir, space, length]
-/labelmark {
+/point-detail {
 	3 -1 roll
 	gsave
 		rotate
@@ -204,17 +166,6 @@ end def
 	grestore
 } def
 
-% Рисует немой штрих
-% dir - направление штриха в градусах
-% length - длина штриха
-%[ length, dir ]
-/mutemark {
-	gsave
-		rotate
-		0 rlineto
-		stroke
-	grestore
-} def
 
 
 % Рисует надпись к точке
@@ -224,7 +175,7 @@ end def
 % dir - направление отступа в градусах
 % space - длина отступа
 % [str, xw, xh, yw, yh, a, dir, space]
-/label {
+/point-label {
 	exch
 	gsave
 		rotate

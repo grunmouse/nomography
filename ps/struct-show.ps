@@ -1,0 +1,42 @@
+{
+	/fontheight { 
+		currentfont /ScaleMatrix get 3 get
+	} bind def
+
+	% для строки возвращает пару длина высота шрифта
+	% [str]
+	/stringsize {
+		stringwidth pop
+		fontheight
+	} bind def
+} /stringsize ifnotkey
+
+
+
+/struct-show {
+	dup type /dicttype eq
+	{begin doshow end}
+	{
+		show
+	}
+	ifelse
+} def
+
+/struct-size {
+	dup type /dicttype eq
+	{begin getsize end}
+	{
+		stringsize
+	}
+	ifelse
+	
+} def
+
+/struct-baseline {
+	dup type /dicttype eq
+	{begin getbaseline end}
+	{pop 0}
+	ifelse
+} def
+
+(struct/part.ps) stealfile

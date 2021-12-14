@@ -1,0 +1,83 @@
+/* [wxMaxima batch file version 1] [ DO NOT EDIT BY HAND! ]*/
+/* [ Created with wxMaxima version 19.05.7 ] */
+/* [wxMaxima: input   start ] */
+eq3x:A*f_1*f_2+B_1*f_2+B_2*f_1+C_3-x;
+eq3y:B_3*f_1*f_2+C_1*f_1+C_2*f_2+D-y;
+eq1:eliminate([eq3x, eq3y],[f_2])[1];
+eq2:eliminate([eq3x, eq3y],[f_1])[1];
+m_1:coeff(coeff(expand(eq1),y,0),x,0);
+m_2:coeff(coeff(expand(eq2),y,0),x,0);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+coeff(m_1,f_1,2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+coeff(m_1,f_1,1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+coeff(m_1,f_1,0);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+coeff(m_2,f_2,2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+coeff(m_2,f_2,1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+coeff(m_2,f_2,0);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+z1x:(B_3*f_1+C_2)/(A*f_1+B_1)-x_1;
+z1y:m_1/(A*f_1+B_1)-y_1;
+z2x:(B_3*f_2 + C_1)/(A*f_2+B_2)-x_1;
+z2y:m_2/(A*f_2+B_2)-y_1;
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eqz1:eliminate([z1x,z1y],[f_1])[1];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+load("f90")$
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f90(eqz1);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eqz2:eliminate([z2x,z2y],[f_2])[1];
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+f90(eqz2);
+/* [wxMaxima: input   end   ] */
+
+
+/* [wxMaxima: input   start ] */
+eqz1/eqz2;
+/* [wxMaxima: input   end   ] */
+
+
+
+/* Old versions of Maxima abort on loading files that end in a comment. */
+"Created with wxMaxima 19.05.7"$

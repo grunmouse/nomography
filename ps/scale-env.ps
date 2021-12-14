@@ -1,0 +1,190 @@
+{(../../ps-math/) stealfolder} /auto-diff-lib ifnotkey
+
+
+/safetype {
+	count
+	0 eq
+	{
+		/nulltype
+	}
+	{
+		dup type
+	}
+	ifelse
+} def
+
+% Рисует штрих, заданный полярными координатами
+% dir - направление штриха в градусах
+% length - длина штриха
+%[ length, dir ]
+/polar-line {
+	gsave
+		rotate
+		0 rlineto
+		stroke
+	grestore
+} def
+
+
+%[f]
+/scale-env {
+	0 dict begin
+		/fun exch def % Запоминаемая функция шкалы
+		/diff {
+			%[x]
+			[ exch 1 ] % [ [x 1] ]
+			auto-diff-lib begin
+				fun
+			end
+		} def % [ [f(x) f'(x)] ] - массив из пары значений: функции и первой производной
+		
+		/curve-dir {
+			%[x]
+			[ exch diff]
+			{1 get} forall
+			exch atan
+		} def % - положительное направление кривой в данной точке
+
+		/step 1 def % Шаг черчения кривой
+		/tostring {12 string cvs} def % Функция преобразования значения параметра в текст подписи
+		/target { 0.5 0 0 0.5} def % Матрица расчёта точки прицеливания
+		/space 2 def
+		/level0 5 def
+		/dlevel 1.5 def
+		/a {} def % функция, вычисляющая курс входа по направлению штриха
+		
+		%[level]
+		/mark-len {
+			dlevel mul neg
+			level0 add
+		} def
+		
+		% Установить новую матрицу точки прицеливания
+		/settarget {
+			4 array astore cvx 
+			/target exch def
+		} def
+		
+		% [x0, x1]
+		/line {
+			/fun load 3 1 roll
+			f-line
+		} def
+
+		/curve {
+			/fun load 3 1 roll
+			step f-curve
+		} def
+		
+		% Перейти в точку, заданную агрументом функции
+		/movepos {
+			dup /currentarg exch def % Сохраняем текущий аргумент
+			fun moveto
+		} def
+		
+		% Элементы оператора относительных координат точки прицеливания
+		/left { 0 0 } def % абсцисса начала строки
+		/first { 0 0.5 } def % абсцисса середины первого символа
+		/center { 0.5 0 } def % абсцисса середины строки
+		/last { 1 -0.5 } def % абсцисса середины последнего символа
+		/right { 1 0 } def % абсцисса конца строки
+		/top {0 1} def % ордината линии прописных
+		/middle {0 0.5} def % средняя ордината
+		/bottom {0 0} def % ордината базовой линии
+
+		/rat {
+			3 dict begin
+				/den exch def
+				/nom exch def
+				[
+					[ den /mul /round /cvi nom /mod 0 /eq ] {cvx} forall 
+				] cvx
+			end
+		} def
+
+		/value {
+			0 dict begin
+				/x exch def
+				x movepos
+				safetype /stringtype eq
+					{}
+					{currentarg tostring}
+					ifelse
+				target 
+				currentarg dir dup a exch
+				space level0 point-detail
+			end
+		} def		
+		
+		/struct-value {
+			0 dict begin
+				/x exch def
+				x movepos
+				target 
+				currentarg dir dup a exch
+				space level0 point-detail
+			end
+		} def
+		
+		%[x, level]
+		/mutemark {
+			mark-len % x, len
+			exch % len, x
+			dup movepos
+			dir	% len, dir
+			polar-line
+		} def
+		
+		
+		% [ x1 x2 c level cond ]
+		/mutegroup2 {
+			0 dict begin
+				/cond exch def
+				/level exch def
+				/c exch def
+				/x2 exch def
+				/x1 exch def
+				
+				
+				gsave
+				x1 c add
+				c
+				x2
+				{
+					%[x]
+					dup % [x, x]
+					cond {level  1 sub}{ level} ifelse % [x, level]
+					mutemark
+				} for
+				grestore
+			end
+		} def				
+		
+		% [ x1 x2 c level ]
+		/mutegroup {
+			0 dict begin
+				mark-len /len exch def
+				/c exch def
+				/x2 exch def
+				/x1 exch def
+				
+				gsave
+				x1 c add
+				c
+				x2
+				{
+					%[x]
+					/x exch def
+					
+					x movepos
+					len
+					x dir
+					polar-line
+				} for
+				grestore
+			end
+		} def		
+	
+		currentdict
+	end
+} def
