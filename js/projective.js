@@ -46,7 +46,7 @@ function algo(A, B, C, D){
 }
 
 /**
- * Генерирует матрицу, отображающую четвёрку точек from в цепочку точек to
+ * Генерирует матрицу, отображающую четвёрку точек from в четвёрку точек to
  * @param from : Array[4]<Vector2>
  * @param to : Array[4]<Vector2>
  * @return SquareMatrix3

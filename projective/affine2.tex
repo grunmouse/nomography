@@ -37,23 +37,31 @@ $$
 
 Обозначим
 
-$$ \det DB = B_{s,y} D_{s,x}-B_{s,x} D_{s,y}$$
+$$ \Delta = B_{s,y} D_{s,x}-B_{s,x} D_{s,y}$$
 
 $$
 	M = 
 	\begin{pmatrix}
-		\frac{B_{s_y}}{det DB} & -\frac{B_{s,x}}{det DB}\\
-		-\frac{D_{s,y}}{det DB} & \frac{D_{s,x}}{det DB}
+		\frac{B_{s_y}}{\Delta} & -\frac{B_{s,x}}{\Delta}\\
+		-\frac{D_{s,y}}{\Delta} & \frac{D_{s,x}}{\Delta}
 	\end{pmatrix}
 $$
 
 Расширенная матрица:
 
+$$ \Alpha^{-1} =
+\begin{pmatrix}
+	D_{s,x} & B_{s,x} & 0 \\
+	D_{s,y} & B_{s,y} & 0 \\
+	0 & 0 & 1
+\end{pmatrix}.
+$$
+
 $$
 	\Alpha = 
 	\begin{pmatrix}
-		\frac{B_{s_y}}{det DB} & -\frac{B_{s,x}}{det DB} & 0 \\
-		-\frac{D_{s,y}}{det DB} & \frac{D_{s,x}}{det DB} & 0 \\
+		\frac{B_{s_y}}{\Delta} & -\frac{B_{s,x}}{\Delta} & 0 \\
+		-\frac{D_{s,y}}{\Delta} & \frac{D_{s,x}}{\Delta} & 0 \\
 		0 & 0 & 1
 	\end{pmatrix}.
 $$
