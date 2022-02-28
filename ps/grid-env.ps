@@ -1,3 +1,5 @@
+%создаёт словарь с функциями для рисования бинарной	сетки для функции f
+% @param f - функция, отображающая пару аргументов на пару координат: a b fun -> x y
 %[f]
 /grid-env {
 	0 dict begin
@@ -14,6 +16,7 @@
 			end
 		} def
 		
+		%функция второго аргумента при заданном первом
 		/fun-a {
 			0 dict begin
 				/a exch def
@@ -45,16 +48,19 @@
 			/target exch def
 		} def
 		
+		% Установить пределы первого аргумента
 		/setlimits-a {
 			/max-a exch def
 			/min-a exch def
 		} def
 
+		% Установить пределы второго аргумента
 		/setlimits-a {
 			/max-b exch def
 			/min-b exch def
 		} def
 		
+		%Рисовать изолинию первого аргумента
 		%[a, level]
 		/curve-a {
 			gsave
@@ -64,6 +70,7 @@
 			grestore
 		} def
 		
+		%Рисовать изолинию второго аргумента
 		%[b, level]
 		/curve-b {
 			gsave
