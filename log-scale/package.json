@@ -1,0 +1,15 @@
+{
+  "name": "log-scale",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build-nomo-1.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grunmouse/format-recursive": "link:..\\..\\format-recursive",
+    "@grunmouse/nomography": "link:..\\js"
+  }
+}

@@ -1,4 +1,5 @@
 const {Vector2} = require('@grunmouse/math-vector');
+const {flags} = require('@grunmouse/binary');
 
 /**
  * Функция для заданной шкалы находит точки для надписанных и немых штрихов 
@@ -16,6 +17,162 @@ const {Vector2} = require('@grunmouse/math-vector');
 
 
 
+/**
+ * Строит таблицу значений для надписанных штрихов
+ */
+function createLabeled(f, D, levels, labeldist){
+	levels = levels.slice(0);
+	levels.sort((a,b)=>(a-b));
+	//Находим наибольших полезный шаг штрихов
+	let max, min, step;
+	for(let i = levels.length; i--;){
+		let lev = levels[i];
+		max = Math.floor(D[1] / lev) * lev;
+		min = Math.ceil(D[0] / lev) * lev;
+		let count = (max - min)/lev + 1 + (min!=D[0]) + (max!=D[1]);
+		if(count > 2){
+			step = lev;
+			break;
+		}
+	}
+	if(!step){
+		console.warn('Not allowed level for D: ' + D);
+		return D.map((a)=>({a, x:f.x(a), y:f.y(a)}));
+	}
+	
+	//Получаем отрезки
+	let args = [];
+	for(let x = min; x<=max; x+=step){
+		args.push(x);
+	}
+	if(max<D[1]){
+		args.push(D[1]);
+	}
+	if(min>D[0]){
+		args.unshift(D[0]);
+	}
+	
+	let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
+	
+	for(let group of unfullGroupDown(points, labeldist.max)){
+		
+		let index = points.indexOf(group[0]), length = group.length;
+
+		group = handleUnfull(group, labeldist.min);
+		
+		points.splice(index, length, ...group);
+	}
+	
+	if(points.length === 2){
+		console.warn('Not points inner D: ' + D);
+		return points;
+	}
+	
+	for(let pair of pairsDown(points)){
+		let [cur, next, index] = pair;
+		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+		if(d > labeldist.max){
+			let group = createLabeled(f, [cur.a, next.a], levels, labeldist);
+			points.splice(index, 2, ...group);
+		}
+	}
+	
+	return points;
+}
+
+function handleUnfull(group, min){
+	const length = group.length;
+	const first = group[0];
+	const last = group[length-1];
+	const count = BigInt(length-2);
+	const over = 1n<<count;
+
+	let minmaxD = Infinity, selgroup = group;
+	const debugMap = [];
+	byvalue:for(let mask = 0n; mask<over; ++mask){
+		let points = [first].concat(flags.flagNumbers(mask).map((i)=>(group[Number(i)+1])), last);
+		let maxD = 0;
+		//Контроль дистанций
+		for(let pair of pairsUp(points)){
+			let [cur, next, i] = pair;
+			let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+			if(d<min){
+				continue byvalue;
+			}
+			if(d >= maxD){
+				maxD = d;
+			}
+		}
+		debugMap.push([points, maxD]);
+		//Поиск наименьшей наибольшей дистанции
+		if(maxD < minmaxD){
+			minmaxD = maxD;
+			selgroup = points;
+		}
+	}
+	
+	debugMap.sort(([A, ad], [B, bd])=>(ad-bd));
+	//console.dir(debugMap.slice(0,2), {depth:4});
+	
+	return selgroup;
+}
+
+/**
+ * Находит группы точек, расстояние между которыми меньше min
+ */
+function *unfullGroup(points, min){
+	let group;
+	for(let pair of pairsUp(points)){
+		let [cur, next, i] = pair;
+		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+		if(d<=min){
+			if(group){
+				group.push(next);
+			}
+			else{
+				group = [cur, next];
+			}
+		}
+		else{
+			if(group){
+				yield group;
+				group = null;
+			}
+		}
+	}
+	if(group){
+		yield group;
+		group = null;
+	}
+}
+/**
+ * Находит группы точек, расстояние между которыми меньше min
+ */
+function *unfullGroupDown(points, min){
+	let group;
+	for(let pair of pairsDown(points)){
+		let [cur, next, i] = pair;
+		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+		if(d<=min){
+			if(group){
+				group.unshift(cur);
+			}
+			else{
+				group = [cur, next];
+			}
+		}
+		else{
+			if(group){
+				yield group;
+				group = null;
+			}
+		}
+	}
+	if(group){
+		yield group;
+		group = null;
+	}	
+}
 
 
 /**
@@ -48,7 +205,7 @@ function * pairsUp(arr){
  */
 function * pairsDown(arr){
 	let len = arr.length-1;
-	for(let i=len-1; i--;){
+	for(let i=len; i--;){
 		let pair = arr.slice(i, i+2).concat(i);
 		yield pair;
 	}	
@@ -128,5 +285,6 @@ function makeTable(f, D, step, d, levels){
 }
 
 module.exports = {
+	createLabeled,
 	makeTable
 };

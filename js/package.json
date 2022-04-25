@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grunmouse/binary": "link:..\\..\\binary",
     "@grunmouse/convex": "link:..\\..\\convex",
     "@grunmouse/math-matrix": "link:..\\..\\math-matrix",
     "@grunmouse/math-vector": "link:..\\..\\math-vector"

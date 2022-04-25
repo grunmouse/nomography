@@ -2,7 +2,7 @@ const {Matrix, SquareMatrix3} = require('@grunmouse/math-matrix');
 const {Vector} = require('@grunmouse/math-vector');
 
 /**
- * Находит матрицу, отображающую тройку точек ABD на четвёрку точек (0;0),(1;0),(0;1)
+ * Находит матрицу, отображающую тройку точек ABD на тройку точек (0;0),(1;0),(0;1)
  * Возвращает промежуточные матрицы
  * @param A : Vector2
  * @param B : Vector2
