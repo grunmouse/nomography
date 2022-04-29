@@ -1,5 +1,10 @@
 const {Vector2} = require('@grunmouse/math-vector');
 const {flags} = require('@grunmouse/binary');
+const Decimal = require('decimal.js');
+
+const toDecimal = (a)=>(new Decimal(a));
+
+const {toLevels} = require('../mark-levels.js');
 
 /**
  * Функция для заданной шкалы находит точки для надписанных и немых штрихов 
@@ -12,49 +17,25 @@ const {flags} = require('@grunmouse/binary');
  * @property labeldist.min : Number - наименьшее разрешённое расстояние между надписанными штрихами
  * @property labeldist.max : Number - наибольшее допустимое расстояние между надписанными штрихами
  *
- *
- */
-
-
-
-/**
- * Строит таблицу значений для надписанных штрихов
+ * @return Array<{a, x, y}> - таблица значений надписанных штрихов
  */
 function createLabeled(f, D, levels, labeldist){
-	levels = levels.slice(0);
-	levels.sort((a,b)=>(a-b));
+	D = D.map(toDecimal);
+	levels = toLevels(levels);
 	//Находим наибольших полезный шаг штрихов
-	let max, min, step;
-	for(let i = levels.length; i--;){
-		let lev = levels[i];
-		max = Math.floor(D[1] / lev) * lev;
-		min = Math.ceil(D[0] / lev) * lev;
-		let count = (max - min)/lev + 1 + (min!=D[0]) + (max!=D[1]);
-		if(count > 2){
-			step = lev;
-			break;
-		}
-	}
+	let step = levels.findTop(D);
+
 	if(!step){
 		console.warn('Not allowed level for D: ' + D);
 		return D.map((a)=>({a, x:f.x(a), y:f.y(a)}));
 	}
 	
 	//Получаем отрезки
-	let args = [];
-	for(let x = min; x<=max; x+=step){
-		args.push(x);
-	}
-	if(max<D[1]){
-		args.push(D[1]);
-	}
-	if(min>D[0]){
-		args.unshift(D[0]);
-	}
+	let args = generateArgs(D, step.min, step.max, step.step);
 	
 	let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
 	
-	for(let group of unfullGroupDown(points, labeldist.max)){
+	for(let group of unfullGroupDown2(points, labeldist)){
 		
 		let index = points.indexOf(group[0]), length = group.length;
 
@@ -72,12 +53,32 @@ function createLabeled(f, D, levels, labeldist){
 		let [cur, next, index] = pair;
 		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
 		if(d > labeldist.max){
-			let group = createLabeled(f, [cur.a, next.a], levels, labeldist);
+			let group = zwischenLabeled(f, [cur.a, next.a], step, levels, labeldist);
 			points.splice(index, 2, ...group);
 		}
 	}
 	
 	return points;
+}
+
+function zwischenLabeled(f, D, step,  levels, labeldist){
+	return createLabeled(f, D, levels, labeldist);
+}
+
+
+function generateArgs(D, min, max, step){
+	let args = [];
+	for(let x = min; x.lessThan(max); x = x.plus(step)){
+		args.push(x);
+	}
+	args.push(max);
+	if(max.lessThan(D[1])){
+		args.push(D[1]);
+	}
+	if(min.greaterThan(D[0])){
+		args.unshift(D[0]);
+	}
+	return args;
 }
 
 function handleUnfull(group, min){
@@ -87,10 +88,47 @@ function handleUnfull(group, min){
 	const count = BigInt(length-2);
 	const over = 1n<<count;
 
+
+	const gen = function *(first, over){
+		for(let mask = 0n; mask<over; ++mask){
+			let points = [first].concat(flags.flagNumbers(mask).map((i)=>(group[Number(i)+1])), last);
+			yield points;
+		}
+	};
 	let minmaxD = Infinity, selgroup = group;
+
 	const debugMap = [];
-	byvalue:for(let mask = 0n; mask<over; ++mask){
-		let points = [first].concat(flags.flagNumbers(mask).map((i)=>(group[Number(i)+1])), last);
+	for(let points of filterVariants(gen(first, over), min)){
+		if(points.maxD < minmaxD){
+			minmaxD = points.maxD;
+			selgroup = points;
+		}
+		debugMap.push([points, points.maxD]);
+	}
+	
+	debugMap.sort(([A, ad], [B, bd])=>(ad-bd));
+	//console.dir(debugMap.slice(0,2), {depth:4});
+	
+	return selgroup;
+}
+
+/**
+ * Проверяет группу точек на минимальное деление
+ */
+function ctrlGroup(points, min){
+	for(let pair of pairsUp(points)){
+		let [cur, next, i] = pair;
+		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+		if(d<min){
+			return false;
+		}
+	}
+	return true;
+}
+
+function * filterVariants(genPoint, min){
+
+	byvalue:for(let points of genPoint){
 		let maxD = 0;
 		//Контроль дистанций
 		for(let pair of pairsUp(points)){
@@ -103,18 +141,9 @@ function handleUnfull(group, min){
 				maxD = d;
 			}
 		}
-		debugMap.push([points, maxD]);
-		//Поиск наименьшей наибольшей дистанции
-		if(maxD < minmaxD){
-			minmaxD = maxD;
-			selgroup = points;
-		}
+		points.maxD = maxD;
+		yield points;
 	}
-	
-	debugMap.sort(([A, ad], [B, bd])=>(ad-bd));
-	//console.dir(debugMap.slice(0,2), {depth:4});
-	
-	return selgroup;
 }
 
 /**
@@ -174,19 +203,97 @@ function *unfullGroupDown(points, min){
 	}	
 }
 
+function *unfullGroupDown2(points, dist){
+	let group, after;
+	for(let pair of pairsDown(points)){
+		let [cur, next, i] = pair;
+		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+		if(d<=dist.min){
+			if(group){
+				group.unshift(cur);
+			}
+			else{
+				group = after ? [cur, next, after] : [cur, next];
+			}
+		}
+		else{
+			if(d<=dist.max){
+				if(group){
+					group.unshift(cur);
+					yield group;
+					group = null;
+					after = next;
+				}
+				else{
+					after = next;
+				}
+			}
+			else{
+				if(group){
+					yield group;
+					group = null;
+					after = null;
+				}
+				else{
+					after = null;
+				}
+			}
+		}
+	}
+	if(group){
+		yield group;
+		group = null;
+	}	
+}
 
-/**
- * Составляет первичную таблицу для шкалы
- */
-function createTable(f, D, step){
-	var table = [], prev;
-	for(let a = D[0]; a<=D[1]; a+=step){
-		let x = f.x(a);
-		let y = f.y(a);
-		table.push({a, x, y});
+
+function createMute(f, D, levels, dist){
+	D = D.map(toDecimal);
+	levels = toLevels(levels);
+
+	//Находим наибольших полезный шаг штрихов
+	let step = levels.findTop(D);
+	
+	let {min, max} = step;
+	step = step.step;
+
+	let acceptedStep, acceptedPoints;
+	
+	const gen = function*(step){
+		for(;step;step = levels.getLess(step)){
+			let args = generateArgs(D, min, max, step);
+			let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
+			points.step = step;
+			yield points;
+		}
+	};
+	for(let points of filterVariants(gen(step), dist.min)){
+		acceptedStep = points.step;
+		acceptedPoints = points;
+	}
+
+	let points = acceptedPoints;
+	if(!points){
+		return {min, max};
 	}
 	
-	return table;
+	let usedLevels = new Set();
+	for(let i = 1; i<points.length-1; ++i){
+		let point = points[i];
+		point.level = levels.findLevel(point.a);
+		usedLevels.add(point.level);
+	}
+	
+	usedLevels = Array.from(usedLevels);
+	usedLevels.sort((a,b)=>(b.minus(a)));
+	
+	for(let i = 1; i<points.length-1; ++i){
+		let point = points[i];
+		point.levelIndex = usedLevels.indexOf(points);
+	}
+
+	return {min, max, step:acceptedStep, levels:usedLevels.length, prev:usedLevels[0]};
+	
 }
 
 /**
@@ -211,80 +318,8 @@ function * pairsDown(arr){
 	}	
 }
 
-function ofPair(gen, target, name, fun){
-	return function(table){
-		let len = table.length-1;
-		for(let pair of gen(table)){
-			pair[target][name] = fun(pair[0], pair[1]);
-		}
-		return table;
-	}
-}
-
-const setupDistance = (table)=>{
-	for(let [cur, next, i] of pairsUp(table)){
-		cur.d = Math.hypot(next.x - cur.x, next.y - cur.y);
-		cur.step = next.a - cur.a;
-	}
-	return table;
-};
-const setupPosition = (table)=>{
-	table[0].p = 0;
-	for(let [cur, next, i] of pairsUp(table)){
-		next.p = cur.p + cur.d;
-	}
-	return table;
-};
-
-/**
- * Уточняет таблицу до тех пор, пока все расстояния не будут не больше d
- */
-function precisionTable(table, f, d){
-	let len = table.length;
-	for(let [current, next, i] of pairsDown(table)){
-		if(current.d > d){
-			let div = Math.ceil(d/current.d);
-			let step = current.step;
-			let substep = step/div;
-			
-			let subtable = [current];
-			for(let j = 1; j < div; ++j){
-				let a = j*substep + current.a;
-				let x = f.x(a);
-				let y = f.y(a);
-				subtable[j] = {a,x,y};
-			}
-			setupDistance([...subtable, next]);
-			//precisionTable(subtable, f, d)
-			
-			table.splice(i, 1, ...subtable);
-		}
-	}
-	return table;
-}
-
-function leveledPoints(table, levels){
-	for(let point of table){
-		let set = point.levels = new Set();
-		for(let level of levels){
-			if(point.a % level === 0){
-				set.add(+level);
-			}
-		}
-	}
-}
-
-function makeTable(f, D, step, d, levels){
-	const table = createTable(f, D, step);
-	setupDistance(table);
-	//precisionTable(table, f, d);
-	setupPosition(table);
-	leveledPoints(table, levels);
-	
-	return table;
-}
 
 module.exports = {
 	createLabeled,
-	makeTable
+	createMute
 };

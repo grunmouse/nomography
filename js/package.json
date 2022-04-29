@@ -12,6 +12,7 @@
     "@grunmouse/binary": "link:..\\..\\binary",
     "@grunmouse/convex": "link:..\\..\\convex",
     "@grunmouse/math-matrix": "link:..\\..\\math-matrix",
-    "@grunmouse/math-vector": "link:..\\..\\math-vector"
+    "@grunmouse/math-vector": "link:..\\..\\math-vector",
+    "decimal.js": "^10.3.1"
   }
 }
