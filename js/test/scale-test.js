@@ -2,7 +2,8 @@ const assert = require('assert');
 
 const {
 	createLabeled,
-	createMute
+	createMute,
+	decimalLevels
 } = require('../scale.js');
 
 describe('labeled', ()=>{
@@ -21,11 +22,11 @@ describe('labeled', ()=>{
 		
 		const levels = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5];
 		
-		const table = createLabeled(fun, [1,10], levels, {min:3, max:8});
+		const table = createLabeled(fun, [1,10], decimalLevels, {min:3, max:8});
 		
 		const muteTable = [];
 		for(let i=1; i<table.length; ++i){
-			let gr = createMute(fun, [table[i-1].a, table[i].a], levels, {min:0.5});
+			let gr = createMute(fun, [table[i-1].a, table[i].a], decimalLevels, {min:0.5});
 			muteTable.push(gr);
 			//console.log(gr.step, gr.prev);
 			

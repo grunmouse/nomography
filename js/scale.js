@@ -4,7 +4,7 @@ const Decimal = require('decimal.js');
 
 const toDecimal = (a)=>(new Decimal(a));
 
-const {toLevels} = require('../mark-levels.js');
+const {toLevels, decimalLevels} = require('./mark-levels.js');
 
 /**
  * Функция для заданной шкалы находит точки для надписанных и немых штрихов 
@@ -30,11 +30,51 @@ function createLabeled(f, D, levels, labeldist){
 		return D.map((a)=>({a, x:f.x(a), y:f.y(a)}));
 	}
 	
-	//Получаем отрезки
-	let args = generateArgs(D, step.min, step.max, step.step);
+	return fullDiap(f, D, step.step, levels, labeldist);
+}
+
+/**
+ * Заполняет диапазон D надписанными штрихами
+ */
+function fullDiap(f, D, step, levels, labeldist){
+	let args = levels.generateArgs(D, step);
 	
 	let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
 	
+	return handlePoints(points, f, step, levels, labeldist);
+}
+
+function handlePoints(points, f, step, levels, labeldist){
+	console.log('handle: ' + points.map(p=>p.a).join());
+	points = downsinglePoints(points, labeldist);
+	
+	if(points.length === 2){
+		//console.warn('Not points inner D: ' + D);
+		return points;
+	}
+	
+	return expandPoints(points, f, step, levels, labeldist);
+}
+
+/**
+ * Проверяет группу точек на минимальное деление
+ */
+function ctrlGroup(points, min){
+	for(let pair of pairsUp(points)){
+		let [cur, next, i] = pair;
+		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+		if(d<min){
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * Прореживает точки, удаляя некоторые из них в тех местах, где они слишком частые
+ */
+function downsinglePoints(points, labeldist){
+	console.log('downsingle: ' + points.map(p=>p.a).join());
 	for(let group of unfullGroupDown2(points, labeldist)){
 		
 		let index = points.indexOf(group[0]), length = group.length;
@@ -44,11 +84,14 @@ function createLabeled(f, D, levels, labeldist){
 		points.splice(index, length, ...group);
 	}
 	
-	if(points.length === 2){
-		console.warn('Not points inner D: ' + D);
-		return points;
-	}
-	
+	return points;
+}
+
+/**
+ * Пытается добавить деления меньшей цены в тех местах, где штрихи слишком редкие
+ */
+function expandPoints(points, f, step, levels, labeldist){
+	console.log('expand: ' + points.map(p=>p.a).join());
 	for(let pair of pairsDown(points)){
 		let [cur, next, index] = pair;
 		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
@@ -61,25 +104,37 @@ function createLabeled(f, D, levels, labeldist){
 	return points;
 }
 
+
 function zwischenLabeled(f, D, step,  levels, labeldist){
+	console.log('zwischen: ' + D.map(String).join());
+	let lessUniversal = levels.getLessUniversalStep(step);
+	
+	let args = levels.generateArgs(D, lessUniversal);
+	
+	let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
+	
+	if(ctrlGroup(points, labeldist.min)){
+		return expandPoints(points, f, lessUniversal, levels, labeldist);
+	}
+	else{
+		let steps = levels.getStepsBetween(step, lessUniversal);
+		if(steps.length>0){
+			let groups = steps.map((step)=>{
+				return fullDiap(f, D, step, levels, labeldist);
+			});
+			groups.sort((a, b)=>(b.length - a.length));
+			
+			return groups[0];
+		}
+		else{
+			return handlePoints(points, f, lessUniversal, levels, labeldist);
+		}
+	}
+	
 	return createLabeled(f, D, levels, labeldist);
+	
 }
 
-
-function generateArgs(D, min, max, step){
-	let args = [];
-	for(let x = min; x.lessThan(max); x = x.plus(step)){
-		args.push(x);
-	}
-	args.push(max);
-	if(max.lessThan(D[1])){
-		args.push(D[1]);
-	}
-	if(min.greaterThan(D[0])){
-		args.unshift(D[0]);
-	}
-	return args;
-}
 
 function handleUnfull(group, min){
 	const length = group.length;
@@ -112,19 +167,6 @@ function handleUnfull(group, min){
 	return selgroup;
 }
 
-/**
- * Проверяет группу точек на минимальное деление
- */
-function ctrlGroup(points, min){
-	for(let pair of pairsUp(points)){
-		let [cur, next, i] = pair;
-		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
-		if(d<min){
-			return false;
-		}
-	}
-	return true;
-}
 
 function * filterVariants(genPoint, min){
 
@@ -259,20 +301,16 @@ function createMute(f, D, levels, dist){
 
 	let acceptedStep, acceptedPoints;
 	
-	const gen = function*(step){
-		for(;step;step = levels.getLess(step)){
-			let args = generateArgs(D, min, max, step);
-			let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
-			points.step = step;
-			yield points;
-		}
-	};
-	for(let points of filterVariants(gen(step), dist.min)){
-		acceptedStep = points.step;
-		acceptedPoints = points;
-	}
+	let pair = levels.findPair((index)=>{
+		let step = levels.getStep(index);
+		let args = levels.generateArgs(D, step);
+		let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
+		return !ctrlGroup(points, dist.min);
+	});
+	
+	acceptedStep = levels.getStep(pair.over);
 
-	let points = acceptedPoints;
+	let points = levels.generateArgs(D, step).map((a)=>({a, x:f.x(a), y:f.y(a)}));
 	if(!points){
 		return {min, max};
 	}
@@ -321,5 +359,6 @@ function * pairsDown(arr){
 
 module.exports = {
 	createLabeled,
-	createMute
+	createMute,
+	decimalLevels
 };

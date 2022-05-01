@@ -2,6 +2,8 @@ const Decimal = require('decimal.js');
 
 const toDecimal = (a)=>(new Decimal(a));
 
+const mod = (a, b)=>(((a % b) + b) % b); //Честный остаток
+
 class LevelsByArray{
 	constructor(arr){
 		arr = arr.slice(0);
@@ -87,8 +89,8 @@ class LevelsByFunctions{
 	}
 	
 	getLimits(D, step){
-		let max = D[1].toNearest(lev, Decimal.ROUND_FLOOR);
-		let min = D[0].toNearest(lev, Decimal.ROUND_CEIL);
+		let max = D[1].toNearest(step, Decimal.ROUND_FLOOR);
+		let min = D[0].toNearest(step, Decimal.ROUND_CEIL);
 		return {max, min, step};
 	}
 	
@@ -104,7 +106,7 @@ class LevelsByFunctions{
 		return false;
 	}
 	
-	_findPair(ctrl){
+	findPair(ctrl){
 		let index = 0;
 		let over, inner;
 		if(ctrl(index)){
@@ -130,7 +132,7 @@ class LevelsByFunctions{
 			}
 		}
 		while(over-inner>1){
-			index = (over + inner) >>> 1;
+			index = Math.floor((over + inner)/2);
 			if(ctrl(index)){
 				inner = index;
 			}
@@ -142,15 +144,15 @@ class LevelsByFunctions{
 	}
 	
 	findTop(D){
-		let pair = this._findPair((index)=>(this.hasAllowStep(D, this.getStep(index))));
-		return this.getLimits(D, pair.inner);
+		let pair = this.findPair((index)=>(this.hasAllowStep(D, this.getStep(index))));
+		return this.getLimits(D, this.getStep(pair.inner));
 	}
 	
 	getLessUniversalStep(step){
 		let index = this.getIndex(step);
-		let step = this.getStep(++index);
+		step = this.getStep(--index);
 		while(!this.hasDiv(step)){
-			step = this.getStep(++index);
+			step = this.getStep(--index);
 		}
 		return step;
 	}
@@ -167,7 +169,7 @@ class LevelsByFunctions{
 	}
 	
 	getLess(step){
-		return this.getStep(this.getIndex(step)+1);
+		return this.getStep(this.getIndex(step)-1);
 	}
 	
 		
@@ -175,9 +177,26 @@ class LevelsByFunctions{
 	 * Ищет наибольший шаг, являющийся делителем
 	 */
 	findLevel(value){
-		let pair = this._findPair((index)=>(this.hasDiv(this.getStep(index), value)));
+		let pair = this.findPair((index)=>(this.hasDiv(this.getStep(index), value)));
 		
-		return pair.inner;
+		return this.getStep(pair.inner);
+	}
+	
+	generateArgs(D, step){
+		const {min, max}  = this.getLimits(D, step);
+		
+		let args = [];
+		for(let x = min; x.lessThan(max); x = x.plus(step)){
+			args.push(x);
+		}
+		args.push(max);
+		if(max.lessThan(D[1])){
+			args.push(D[1]);
+		}
+		if(min.greaterThan(D[0])){
+			args.unshift(D[0]);
+		}
+		return args;		
 	}
 }
 
@@ -189,11 +208,11 @@ function toLevels(obj){
 }
 
 const decimalLevels = new LevelsByFunctions({
-	getStep:function(index){
+	getStep(index){
 		if(index === 0){
 			return new Decimal(1);
 		}
-		let hemi = index % 2;
+		let hemi = mod(index, 2);
 		let exp = Math.floor(index/2);
 		
 		let value = Decimal.pow(10, exp);
@@ -203,7 +222,7 @@ const decimalLevels = new LevelsByFunctions({
 		return value;
 	},
 	getIndex(step){
-		if(step.eq(1)){
+		if(new Decimal(step).eq(1)){
 			return 0;
 		}
 		let exp = Decimal.log10(step);
@@ -219,11 +238,12 @@ const decimalLevels = new LevelsByFunctions({
 		if(b == null){
 			return true;
 		}
-		return new Decimal(a).lessThan(b);
+		return new Decimal(b).div(a).isInteger();
 	}
 });
 
 module.exports = {
 	toLevels,
-	LevelsByFunctions
+	LevelsByFunctions,
+	decimalLevels
 };

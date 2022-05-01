@@ -29,11 +29,11 @@ const common = {
 }
 
 
-const table = scale.createLabeled(fun, [1,10], [0.001, 0.005, 0.01, 0.05, 0.1, 0.5], {min:3, max:8});
+const table = scale.createLabeled(fun, [1,10], scale.decimalLevels, {min:3, max:8});
 
 const muteTable = [];
 for(let i=1; i<table.length; ++i){
-	let gr = scale.createMute(fun, [table[i-1].a, table[i].a], [0.001, 0.005, 0.01, 0.05, 0.1, 0.5], {min:0.5});
+	let gr = scale.createMute(fun, [table[i-1].a, table[i].a], scale.decimalLevels, {min:0.5});
 	let {step, prev, min, max} = gr;
 	if(step.equals(prev)){
 		muteTable.push(`${min} ${max} ${step} 1 mutegroup`);
