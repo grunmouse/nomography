@@ -1,53 +1,26 @@
-const {Vector2} = require('@grunmouse/math-vector');
 const {flags} = require('@grunmouse/binary');
-const Decimal = require('decimal.js');
-
-const toDecimal = (a)=>(new Decimal(a));
-
-const {toLevels, decimalLevels} = require('./mark-levels.js');
-const ScalePoints = require('./scale-points.js');
-
-
-/**
- * Функция для заданной шкалы находит точки для надписанных и немых штрихов 
- * @param f : Object - уравнение шкалы
- * @property f.x : Function - отображает параметр на координату
- * @property f.y : Function
- * @param D : Array[2]<Number> - отрезок значений параметра, отображаемый на шкалу
- * @param levels : Array<Number> - хорошие кратности параметра для штрихов.
- * @param labeldist : Object
- * @property labeldist.min : Number - наименьшее разрешённое расстояние между надписанными штрихами
- * @property labeldist.max : Number - наибольшее допустимое расстояние между надписанными штрихами
- *
- * @return Array<{a, x, y}> - таблица значений надписанных штрихов
- */
-function createLabeled(f, D, levels, labeldist){
-	D = D.map(toDecimal);
-	levels = toLevels(levels);
-	//Находим наибольших полезный шаг штрихов
-	let step = levels.findTop(D);
-
-	if(!step){
-		console.warn('Not allowed level for D: ' + D);
-		return D.map((a)=>({a, x:f.x(a), y:f.y(a)}));
-	}
-	
-	return fullDiap(f, D, step.step, levels, labeldist);
-}
 
 /**
  * Заполняет диапазон D надписанными штрихами
  */
 function fullDiap(f, D, step, levels, labeldist){
-	let points = new ScalePoints(f, D, step, levels, labeldist);
+	let args = levels.generateArgs(D, step);
+	
+	let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
 	
 	return handlePoints(points, f, step, levels, labeldist);
 }
 
 function handlePoints(points, f, step, levels, labeldist){
-	points.downsingle();
+	console.log('handle: ' + points.map(p=>p.a).join());
+	points = downsinglePoints(points, labeldist);
 	
-	return points.expanded ? points : expandPoints(points, f, step, levels, labeldist);
+	if(points.length === 2){
+		//console.warn('Not points inner D: ' + D);
+		return points;
+	}
+	
+	return expandPoints(points, f, step, levels, labeldist);
 }
 
 /**
@@ -64,18 +37,33 @@ function ctrlGroup(points, min){
 	return true;
 }
 
+/**
+ * Прореживает точки, удаляя некоторые из них в тех местах, где они слишком частые
+ */
+function downsinglePoints(points, labeldist){
+	for(let group of unfullGroupDown2(points, labeldist)){
+		
+		let index = points.indexOf(group[0]), length = group.length;
+
+		group = handleUnfull(group, labeldist.min);
+		
+		points.splice(index, length, ...group);
+	}
+	
+	return points;
+}
 
 /**
  * Пытается добавить деления меньшей цены в тех местах, где штрихи слишком редкие
  */
 function expandPoints(points, f, step, levels, labeldist){
-	
-	for(let pair of points.pairsDown()){
+	console.log('expand: ' + points.map(p=>p.a).join());
+	for(let pair of pairsDown(points)){
 		let [cur, next, index] = pair;
 		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
 		if(d > labeldist.max){
 			let group = zwischenLabeled(f, [cur.a, next.a], step, levels, labeldist);
-			points.pairToGroup(index, group);
+			points.splice(index, 2, ...group);
 		}
 	}
 	
@@ -85,14 +73,13 @@ function expandPoints(points, f, step, levels, labeldist){
 
 function zwischenLabeled(f, D, step,  levels, labeldist){
 	console.log('zwischen: ' + D.map(String).join());
-	if(levels.hasAllowStep(D, step)){ //Прореженные отрезки не делим
-		return;
-	}
 	let lessUniversal = levels.getLessUniversalStep(step);
 	
-	let points = new ScalePoints(f, D, lessUniversal, levels, labeldist);
+	let args = levels.generateArgs(D, lessUniversal);
 	
-	if(points.downsingled){
+	let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
+	
+	if(ctrlGroup(points, labeldist.min)){
 		return expandPoints(points, f, lessUniversal, levels, labeldist);
 	}
 	else{
@@ -195,34 +182,7 @@ function *unfullGroup(points, min){
 		group = null;
 	}
 }
-/**
- * Находит группы точек, расстояние между которыми меньше min
- */
-function *unfullGroupDown(points, min){
-	let group;
-	for(let pair of pairsDown(points)){
-		let [cur, next, i] = pair;
-		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
-		if(d<=min){
-			if(group){
-				group.unshift(cur);
-			}
-			else{
-				group = [cur, next];
-			}
-		}
-		else{
-			if(group){
-				yield group;
-				group = null;
-			}
-		}
-	}
-	if(group){
-		yield group;
-		group = null;
-	}	
-}
+
 
 function *unfullGroupDown2(points, dist){
 	let group, after;
@@ -391,51 +351,6 @@ function *groupPointsDown(points, dist){
 }
 
 
-function createMute(f, D, levels, dist){
-	console.log(D);
-	D = D.map(toDecimal);
-	levels = toLevels(levels);
-
-	//Находим наибольших полезный шаг штрихов
-	let step = levels.findTop(D);
-	
-	let {min, max} = step;
-	step = step.step;
-
-	let acceptedStep, acceptedPoints;
-	
-	let pair = levels.findPair((index)=>{
-		let step = levels.getStep(index);
-		let args = levels.generateArgs(D, step);
-		let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
-		return !ctrlGroup(points, dist.min);
-	});
-	
-	acceptedStep = levels.getStep(pair.over);
-
-	let points = levels.generateArgs(D, step).map((a)=>({a, x:f.x(a), y:f.y(a)}));
-	if(!points){
-		return {min, max};
-	}
-	
-	let usedLevels = new Set();
-	for(let i = 1; i<points.length-1; ++i){
-		let point = points[i];
-		point.level = levels.findLevel(point.a);
-		usedLevels.add(point.level);
-	}
-	
-	usedLevels = Array.from(usedLevels);
-	usedLevels.sort((a,b)=>(b.minus(a)));
-	
-	for(let i = 1; i<points.length-1; ++i){
-		let point = points[i];
-		point.levelIndex = usedLevels.indexOf(points);
-	}
-
-	return {min, max, step:acceptedStep, levels:usedLevels.length, prev:usedLevels[0]};
-	
-}
 
 /**
  * Генерирует пары значений массива от начала к концу
@@ -459,9 +374,10 @@ function * pairsDown(arr){
 	}	
 }
 
-
 module.exports = {
-	createLabeled,
-	createMute,
-	decimalLevels
-};
+	pairsDown,
+	pairsUp,
+	unfullGroupDown2,
+	downsinglePoints,
+	ctrlGroup
+}

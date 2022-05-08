@@ -22,11 +22,14 @@ describe('labeled', ()=>{
 		
 		const levels = [0.001, 0.005, 0.01, 0.05, 0.1, 0.5];
 		
-		const table = createLabeled(fun, [1,10], decimalLevels, {min:3, max:8});
+		const table = createLabeled(fun, [2,2.1], decimalLevels, {min:3, max:8});
 		
 		const muteTable = [];
-		for(let i=1; i<table.length; ++i){
-			let gr = createMute(fun, [table[i-1].a, table[i].a], decimalLevels, {min:0.5});
+		console.log(table);
+		
+		return;
+		for(let pair of table.pairsUp()){
+			let gr = createMute(fun, [pair[0].a, pair[1].a], decimalLevels, {min:0.5});
 			muteTable.push(gr);
 			//console.log(gr.step, gr.prev);
 			
