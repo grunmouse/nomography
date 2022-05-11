@@ -1,29 +1,6 @@
 const {flags} = require('@grunmouse/binary');
 
 /**
- * Заполняет диапазон D надписанными штрихами
- */
-function fullDiap(f, D, step, levels, labeldist){
-	let args = levels.generateArgs(D, step);
-	
-	let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
-	
-	return handlePoints(points, f, step, levels, labeldist);
-}
-
-function handlePoints(points, f, step, levels, labeldist){
-	console.log('handle: ' + points.map(p=>p.a).join());
-	points = downsinglePoints(points, labeldist);
-	
-	if(points.length === 2){
-		//console.warn('Not points inner D: ' + D);
-		return points;
-	}
-	
-	return expandPoints(points, f, step, levels, labeldist);
-}
-
-/**
  * Проверяет группу точек на минимальное деление
  */
 function ctrlGroup(points, min){
@@ -51,54 +28,6 @@ function downsinglePoints(points, labeldist){
 	}
 	
 	return points;
-}
-
-/**
- * Пытается добавить деления меньшей цены в тех местах, где штрихи слишком редкие
- */
-function expandPoints(points, f, step, levels, labeldist){
-	console.log('expand: ' + points.map(p=>p.a).join());
-	for(let pair of pairsDown(points)){
-		let [cur, next, index] = pair;
-		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
-		if(d > labeldist.max){
-			let group = zwischenLabeled(f, [cur.a, next.a], step, levels, labeldist);
-			points.splice(index, 2, ...group);
-		}
-	}
-	
-	return points;
-}
-
-
-function zwischenLabeled(f, D, step,  levels, labeldist){
-	console.log('zwischen: ' + D.map(String).join());
-	let lessUniversal = levels.getLessUniversalStep(step);
-	
-	let args = levels.generateArgs(D, lessUniversal);
-	
-	let points = args.map((a)=>({a, x:f.x(a), y:f.y(a)}));
-	
-	if(ctrlGroup(points, labeldist.min)){
-		return expandPoints(points, f, lessUniversal, levels, labeldist);
-	}
-	else{
-		let steps = levels.getStepsBetween(step, lessUniversal);
-		if(steps.length>0){
-			let groups = steps.map((step)=>{
-				return fullDiap(f, D, step, levels, labeldist);
-			});
-			groups.sort((a, b)=>(b.length - a.length));
-			
-			return groups[0];
-		}
-		else{
-			return handlePoints(points, f, lessUniversal, levels, labeldist);
-		}
-	}
-	
-	return createLabeled(f, D, levels, labeldist);
-	
 }
 
 
@@ -151,35 +80,6 @@ function * filterVariants(genPoint, min){
 		}
 		points.maxD = maxD;
 		yield points;
-	}
-}
-
-/**
- * Находит группы точек, расстояние между которыми меньше min
- */
-function *unfullGroup(points, min){
-	let group;
-	for(let pair of pairsUp(points)){
-		let [cur, next, i] = pair;
-		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
-		if(d<=min){
-			if(group){
-				group.push(next);
-			}
-			else{
-				group = [cur, next];
-			}
-		}
-		else{
-			if(group){
-				yield group;
-				group = null;
-			}
-		}
-	}
-	if(group){
-		yield group;
-		group = null;
 	}
 }
 

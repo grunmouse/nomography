@@ -14,5 +14,9 @@
     "@grunmouse/math-matrix": "link:..\\..\\math-matrix",
     "@grunmouse/math-vector": "link:..\\..\\math-vector",
     "decimal.js": "^10.3.1"
+  },
+  "devDependencies": {
+    "@grunmouse/jsverify-env": "link:..\\..\\jsverify-env",
+    "jsverify": "^0.8.4"
   }
 }

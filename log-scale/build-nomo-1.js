@@ -26,14 +26,14 @@ const common = {
 	tau_min,
 	line_count,
 	lambda
-}
+};
 
 
-const table = scale.createLabeled(fun, [1,10], scale.decimalLevels, {min:3, max:8});
+const table = scale.createLabeled(fun, scale.euclid, [1,10], scale.decimal25Levels, {min:3, max:6});
 
 const muteTable = [];
-for(let i=1; i<table.length; ++i){
-	let gr = scale.createMute(fun, [table[i-1].a, table[i].a], scale.decimalLevels, {min:0.5});
+for(let pair of table.pairsUp()){
+	let gr = scale.createMute(fun, scale.euclid, [pair[0].a, pair[1].a], scale.decimalLevels, {min:0.5});
 	let {step, prev, min, max} = gr;
 	if(step.equals(prev)){
 		muteTable.push(`${min} ${max} ${step} 1 mutegroup`);

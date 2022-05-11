@@ -4,63 +4,6 @@ const toDecimal = (a)=>(new Decimal(a));
 
 const mod = (a, b)=>(((a % b) + b) % b); //Честный остаток
 
-class LevelsByArray{
-	constructor(arr){
-		arr = arr.slice(0);
-		arr.sort((a,b)=>(a-b));
-		arr = arr.map(toDecimal);
-		this._levels = arr;
-		this._nextMap = new Map(arr.map((val, i, arr)=>([val.toString(), arr[i-1]])));
-	}
-	
-	findTop(D){
-		let max, min, step, levels = this._levels;
-		for(let i = levels.length; i--;){
-			let lev = levels[i];
-			max = D[1].toNearest(lev, Decimal.ROUND_FLOOR);
-			min = D[0].toNearest(lev, Decimal.ROUND_CEIL);
-			let count = max.minus(min).dividedBy(lev);
-			if(count.isPositive()){
-				count = count.toNumber() + 1 + min.greaterThan(D[0]) + max.lessThan(D[1]);
-				if(count >= 3){
-					return  {min, max, step:lev};
-				}
-			}
-		}
-	}
-	
-	findLevel(value){
-		let levels = this._levels;
-		for(let i = levels.length; i--;){
-			let lev = levels[i];
-			if(Decimal.mod(value, lev).isZero()){
-				return lev;
-			}
-		}
-	}
-	
-	getNext(step){
-		if(step.step){
-			step = step.step;
-		}
-		return this._nextMap.get(step.toString());
-	}
-
-	getAlter(step){
-		if(step.step){
-			step = step.step;
-		}
-		return this._nextMap.get(step.toString());
-	}
-	
-	getLess(step){
-		if(step.step){
-			step = step.step;
-		} 
-		return this._nextMap.get(step.toString());
-	}
-}
-
 
 class LevelsByFunctions{
 	/**
@@ -76,16 +19,80 @@ class LevelsByFunctions{
 	 */
 	
 	/**
-	 * @function hasDiv - проверяет вхождение делителя в делимое
+	 * @function isUniversal - проверяет универсальность делителя для всех больших делителей
+	 * @param divisor : (Number|Decimal) - проверяемый делитель
+	 * @return Boolean
+	 */
+	 
+
+	constructor(config){
+		this.getStep = config.getStep;
+		this.getIndex = config.getIndex;
+		this.isUniversal = config.isUniversal;
+		if(config.hasDiv){
+			this.hasDiv = config.hasDiv;
+		}
+	}
+	
+	/**
+	 * @function hasDiv - проверяет вхождение делителя в делимое или универсальность делителя
 	 * @param divisor : (Number|Decimal) - проверяемый делитель
 	 * @param dividend? : (Null|Number|Decimal) - делимое, если опущено - проверяется универсальность делителя
 	 * @return Boolean
 	 */
-	
-	constructor(config){
-		this.getStep = config.getStep;
-		this.getIndex = config.getIndex;
-		this.hasDiv = config.hasDiv;
+	hasDiv(a, b){
+		if(b == null){
+			console.warn('hasDiv(a) - is deprecated');
+			return this.isUniversal(a);
+		}
+		return new Decimal(b).div(a).isInteger();
+	}
+
+	/**
+	 * Находит для разбивки деления ценой max на деления ценой min варианты цены промежуточных делений
+	 */
+	findSepVars(max, min){
+		if(!this.hasDiv(min, max)){
+			return [];
+		}
+		let minIndex = this.getIndex(min), maxIndex = this.getIndex(max);
+		if(maxIndex === minIndex){
+			return [];
+		}
+		if(maxIndex - minIndex === 1){
+			return [[max, min]];
+		}
+		let zwischen = [];
+		byindex:for(let i = maxIndex-1; i>minIndex; i--){
+			let step = this.getStep(i);
+			if(this.isUniversal(step)){
+				zwischen.push(step);
+				break byindex;
+			}
+			if(this.hasDiv(step, max) && this.hasDiv(min, step)){
+				for(let great of zwischen){
+					if(this.hasDiv(step, great)){
+						continue byindex;
+					}
+				}
+				zwischen.push(step);
+			}
+		}
+		
+		if(zwischen.length === 0){
+			return [[max, min]];
+		}
+		
+		let result = [];
+		for(let step of zwischen){
+			let tails = this.findSepVars(step, min);
+			for(let tail of tails){
+				let res = [max].concat(tail);
+				result.push(res);
+			}
+		}
+		
+		return result;
 	}
 	
 	getLimits(D, step){
@@ -106,6 +113,11 @@ class LevelsByFunctions{
 		return false;
 	}
 	
+	/** 
+	 * Ищет минимальную вилку, такую, что ctrl(over)=== false && ctrl(inner)===true
+	 * @param ctrl : Function<Integer => Boolean> - полумонотонно убывает на целых числах (полагая, что true>false)
+	 * @return {inner:Integet, over:integer}
+	 */
 	findPair(ctrl){
 		let index = 0;
 		let over, inner;
@@ -148,10 +160,79 @@ class LevelsByFunctions{
 		return this.getLimits(D, this.getStep(pair.inner));
 	}
 	
+	/**
+	 * Находит деления, которые являются делителями переданного, но не являются делителями друг друга
+	 */
+	getLessStepVariants(sourceStep){
+		let result = [];
+		let index = this.getIndex(sourceStep);
+		byindex:while(true){
+			--index;
+			let step = this.getStep(index);
+			if(this.hasDiv(step, sourceStep)){
+				if(this.isUniversal(step)){
+					if(result.length === 0){
+						result.push(step);
+					}
+					break byindex;
+				}
+				
+				for(let gr of result){
+					if(this.hasDiv(step, gr)){
+						continue byindex;
+					}
+				}
+				result.push(step);
+			}
+		}
+		
+		return result;
+	}
+	
+	getLessNStepVariants(sourceStep, n){
+		if(n < 1){
+			throw new RangeError('n < 1');
+		}
+		const map = new Map();
+		const getVariants = (step)=>{
+			if(map.has(step)){
+				return map.get(step);
+			}
+			else{
+				let result = this.getLessStepVariants(step);
+				map.set(step, results);
+				return result;
+			}
+		};
+		
+		let queue = this.getLessStepVariants(sourceStep);
+		if(n === 1){
+			return queue;
+		}
+		
+		let result = [];
+		for(let i = 0; i<queue.length; ++i){
+			let item = queue[i];
+			let last = item[item.length-1];
+			let next = getVariants(last);
+			for(let step of next){
+				let new_item = item.concat(step);
+				if(new_item.length < n){
+					queue.push(new_item);
+				}
+				else{
+					result.push(new_item);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
 	getLessUniversalStep(step){
 		let index = this.getIndex(step);
 		step = this.getStep(--index);
-		while(!this.hasDiv(step)){
+		while(!this.isUniversal(step)){
 			step = this.getStep(--index);
 		}
 		return step;
@@ -234,16 +315,52 @@ const decimalLevels = new LevelsByFunctions({
 		}
 		return index;
 	},
-	hasDiv(a, b){
-		if(b == null){
-			return true;
+	isUniversal(step){
+		return true;
+	}
+});
+
+const decimal25Levels =  new LevelsByFunctions({
+	getStep(index){
+		if(index === 0){
+			return new Decimal(1);
 		}
-		return new Decimal(b).div(a).isInteger();
+		let part = mod(index, 3);
+		let exp = Math.floor(index/3);
+		
+		let value = Decimal.pow(10, exp);
+		
+		if(part > 0){
+			value = value.times([1,2,5][part]);
+		}
+		return value;
+	},
+	getIndex(step){
+		if(new Decimal(step).eq(1)){
+			return 0;
+		}
+		let exp = Decimal.log10(step);
+		let iexp = Decimal.floor(exp);
+		let istep = Decimal.pow(10, iexp);
+		let part = +step.div(istep);
+		let fexp = exp.minus(iexp);
+		let index = iexp.valueOf()*3;
+		if(!fexp.isZero()){
+			index += [2,5].indexOf(part)+1;
+		}
+		return index;
+	},
+	isUniversal(step){
+		let exp = Decimal.log10(step);
+		let iexp = Decimal.floor(exp);
+		let fexp = exp.minus(iexp);
+		return fexp.isZero();
 	}
 });
 
 module.exports = {
 	toLevels,
 	LevelsByFunctions,
-	decimalLevels
+	decimalLevels,
+	decimal25Levels
 };
