@@ -33,10 +33,10 @@ const table = scale.createLabeled(fun, scale.euclid, [1,10], scale.decimal25Leve
 
 const muteTable = [];
 for(let pair of table.pairsUp()){
-	let gr = scale.createMute(fun, scale.euclid, [pair[0].a, pair[1].a], scale.decimalLevels, {min:0.5});
-	let {step, prev, min, max} = gr;
-	if(step.equals(prev)){
-		muteTable.push(`${min} ${max} ${step} 1 mutegroup`);
+	let gr = scale.createMute(fun, scale.euclid, [pair[0].a, pair[1].a], scale.decimal25Levels, {min:0.5});
+	let {step, prev, min, max, two} = gr;
+	if(!two){
+		muteTable.push(`${min} ${max} ${prev} 2 mutegroup`);
 	}
 	else{
 		let den = 10**(-step.e);

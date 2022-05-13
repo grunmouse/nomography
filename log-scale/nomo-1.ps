@@ -13,7 +13,7 @@
 	in2mm
 	
 	0.2 setlinewidth
-	/eskd-b-font  findfont	2.5 scalefont setfont
+	/eskd-b-font  findfont	2.2 scalefont setfont
 	
 /max_length 270 def
 /tau_max 10 def
@@ -29,7 +29,9 @@ gsave
 	/dir {pop -90} def
 	/a {90 sub} def
 	/target { last middle } def
-
+	/space 1 def
+	/level0 4 def % Длина штриха нулевого уровня вложенности делений
+	/dlevel 1 def % Уменьшение длины штриха при увеличении уровня вложенности
 	
 	/startpos tau_min fun 2def
 	/posstep 
@@ -373,179 +375,179 @@ gsave
 			1.14 1.15 0.001 2 5 1000 rat mutegroup2
 			1.15 1.16 0.001 2 5 1000 rat mutegroup2
 			1.16 1.17 0.001 2 5 1000 rat mutegroup2
-			1.17 1.18 0.005 1 mutegroup
-			1.18 1.19 0.005 1 mutegroup
-			1.19 1.2 0.005 1 mutegroup
-			1.2 1.21 0.005 1 mutegroup
-			1.21 1.22 0.005 1 mutegroup
-			1.22 1.23 0.005 1 mutegroup
-			1.23 1.24 0.005 1 mutegroup
-			1.24 1.25 0.005 1 mutegroup
-			1.25 1.26 0.005 1 mutegroup
-			1.26 1.27 0.005 1 mutegroup
-			1.27 1.28 0.005 1 mutegroup
-			1.28 1.29 0.005 1 mutegroup
-			1.29 1.3 0.005 1 mutegroup
-			1.3 1.31 0.005 1 mutegroup
-			1.31 1.32 0.005 1 mutegroup
-			1.32 1.33 0.005 1 mutegroup
-			1.33 1.34 0.005 1 mutegroup
-			1.34 1.35 0.005 1 mutegroup
-			1.35 1.36 0.005 1 mutegroup
-			1.36 1.37 0.005 1 mutegroup
-			1.37 1.38 0.005 1 mutegroup
-			1.38 1.39 0.005 1 mutegroup
-			1.39 1.4 0.005 1 mutegroup
-			1.4 1.41 0.005 1 mutegroup
-			1.41 1.42 0.005 1 mutegroup
-			1.42 1.43 0.005 1 mutegroup
-			1.43 1.44 0.005 1 mutegroup
-			1.44 1.45 0.005 1 mutegroup
-			1.45 1.46 0.005 1 mutegroup
-			1.46 1.47 0.005 1 mutegroup
-			1.47 1.48 0.005 1 mutegroup
-			1.48 1.49 0.005 1 mutegroup
-			1.49 1.5 0.005 1 mutegroup
-			1.5 1.51 0.005 1 mutegroup
-			1.51 1.52 0.005 1 mutegroup
-			1.52 1.53 0.005 1 mutegroup
-			1.53 1.54 0.005 1 mutegroup
-			1.54 1.55 0.005 1 mutegroup
-			1.55 1.56 0.005 1 mutegroup
-			1.56 1.57 0.005 1 mutegroup
-			1.57 1.58 0.005 1 mutegroup
-			1.58 1.59 0.005 1 mutegroup
-			1.59 1.6 0.005 1 mutegroup
-			1.6 1.61 0.005 1 mutegroup
-			1.61 1.62 0.005 1 mutegroup
-			1.62 1.63 0.005 1 mutegroup
-			1.63 1.64 0.005 1 mutegroup
-			1.64 1.65 0.005 1 mutegroup
-			1.65 1.66 0.005 1 mutegroup
-			1.66 1.67 0.005 1 mutegroup
-			1.67 1.68 0.005 1 mutegroup
-			1.68 1.69 0.005 1 mutegroup
-			1.69 1.7 0.005 1 mutegroup
-			1.7 1.71 0.005 1 mutegroup
-			1.71 1.72 0.005 1 mutegroup
-			1.72 1.73 0.005 1 mutegroup
-			1.73 1.74 0.005 1 mutegroup
-			1.74 1.75 0.005 1 mutegroup
-			1.75 1.76 0.005 1 mutegroup
-			1.76 1.77 0.005 1 mutegroup
-			1.77 1.78 0.005 1 mutegroup
-			1.78 1.79 0.005 1 mutegroup
-			1.79 1.8 0.005 1 mutegroup
-			1.8 1.81 0.005 1 mutegroup
-			1.81 1.82 0.005 1 mutegroup
-			1.82 1.83 0.005 1 mutegroup
-			1.83 1.84 0.005 1 mutegroup
-			1.84 1.85 0.005 1 mutegroup
-			1.85 1.86 0.005 1 mutegroup
-			1.86 1.87 0.005 1 mutegroup
-			1.87 1.88 0.005 1 mutegroup
-			1.88 1.89 0.005 1 mutegroup
-			1.89 1.9 0.005 1 mutegroup
-			1.9 1.91 0.005 1 mutegroup
-			1.91 1.92 0.005 1 mutegroup
-			1.92 1.93 0.005 1 mutegroup
-			1.93 1.94 0.005 1 mutegroup
-			1.94 1.96 0.005 2 50 1000 rat mutegroup2
-			1.96 1.98 0.005 2 10 1000 rat mutegroup2
-			1.98 2 0.005 2 10 1000 rat mutegroup2
-			2 2.02 0.005 2 10 1000 rat mutegroup2
-			2.02 2.04 0.005 2 10 1000 rat mutegroup2
-			2.04 2.06 0.005 2 50 1000 rat mutegroup2
-			2.06 2.08 0.005 2 10 1000 rat mutegroup2
-			2.08 2.1 0.005 2 10 1000 rat mutegroup2
-			2.1 2.12 0.005 2 10 1000 rat mutegroup2
-			2.12 2.14 0.005 2 10 1000 rat mutegroup2
-			2.14 2.16 0.005 2 50 1000 rat mutegroup2
-			2.16 2.18 0.005 2 10 1000 rat mutegroup2
-			2.18 2.2 0.005 2 10 1000 rat mutegroup2
-			2.2 2.22 0.005 2 10 1000 rat mutegroup2
-			2.22 2.24 0.005 2 10 1000 rat mutegroup2
-			2.24 2.26 0.005 2 50 1000 rat mutegroup2
-			2.26 2.28 0.005 2 10 1000 rat mutegroup2
-			2.28 2.3 0.005 2 10 1000 rat mutegroup2
-			2.3 2.32 0.005 2 10 1000 rat mutegroup2
-			2.32 2.34 0.005 2 10 1000 rat mutegroup2
-			2.34 2.36 0.005 2 50 1000 rat mutegroup2
+			1.17 1.18 0.002 2 mutegroup
+			1.18 1.19 0.002 2 mutegroup
+			1.19 1.2 0.002 2 mutegroup
+			1.2 1.21 0.002 2 mutegroup
+			1.21 1.22 0.002 2 mutegroup
+			1.22 1.23 0.002 2 mutegroup
+			1.23 1.24 0.002 2 mutegroup
+			1.24 1.25 0.002 2 mutegroup
+			1.25 1.26 0.002 2 mutegroup
+			1.26 1.27 0.002 2 mutegroup
+			1.27 1.28 0.002 2 mutegroup
+			1.28 1.29 0.002 2 mutegroup
+			1.29 1.3 0.002 2 mutegroup
+			1.3 1.31 0.002 2 mutegroup
+			1.31 1.32 0.002 2 mutegroup
+			1.32 1.33 0.002 2 mutegroup
+			1.33 1.34 0.002 2 mutegroup
+			1.34 1.35 0.002 2 mutegroup
+			1.35 1.36 0.002 2 mutegroup
+			1.36 1.37 0.002 2 mutegroup
+			1.37 1.38 0.002 2 mutegroup
+			1.38 1.39 0.002 2 mutegroup
+			1.39 1.4 0.002 2 mutegroup
+			1.4 1.41 0.002 2 mutegroup
+			1.41 1.42 0.002 2 mutegroup
+			1.42 1.43 0.002 2 mutegroup
+			1.43 1.44 0.002 2 mutegroup
+			1.44 1.45 0.002 2 mutegroup
+			1.45 1.46 0.002 2 mutegroup
+			1.46 1.47 0.002 2 mutegroup
+			1.47 1.48 0.002 2 mutegroup
+			1.48 1.49 0.002 2 mutegroup
+			1.49 1.5 0.002 2 mutegroup
+			1.5 1.51 0.002 2 mutegroup
+			1.51 1.52 0.002 2 mutegroup
+			1.52 1.53 0.002 2 mutegroup
+			1.53 1.54 0.002 2 mutegroup
+			1.54 1.55 0.002 2 mutegroup
+			1.55 1.56 0.002 2 mutegroup
+			1.56 1.57 0.002 2 mutegroup
+			1.57 1.58 0.002 2 mutegroup
+			1.58 1.59 0.002 2 mutegroup
+			1.59 1.6 0.002 2 mutegroup
+			1.6 1.61 0.002 2 mutegroup
+			1.61 1.62 0.002 2 mutegroup
+			1.62 1.63 0.002 2 mutegroup
+			1.63 1.64 0.002 2 mutegroup
+			1.64 1.65 0.002 2 mutegroup
+			1.65 1.66 0.002 2 mutegroup
+			1.66 1.67 0.002 2 mutegroup
+			1.67 1.68 0.002 2 mutegroup
+			1.68 1.69 0.002 2 mutegroup
+			1.69 1.7 0.002 2 mutegroup
+			1.7 1.71 0.002 2 mutegroup
+			1.71 1.72 0.002 2 mutegroup
+			1.72 1.73 0.002 2 mutegroup
+			1.73 1.74 0.002 2 mutegroup
+			1.74 1.75 0.002 2 mutegroup
+			1.75 1.76 0.002 2 mutegroup
+			1.76 1.77 0.002 2 mutegroup
+			1.77 1.78 0.002 2 mutegroup
+			1.78 1.79 0.002 2 mutegroup
+			1.79 1.8 0.002 2 mutegroup
+			1.8 1.81 0.002 2 mutegroup
+			1.81 1.82 0.002 2 mutegroup
+			1.82 1.83 0.002 2 mutegroup
+			1.83 1.84 0.002 2 mutegroup
+			1.84 1.85 0.002 2 mutegroup
+			1.85 1.86 0.002 2 mutegroup
+			1.86 1.87 0.002 2 mutegroup
+			1.87 1.88 0.002 2 mutegroup
+			1.88 1.89 0.002 2 mutegroup
+			1.89 1.9 0.002 2 mutegroup
+			1.9 1.91 0.002 2 mutegroup
+			1.91 1.92 0.002 2 mutegroup
+			1.92 1.93 0.002 2 mutegroup
+			1.93 1.94 0.002 2 mutegroup
+			1.94 1.96 0.002 2 10 1000 rat mutegroup2
+			1.96 1.98 0.002 2 10 1000 rat mutegroup2
+			1.98 2 0.002 2 10 1000 rat mutegroup2
+			2 2.02 0.002 2 10 1000 rat mutegroup2
+			2.02 2.04 0.002 2 10 1000 rat mutegroup2
+			2.04 2.06 0.002 2 10 1000 rat mutegroup2
+			2.06 2.08 0.002 2 10 1000 rat mutegroup2
+			2.08 2.1 0.002 2 10 1000 rat mutegroup2
+			2.1 2.12 0.002 2 10 1000 rat mutegroup2
+			2.12 2.14 0.002 2 10 1000 rat mutegroup2
+			2.14 2.16 0.002 2 10 1000 rat mutegroup2
+			2.16 2.18 0.002 2 10 1000 rat mutegroup2
+			2.18 2.2 0.002 2 10 1000 rat mutegroup2
+			2.2 2.22 0.002 2 10 1000 rat mutegroup2
+			2.22 2.24 0.002 2 10 1000 rat mutegroup2
+			2.24 2.26 0.002 2 10 1000 rat mutegroup2
+			2.26 2.28 0.002 2 10 1000 rat mutegroup2
+			2.28 2.3 0.002 2 10 1000 rat mutegroup2
+			2.3 2.32 0.002 2 10 1000 rat mutegroup2
+			2.32 2.34 0.002 2 10 1000 rat mutegroup2
+			2.34 2.36 0.005 2 10 1000 rat mutegroup2
 			2.36 2.38 0.005 2 10 1000 rat mutegroup2
 			2.38 2.4 0.005 2 10 1000 rat mutegroup2
 			2.4 2.42 0.005 2 10 1000 rat mutegroup2
 			2.42 2.44 0.005 2 10 1000 rat mutegroup2
-			2.44 2.46 0.005 2 50 1000 rat mutegroup2
+			2.44 2.46 0.005 2 10 1000 rat mutegroup2
 			2.46 2.48 0.005 2 10 1000 rat mutegroup2
 			2.48 2.5 0.005 2 10 1000 rat mutegroup2
 			2.5 2.52 0.005 2 10 1000 rat mutegroup2
 			2.52 2.54 0.005 2 10 1000 rat mutegroup2
-			2.54 2.56 0.005 2 50 1000 rat mutegroup2
+			2.54 2.56 0.005 2 10 1000 rat mutegroup2
 			2.56 2.58 0.005 2 10 1000 rat mutegroup2
 			2.58 2.6 0.005 2 10 1000 rat mutegroup2
 			2.6 2.62 0.005 2 10 1000 rat mutegroup2
 			2.62 2.64 0.005 2 10 1000 rat mutegroup2
-			2.64 2.66 0.005 2 50 1000 rat mutegroup2
+			2.64 2.66 0.005 2 10 1000 rat mutegroup2
 			2.66 2.68 0.005 2 10 1000 rat mutegroup2
 			2.68 2.7 0.005 2 10 1000 rat mutegroup2
 			2.7 2.72 0.005 2 10 1000 rat mutegroup2
 			2.72 2.74 0.005 2 10 1000 rat mutegroup2
-			2.74 2.76 0.005 2 50 1000 rat mutegroup2
+			2.74 2.76 0.005 2 10 1000 rat mutegroup2
 			2.76 2.78 0.005 2 10 1000 rat mutegroup2
 			2.78 2.8 0.005 2 10 1000 rat mutegroup2
 			2.8 2.82 0.005 2 10 1000 rat mutegroup2
 			2.82 2.84 0.005 2 10 1000 rat mutegroup2
-			2.84 2.86 0.005 2 50 1000 rat mutegroup2
+			2.84 2.86 0.005 2 10 1000 rat mutegroup2
 			2.86 2.88 0.005 2 10 1000 rat mutegroup2
 			2.88 2.9 0.005 2 10 1000 rat mutegroup2
 			2.9 2.92 0.005 2 10 1000 rat mutegroup2
 			2.92 2.94 0.005 2 10 1000 rat mutegroup2
-			2.94 2.96 0.005 2 50 1000 rat mutegroup2
+			2.94 2.96 0.005 2 10 1000 rat mutegroup2
 			2.96 2.98 0.005 2 10 1000 rat mutegroup2
 			2.98 3 0.005 2 10 1000 rat mutegroup2
 			3 3.02 0.005 2 10 1000 rat mutegroup2
 			3.02 3.04 0.005 2 10 1000 rat mutegroup2
-			3.04 3.06 0.005 2 50 1000 rat mutegroup2
+			3.04 3.06 0.005 2 10 1000 rat mutegroup2
 			3.06 3.08 0.005 2 10 1000 rat mutegroup2
 			3.08 3.1 0.005 2 10 1000 rat mutegroup2
 			3.1 3.12 0.005 2 10 1000 rat mutegroup2
 			3.12 3.14 0.005 2 10 1000 rat mutegroup2
-			3.14 3.16 0.005 2 50 1000 rat mutegroup2
+			3.14 3.16 0.005 2 10 1000 rat mutegroup2
 			3.16 3.18 0.005 2 10 1000 rat mutegroup2
 			3.18 3.2 0.005 2 10 1000 rat mutegroup2
 			3.2 3.22 0.005 2 10 1000 rat mutegroup2
 			3.22 3.24 0.005 2 10 1000 rat mutegroup2
-			3.24 3.26 0.005 2 50 1000 rat mutegroup2
+			3.24 3.26 0.005 2 10 1000 rat mutegroup2
 			3.26 3.28 0.005 2 10 1000 rat mutegroup2
 			3.28 3.3 0.005 2 10 1000 rat mutegroup2
 			3.3 3.32 0.005 2 10 1000 rat mutegroup2
 			3.32 3.34 0.005 2 10 1000 rat mutegroup2
-			3.34 3.36 0.005 2 50 1000 rat mutegroup2
+			3.34 3.36 0.005 2 10 1000 rat mutegroup2
 			3.36 3.38 0.005 2 10 1000 rat mutegroup2
 			3.38 3.4 0.005 2 10 1000 rat mutegroup2
 			3.4 3.42 0.005 2 10 1000 rat mutegroup2
 			3.42 3.44 0.005 2 10 1000 rat mutegroup2
-			3.44 3.46 0.005 2 50 1000 rat mutegroup2
+			3.44 3.46 0.005 2 10 1000 rat mutegroup2
 			3.46 3.48 0.005 2 10 1000 rat mutegroup2
 			3.48 3.5 0.005 2 10 1000 rat mutegroup2
 			3.5 3.52 0.005 2 10 1000 rat mutegroup2
 			3.52 3.54 0.005 2 10 1000 rat mutegroup2
-			3.54 3.56 0.005 2 50 1000 rat mutegroup2
+			3.54 3.56 0.005 2 10 1000 rat mutegroup2
 			3.56 3.58 0.005 2 10 1000 rat mutegroup2
 			3.58 3.6 0.005 2 10 1000 rat mutegroup2
 			3.6 3.62 0.005 2 10 1000 rat mutegroup2
 			3.62 3.64 0.005 2 10 1000 rat mutegroup2
-			3.64 3.66 0.005 2 50 1000 rat mutegroup2
+			3.64 3.66 0.005 2 10 1000 rat mutegroup2
 			3.66 3.68 0.005 2 10 1000 rat mutegroup2
 			3.68 3.7 0.005 2 10 1000 rat mutegroup2
 			3.7 3.72 0.005 2 10 1000 rat mutegroup2
 			3.72 3.74 0.005 2 10 1000 rat mutegroup2
-			3.74 3.76 0.005 2 50 1000 rat mutegroup2
+			3.74 3.76 0.005 2 10 1000 rat mutegroup2
 			3.76 3.78 0.005 2 10 1000 rat mutegroup2
 			3.78 3.8 0.005 2 10 1000 rat mutegroup2
 			3.8 3.82 0.005 2 10 1000 rat mutegroup2
 			3.82 3.84 0.005 2 10 1000 rat mutegroup2
-			3.84 3.86 0.005 2 50 1000 rat mutegroup2
+			3.84 3.86 0.005 2 10 1000 rat mutegroup2
 			3.86 3.88 0.005 2 10 1000 rat mutegroup2
 			3.88 3.9 0.005 2 10 1000 rat mutegroup2
 			3.9 3.95 0.005 2 10 1000 rat mutegroup2
@@ -587,83 +589,83 @@ gsave
 			5.7 5.75 0.005 2 10 1000 rat mutegroup2
 			5.75 5.8 0.005 2 10 1000 rat mutegroup2
 			5.8 5.85 0.005 2 10 1000 rat mutegroup2
-			5.85 5.9 0.01 1 mutegroup
-			5.9 5.95 0.01 1 mutegroup
-			5.95 6 0.01 1 mutegroup
-			6 6.05 0.01 1 mutegroup
-			6.05 6.1 0.01 1 mutegroup
-			6.1 6.15 0.01 1 mutegroup
-			6.15 6.2 0.01 1 mutegroup
-			6.2 6.25 0.01 1 mutegroup
-			6.25 6.3 0.01 1 mutegroup
-			6.3 6.35 0.01 1 mutegroup
-			6.35 6.4 0.01 1 mutegroup
-			6.4 6.45 0.01 1 mutegroup
-			6.45 6.5 0.01 1 mutegroup
-			6.5 6.55 0.01 1 mutegroup
-			6.55 6.6 0.01 1 mutegroup
-			6.6 6.65 0.01 1 mutegroup
-			6.65 6.7 0.01 1 mutegroup
-			6.7 6.75 0.01 1 mutegroup
-			6.75 6.8 0.01 1 mutegroup
-			6.8 6.85 0.01 1 mutegroup
-			6.85 6.9 0.01 1 mutegroup
-			6.9 6.95 0.01 1 mutegroup
-			6.95 7 0.01 1 mutegroup
-			7 7.05 0.01 1 mutegroup
-			7.05 7.1 0.01 1 mutegroup
-			7.1 7.15 0.01 1 mutegroup
-			7.15 7.2 0.01 1 mutegroup
-			7.2 7.25 0.01 1 mutegroup
-			7.25 7.3 0.01 1 mutegroup
-			7.3 7.35 0.01 1 mutegroup
-			7.35 7.4 0.01 1 mutegroup
-			7.4 7.45 0.01 1 mutegroup
-			7.45 7.5 0.01 1 mutegroup
-			7.5 7.55 0.01 1 mutegroup
-			7.55 7.6 0.01 1 mutegroup
-			7.6 7.65 0.01 1 mutegroup
-			7.65 7.7 0.01 1 mutegroup
-			7.7 7.75 0.01 1 mutegroup
-			7.75 7.8 0.01 1 mutegroup
-			7.8 7.85 0.01 1 mutegroup
-			7.85 7.9 0.01 1 mutegroup
-			7.9 7.95 0.01 1 mutegroup
-			7.95 8 0.01 1 mutegroup
-			8 8.05 0.01 1 mutegroup
-			8.05 8.1 0.01 1 mutegroup
-			8.1 8.15 0.01 1 mutegroup
-			8.15 8.2 0.01 1 mutegroup
-			8.2 8.25 0.01 1 mutegroup
-			8.25 8.3 0.01 1 mutegroup
-			8.3 8.35 0.01 1 mutegroup
-			8.35 8.4 0.01 1 mutegroup
-			8.4 8.45 0.01 1 mutegroup
-			8.45 8.5 0.01 1 mutegroup
-			8.5 8.55 0.01 1 mutegroup
-			8.55 8.6 0.01 1 mutegroup
-			8.6 8.65 0.01 1 mutegroup
-			8.65 8.7 0.01 1 mutegroup
-			8.7 8.75 0.01 1 mutegroup
-			8.75 8.8 0.01 1 mutegroup
-			8.8 8.85 0.01 1 mutegroup
-			8.85 8.9 0.01 1 mutegroup
-			8.9 8.95 0.01 1 mutegroup
-			8.95 9 0.01 1 mutegroup
-			9 9.05 0.01 1 mutegroup
-			9.05 9.1 0.01 1 mutegroup
-			9.1 9.15 0.01 1 mutegroup
-			9.15 9.2 0.01 1 mutegroup
-			9.2 9.25 0.01 1 mutegroup
-			9.25 9.3 0.01 1 mutegroup
-			9.3 9.35 0.01 1 mutegroup
-			9.35 9.4 0.01 1 mutegroup
-			9.4 9.45 0.01 1 mutegroup
-			9.45 9.5 0.01 1 mutegroup
-			9.5 9.55 0.01 1 mutegroup
-			9.55 9.6 0.01 1 mutegroup
-			9.6 9.65 0.01 1 mutegroup
-			9.65 9.7 0.01 1 mutegroup
+			5.85 5.9 0.01 2 mutegroup
+			5.9 5.95 0.01 2 mutegroup
+			5.95 6 0.01 2 mutegroup
+			6 6.05 0.01 2 mutegroup
+			6.05 6.1 0.01 2 mutegroup
+			6.1 6.15 0.01 2 mutegroup
+			6.15 6.2 0.01 2 mutegroup
+			6.2 6.25 0.01 2 mutegroup
+			6.25 6.3 0.01 2 mutegroup
+			6.3 6.35 0.01 2 mutegroup
+			6.35 6.4 0.01 2 mutegroup
+			6.4 6.45 0.01 2 mutegroup
+			6.45 6.5 0.01 2 mutegroup
+			6.5 6.55 0.01 2 mutegroup
+			6.55 6.6 0.01 2 mutegroup
+			6.6 6.65 0.01 2 mutegroup
+			6.65 6.7 0.01 2 mutegroup
+			6.7 6.75 0.01 2 mutegroup
+			6.75 6.8 0.01 2 mutegroup
+			6.8 6.85 0.01 2 mutegroup
+			6.85 6.9 0.01 2 mutegroup
+			6.9 6.95 0.01 2 mutegroup
+			6.95 7 0.01 2 mutegroup
+			7 7.05 0.01 2 mutegroup
+			7.05 7.1 0.01 2 mutegroup
+			7.1 7.15 0.01 2 mutegroup
+			7.15 7.2 0.01 2 mutegroup
+			7.2 7.25 0.01 2 mutegroup
+			7.25 7.3 0.01 2 mutegroup
+			7.3 7.35 0.01 2 mutegroup
+			7.35 7.4 0.01 2 mutegroup
+			7.4 7.45 0.01 2 mutegroup
+			7.45 7.5 0.01 2 mutegroup
+			7.5 7.55 0.01 2 mutegroup
+			7.55 7.6 0.01 2 mutegroup
+			7.6 7.65 0.01 2 mutegroup
+			7.65 7.7 0.01 2 mutegroup
+			7.7 7.75 0.01 2 mutegroup
+			7.75 7.8 0.01 2 mutegroup
+			7.8 7.85 0.01 2 mutegroup
+			7.85 7.9 0.01 2 mutegroup
+			7.9 7.95 0.01 2 mutegroup
+			7.95 8 0.01 2 mutegroup
+			8 8.05 0.01 2 mutegroup
+			8.05 8.1 0.01 2 mutegroup
+			8.1 8.15 0.01 2 mutegroup
+			8.15 8.2 0.01 2 mutegroup
+			8.2 8.25 0.01 2 mutegroup
+			8.25 8.3 0.01 2 mutegroup
+			8.3 8.35 0.01 2 mutegroup
+			8.35 8.4 0.01 2 mutegroup
+			8.4 8.45 0.01 2 mutegroup
+			8.45 8.5 0.01 2 mutegroup
+			8.5 8.55 0.01 2 mutegroup
+			8.55 8.6 0.01 2 mutegroup
+			8.6 8.65 0.01 2 mutegroup
+			8.65 8.7 0.01 2 mutegroup
+			8.7 8.75 0.01 2 mutegroup
+			8.75 8.8 0.01 2 mutegroup
+			8.8 8.85 0.01 2 mutegroup
+			8.85 8.9 0.01 2 mutegroup
+			8.9 8.95 0.01 2 mutegroup
+			8.95 9 0.01 2 mutegroup
+			9 9.05 0.01 2 mutegroup
+			9.05 9.1 0.01 2 mutegroup
+			9.1 9.15 0.01 2 mutegroup
+			9.15 9.2 0.01 2 mutegroup
+			9.2 9.25 0.01 2 mutegroup
+			9.25 9.3 0.01 2 mutegroup
+			9.3 9.35 0.01 2 mutegroup
+			9.35 9.4 0.01 2 mutegroup
+			9.4 9.45 0.01 2 mutegroup
+			9.45 9.5 0.01 2 mutegroup
+			9.5 9.55 0.01 2 mutegroup
+			9.55 9.6 0.01 2 mutegroup
+			9.6 9.65 0.01 2 mutegroup
+			9.65 9.7 0.01 2 mutegroup
 			9.7 9.8 0.01 2 5 100 rat mutegroup2
 			9.8 9.9 0.01 2 5 100 rat mutegroup2
 			9.9 10 0.01 2 5 100 rat mutegroup2
@@ -678,7 +680,7 @@ showpage
 	in2mm
 	
 	0.2 setlinewidth
-	/eskd-b-font  findfont	2.5 scalefont setfont
+	/eskd-b-font  findfont	2.2 scalefont setfont
 	
 %Транспарант
 gsave
@@ -687,6 +689,9 @@ gsave
 	/dir {pop 90} def
 	/a {90 sub} def
 	/target { first middle } def
+	/space 1 def
+	/level0 4 def % Длина штриха нулевого уровня вложенности делений
+	/dlevel 1 def % Уменьшение длины штриха при увеличении уровня вложенности
 
 	
 	/startpos tau_min fun 2def
@@ -1031,179 +1036,179 @@ gsave
 			1.14 1.15 0.001 2 5 1000 rat mutegroup2
 			1.15 1.16 0.001 2 5 1000 rat mutegroup2
 			1.16 1.17 0.001 2 5 1000 rat mutegroup2
-			1.17 1.18 0.005 1 mutegroup
-			1.18 1.19 0.005 1 mutegroup
-			1.19 1.2 0.005 1 mutegroup
-			1.2 1.21 0.005 1 mutegroup
-			1.21 1.22 0.005 1 mutegroup
-			1.22 1.23 0.005 1 mutegroup
-			1.23 1.24 0.005 1 mutegroup
-			1.24 1.25 0.005 1 mutegroup
-			1.25 1.26 0.005 1 mutegroup
-			1.26 1.27 0.005 1 mutegroup
-			1.27 1.28 0.005 1 mutegroup
-			1.28 1.29 0.005 1 mutegroup
-			1.29 1.3 0.005 1 mutegroup
-			1.3 1.31 0.005 1 mutegroup
-			1.31 1.32 0.005 1 mutegroup
-			1.32 1.33 0.005 1 mutegroup
-			1.33 1.34 0.005 1 mutegroup
-			1.34 1.35 0.005 1 mutegroup
-			1.35 1.36 0.005 1 mutegroup
-			1.36 1.37 0.005 1 mutegroup
-			1.37 1.38 0.005 1 mutegroup
-			1.38 1.39 0.005 1 mutegroup
-			1.39 1.4 0.005 1 mutegroup
-			1.4 1.41 0.005 1 mutegroup
-			1.41 1.42 0.005 1 mutegroup
-			1.42 1.43 0.005 1 mutegroup
-			1.43 1.44 0.005 1 mutegroup
-			1.44 1.45 0.005 1 mutegroup
-			1.45 1.46 0.005 1 mutegroup
-			1.46 1.47 0.005 1 mutegroup
-			1.47 1.48 0.005 1 mutegroup
-			1.48 1.49 0.005 1 mutegroup
-			1.49 1.5 0.005 1 mutegroup
-			1.5 1.51 0.005 1 mutegroup
-			1.51 1.52 0.005 1 mutegroup
-			1.52 1.53 0.005 1 mutegroup
-			1.53 1.54 0.005 1 mutegroup
-			1.54 1.55 0.005 1 mutegroup
-			1.55 1.56 0.005 1 mutegroup
-			1.56 1.57 0.005 1 mutegroup
-			1.57 1.58 0.005 1 mutegroup
-			1.58 1.59 0.005 1 mutegroup
-			1.59 1.6 0.005 1 mutegroup
-			1.6 1.61 0.005 1 mutegroup
-			1.61 1.62 0.005 1 mutegroup
-			1.62 1.63 0.005 1 mutegroup
-			1.63 1.64 0.005 1 mutegroup
-			1.64 1.65 0.005 1 mutegroup
-			1.65 1.66 0.005 1 mutegroup
-			1.66 1.67 0.005 1 mutegroup
-			1.67 1.68 0.005 1 mutegroup
-			1.68 1.69 0.005 1 mutegroup
-			1.69 1.7 0.005 1 mutegroup
-			1.7 1.71 0.005 1 mutegroup
-			1.71 1.72 0.005 1 mutegroup
-			1.72 1.73 0.005 1 mutegroup
-			1.73 1.74 0.005 1 mutegroup
-			1.74 1.75 0.005 1 mutegroup
-			1.75 1.76 0.005 1 mutegroup
-			1.76 1.77 0.005 1 mutegroup
-			1.77 1.78 0.005 1 mutegroup
-			1.78 1.79 0.005 1 mutegroup
-			1.79 1.8 0.005 1 mutegroup
-			1.8 1.81 0.005 1 mutegroup
-			1.81 1.82 0.005 1 mutegroup
-			1.82 1.83 0.005 1 mutegroup
-			1.83 1.84 0.005 1 mutegroup
-			1.84 1.85 0.005 1 mutegroup
-			1.85 1.86 0.005 1 mutegroup
-			1.86 1.87 0.005 1 mutegroup
-			1.87 1.88 0.005 1 mutegroup
-			1.88 1.89 0.005 1 mutegroup
-			1.89 1.9 0.005 1 mutegroup
-			1.9 1.91 0.005 1 mutegroup
-			1.91 1.92 0.005 1 mutegroup
-			1.92 1.93 0.005 1 mutegroup
-			1.93 1.94 0.005 1 mutegroup
-			1.94 1.96 0.005 2 50 1000 rat mutegroup2
-			1.96 1.98 0.005 2 10 1000 rat mutegroup2
-			1.98 2 0.005 2 10 1000 rat mutegroup2
-			2 2.02 0.005 2 10 1000 rat mutegroup2
-			2.02 2.04 0.005 2 10 1000 rat mutegroup2
-			2.04 2.06 0.005 2 50 1000 rat mutegroup2
-			2.06 2.08 0.005 2 10 1000 rat mutegroup2
-			2.08 2.1 0.005 2 10 1000 rat mutegroup2
-			2.1 2.12 0.005 2 10 1000 rat mutegroup2
-			2.12 2.14 0.005 2 10 1000 rat mutegroup2
-			2.14 2.16 0.005 2 50 1000 rat mutegroup2
-			2.16 2.18 0.005 2 10 1000 rat mutegroup2
-			2.18 2.2 0.005 2 10 1000 rat mutegroup2
-			2.2 2.22 0.005 2 10 1000 rat mutegroup2
-			2.22 2.24 0.005 2 10 1000 rat mutegroup2
-			2.24 2.26 0.005 2 50 1000 rat mutegroup2
-			2.26 2.28 0.005 2 10 1000 rat mutegroup2
-			2.28 2.3 0.005 2 10 1000 rat mutegroup2
-			2.3 2.32 0.005 2 10 1000 rat mutegroup2
-			2.32 2.34 0.005 2 10 1000 rat mutegroup2
-			2.34 2.36 0.005 2 50 1000 rat mutegroup2
+			1.17 1.18 0.002 2 mutegroup
+			1.18 1.19 0.002 2 mutegroup
+			1.19 1.2 0.002 2 mutegroup
+			1.2 1.21 0.002 2 mutegroup
+			1.21 1.22 0.002 2 mutegroup
+			1.22 1.23 0.002 2 mutegroup
+			1.23 1.24 0.002 2 mutegroup
+			1.24 1.25 0.002 2 mutegroup
+			1.25 1.26 0.002 2 mutegroup
+			1.26 1.27 0.002 2 mutegroup
+			1.27 1.28 0.002 2 mutegroup
+			1.28 1.29 0.002 2 mutegroup
+			1.29 1.3 0.002 2 mutegroup
+			1.3 1.31 0.002 2 mutegroup
+			1.31 1.32 0.002 2 mutegroup
+			1.32 1.33 0.002 2 mutegroup
+			1.33 1.34 0.002 2 mutegroup
+			1.34 1.35 0.002 2 mutegroup
+			1.35 1.36 0.002 2 mutegroup
+			1.36 1.37 0.002 2 mutegroup
+			1.37 1.38 0.002 2 mutegroup
+			1.38 1.39 0.002 2 mutegroup
+			1.39 1.4 0.002 2 mutegroup
+			1.4 1.41 0.002 2 mutegroup
+			1.41 1.42 0.002 2 mutegroup
+			1.42 1.43 0.002 2 mutegroup
+			1.43 1.44 0.002 2 mutegroup
+			1.44 1.45 0.002 2 mutegroup
+			1.45 1.46 0.002 2 mutegroup
+			1.46 1.47 0.002 2 mutegroup
+			1.47 1.48 0.002 2 mutegroup
+			1.48 1.49 0.002 2 mutegroup
+			1.49 1.5 0.002 2 mutegroup
+			1.5 1.51 0.002 2 mutegroup
+			1.51 1.52 0.002 2 mutegroup
+			1.52 1.53 0.002 2 mutegroup
+			1.53 1.54 0.002 2 mutegroup
+			1.54 1.55 0.002 2 mutegroup
+			1.55 1.56 0.002 2 mutegroup
+			1.56 1.57 0.002 2 mutegroup
+			1.57 1.58 0.002 2 mutegroup
+			1.58 1.59 0.002 2 mutegroup
+			1.59 1.6 0.002 2 mutegroup
+			1.6 1.61 0.002 2 mutegroup
+			1.61 1.62 0.002 2 mutegroup
+			1.62 1.63 0.002 2 mutegroup
+			1.63 1.64 0.002 2 mutegroup
+			1.64 1.65 0.002 2 mutegroup
+			1.65 1.66 0.002 2 mutegroup
+			1.66 1.67 0.002 2 mutegroup
+			1.67 1.68 0.002 2 mutegroup
+			1.68 1.69 0.002 2 mutegroup
+			1.69 1.7 0.002 2 mutegroup
+			1.7 1.71 0.002 2 mutegroup
+			1.71 1.72 0.002 2 mutegroup
+			1.72 1.73 0.002 2 mutegroup
+			1.73 1.74 0.002 2 mutegroup
+			1.74 1.75 0.002 2 mutegroup
+			1.75 1.76 0.002 2 mutegroup
+			1.76 1.77 0.002 2 mutegroup
+			1.77 1.78 0.002 2 mutegroup
+			1.78 1.79 0.002 2 mutegroup
+			1.79 1.8 0.002 2 mutegroup
+			1.8 1.81 0.002 2 mutegroup
+			1.81 1.82 0.002 2 mutegroup
+			1.82 1.83 0.002 2 mutegroup
+			1.83 1.84 0.002 2 mutegroup
+			1.84 1.85 0.002 2 mutegroup
+			1.85 1.86 0.002 2 mutegroup
+			1.86 1.87 0.002 2 mutegroup
+			1.87 1.88 0.002 2 mutegroup
+			1.88 1.89 0.002 2 mutegroup
+			1.89 1.9 0.002 2 mutegroup
+			1.9 1.91 0.002 2 mutegroup
+			1.91 1.92 0.002 2 mutegroup
+			1.92 1.93 0.002 2 mutegroup
+			1.93 1.94 0.002 2 mutegroup
+			1.94 1.96 0.002 2 10 1000 rat mutegroup2
+			1.96 1.98 0.002 2 10 1000 rat mutegroup2
+			1.98 2 0.002 2 10 1000 rat mutegroup2
+			2 2.02 0.002 2 10 1000 rat mutegroup2
+			2.02 2.04 0.002 2 10 1000 rat mutegroup2
+			2.04 2.06 0.002 2 10 1000 rat mutegroup2
+			2.06 2.08 0.002 2 10 1000 rat mutegroup2
+			2.08 2.1 0.002 2 10 1000 rat mutegroup2
+			2.1 2.12 0.002 2 10 1000 rat mutegroup2
+			2.12 2.14 0.002 2 10 1000 rat mutegroup2
+			2.14 2.16 0.002 2 10 1000 rat mutegroup2
+			2.16 2.18 0.002 2 10 1000 rat mutegroup2
+			2.18 2.2 0.002 2 10 1000 rat mutegroup2
+			2.2 2.22 0.002 2 10 1000 rat mutegroup2
+			2.22 2.24 0.002 2 10 1000 rat mutegroup2
+			2.24 2.26 0.002 2 10 1000 rat mutegroup2
+			2.26 2.28 0.002 2 10 1000 rat mutegroup2
+			2.28 2.3 0.002 2 10 1000 rat mutegroup2
+			2.3 2.32 0.002 2 10 1000 rat mutegroup2
+			2.32 2.34 0.002 2 10 1000 rat mutegroup2
+			2.34 2.36 0.005 2 10 1000 rat mutegroup2
 			2.36 2.38 0.005 2 10 1000 rat mutegroup2
 			2.38 2.4 0.005 2 10 1000 rat mutegroup2
 			2.4 2.42 0.005 2 10 1000 rat mutegroup2
 			2.42 2.44 0.005 2 10 1000 rat mutegroup2
-			2.44 2.46 0.005 2 50 1000 rat mutegroup2
+			2.44 2.46 0.005 2 10 1000 rat mutegroup2
 			2.46 2.48 0.005 2 10 1000 rat mutegroup2
 			2.48 2.5 0.005 2 10 1000 rat mutegroup2
 			2.5 2.52 0.005 2 10 1000 rat mutegroup2
 			2.52 2.54 0.005 2 10 1000 rat mutegroup2
-			2.54 2.56 0.005 2 50 1000 rat mutegroup2
+			2.54 2.56 0.005 2 10 1000 rat mutegroup2
 			2.56 2.58 0.005 2 10 1000 rat mutegroup2
 			2.58 2.6 0.005 2 10 1000 rat mutegroup2
 			2.6 2.62 0.005 2 10 1000 rat mutegroup2
 			2.62 2.64 0.005 2 10 1000 rat mutegroup2
-			2.64 2.66 0.005 2 50 1000 rat mutegroup2
+			2.64 2.66 0.005 2 10 1000 rat mutegroup2
 			2.66 2.68 0.005 2 10 1000 rat mutegroup2
 			2.68 2.7 0.005 2 10 1000 rat mutegroup2
 			2.7 2.72 0.005 2 10 1000 rat mutegroup2
 			2.72 2.74 0.005 2 10 1000 rat mutegroup2
-			2.74 2.76 0.005 2 50 1000 rat mutegroup2
+			2.74 2.76 0.005 2 10 1000 rat mutegroup2
 			2.76 2.78 0.005 2 10 1000 rat mutegroup2
 			2.78 2.8 0.005 2 10 1000 rat mutegroup2
 			2.8 2.82 0.005 2 10 1000 rat mutegroup2
 			2.82 2.84 0.005 2 10 1000 rat mutegroup2
-			2.84 2.86 0.005 2 50 1000 rat mutegroup2
+			2.84 2.86 0.005 2 10 1000 rat mutegroup2
 			2.86 2.88 0.005 2 10 1000 rat mutegroup2
 			2.88 2.9 0.005 2 10 1000 rat mutegroup2
 			2.9 2.92 0.005 2 10 1000 rat mutegroup2
 			2.92 2.94 0.005 2 10 1000 rat mutegroup2
-			2.94 2.96 0.005 2 50 1000 rat mutegroup2
+			2.94 2.96 0.005 2 10 1000 rat mutegroup2
 			2.96 2.98 0.005 2 10 1000 rat mutegroup2
 			2.98 3 0.005 2 10 1000 rat mutegroup2
 			3 3.02 0.005 2 10 1000 rat mutegroup2
 			3.02 3.04 0.005 2 10 1000 rat mutegroup2
-			3.04 3.06 0.005 2 50 1000 rat mutegroup2
+			3.04 3.06 0.005 2 10 1000 rat mutegroup2
 			3.06 3.08 0.005 2 10 1000 rat mutegroup2
 			3.08 3.1 0.005 2 10 1000 rat mutegroup2
 			3.1 3.12 0.005 2 10 1000 rat mutegroup2
 			3.12 3.14 0.005 2 10 1000 rat mutegroup2
-			3.14 3.16 0.005 2 50 1000 rat mutegroup2
+			3.14 3.16 0.005 2 10 1000 rat mutegroup2
 			3.16 3.18 0.005 2 10 1000 rat mutegroup2
 			3.18 3.2 0.005 2 10 1000 rat mutegroup2
 			3.2 3.22 0.005 2 10 1000 rat mutegroup2
 			3.22 3.24 0.005 2 10 1000 rat mutegroup2
-			3.24 3.26 0.005 2 50 1000 rat mutegroup2
+			3.24 3.26 0.005 2 10 1000 rat mutegroup2
 			3.26 3.28 0.005 2 10 1000 rat mutegroup2
 			3.28 3.3 0.005 2 10 1000 rat mutegroup2
 			3.3 3.32 0.005 2 10 1000 rat mutegroup2
 			3.32 3.34 0.005 2 10 1000 rat mutegroup2
-			3.34 3.36 0.005 2 50 1000 rat mutegroup2
+			3.34 3.36 0.005 2 10 1000 rat mutegroup2
 			3.36 3.38 0.005 2 10 1000 rat mutegroup2
 			3.38 3.4 0.005 2 10 1000 rat mutegroup2
 			3.4 3.42 0.005 2 10 1000 rat mutegroup2
 			3.42 3.44 0.005 2 10 1000 rat mutegroup2
-			3.44 3.46 0.005 2 50 1000 rat mutegroup2
+			3.44 3.46 0.005 2 10 1000 rat mutegroup2
 			3.46 3.48 0.005 2 10 1000 rat mutegroup2
 			3.48 3.5 0.005 2 10 1000 rat mutegroup2
 			3.5 3.52 0.005 2 10 1000 rat mutegroup2
 			3.52 3.54 0.005 2 10 1000 rat mutegroup2
-			3.54 3.56 0.005 2 50 1000 rat mutegroup2
+			3.54 3.56 0.005 2 10 1000 rat mutegroup2
 			3.56 3.58 0.005 2 10 1000 rat mutegroup2
 			3.58 3.6 0.005 2 10 1000 rat mutegroup2
 			3.6 3.62 0.005 2 10 1000 rat mutegroup2
 			3.62 3.64 0.005 2 10 1000 rat mutegroup2
-			3.64 3.66 0.005 2 50 1000 rat mutegroup2
+			3.64 3.66 0.005 2 10 1000 rat mutegroup2
 			3.66 3.68 0.005 2 10 1000 rat mutegroup2
 			3.68 3.7 0.005 2 10 1000 rat mutegroup2
 			3.7 3.72 0.005 2 10 1000 rat mutegroup2
 			3.72 3.74 0.005 2 10 1000 rat mutegroup2
-			3.74 3.76 0.005 2 50 1000 rat mutegroup2
+			3.74 3.76 0.005 2 10 1000 rat mutegroup2
 			3.76 3.78 0.005 2 10 1000 rat mutegroup2
 			3.78 3.8 0.005 2 10 1000 rat mutegroup2
 			3.8 3.82 0.005 2 10 1000 rat mutegroup2
 			3.82 3.84 0.005 2 10 1000 rat mutegroup2
-			3.84 3.86 0.005 2 50 1000 rat mutegroup2
+			3.84 3.86 0.005 2 10 1000 rat mutegroup2
 			3.86 3.88 0.005 2 10 1000 rat mutegroup2
 			3.88 3.9 0.005 2 10 1000 rat mutegroup2
 			3.9 3.95 0.005 2 10 1000 rat mutegroup2
@@ -1245,83 +1250,83 @@ gsave
 			5.7 5.75 0.005 2 10 1000 rat mutegroup2
 			5.75 5.8 0.005 2 10 1000 rat mutegroup2
 			5.8 5.85 0.005 2 10 1000 rat mutegroup2
-			5.85 5.9 0.01 1 mutegroup
-			5.9 5.95 0.01 1 mutegroup
-			5.95 6 0.01 1 mutegroup
-			6 6.05 0.01 1 mutegroup
-			6.05 6.1 0.01 1 mutegroup
-			6.1 6.15 0.01 1 mutegroup
-			6.15 6.2 0.01 1 mutegroup
-			6.2 6.25 0.01 1 mutegroup
-			6.25 6.3 0.01 1 mutegroup
-			6.3 6.35 0.01 1 mutegroup
-			6.35 6.4 0.01 1 mutegroup
-			6.4 6.45 0.01 1 mutegroup
-			6.45 6.5 0.01 1 mutegroup
-			6.5 6.55 0.01 1 mutegroup
-			6.55 6.6 0.01 1 mutegroup
-			6.6 6.65 0.01 1 mutegroup
-			6.65 6.7 0.01 1 mutegroup
-			6.7 6.75 0.01 1 mutegroup
-			6.75 6.8 0.01 1 mutegroup
-			6.8 6.85 0.01 1 mutegroup
-			6.85 6.9 0.01 1 mutegroup
-			6.9 6.95 0.01 1 mutegroup
-			6.95 7 0.01 1 mutegroup
-			7 7.05 0.01 1 mutegroup
-			7.05 7.1 0.01 1 mutegroup
-			7.1 7.15 0.01 1 mutegroup
-			7.15 7.2 0.01 1 mutegroup
-			7.2 7.25 0.01 1 mutegroup
-			7.25 7.3 0.01 1 mutegroup
-			7.3 7.35 0.01 1 mutegroup
-			7.35 7.4 0.01 1 mutegroup
-			7.4 7.45 0.01 1 mutegroup
-			7.45 7.5 0.01 1 mutegroup
-			7.5 7.55 0.01 1 mutegroup
-			7.55 7.6 0.01 1 mutegroup
-			7.6 7.65 0.01 1 mutegroup
-			7.65 7.7 0.01 1 mutegroup
-			7.7 7.75 0.01 1 mutegroup
-			7.75 7.8 0.01 1 mutegroup
-			7.8 7.85 0.01 1 mutegroup
-			7.85 7.9 0.01 1 mutegroup
-			7.9 7.95 0.01 1 mutegroup
-			7.95 8 0.01 1 mutegroup
-			8 8.05 0.01 1 mutegroup
-			8.05 8.1 0.01 1 mutegroup
-			8.1 8.15 0.01 1 mutegroup
-			8.15 8.2 0.01 1 mutegroup
-			8.2 8.25 0.01 1 mutegroup
-			8.25 8.3 0.01 1 mutegroup
-			8.3 8.35 0.01 1 mutegroup
-			8.35 8.4 0.01 1 mutegroup
-			8.4 8.45 0.01 1 mutegroup
-			8.45 8.5 0.01 1 mutegroup
-			8.5 8.55 0.01 1 mutegroup
-			8.55 8.6 0.01 1 mutegroup
-			8.6 8.65 0.01 1 mutegroup
-			8.65 8.7 0.01 1 mutegroup
-			8.7 8.75 0.01 1 mutegroup
-			8.75 8.8 0.01 1 mutegroup
-			8.8 8.85 0.01 1 mutegroup
-			8.85 8.9 0.01 1 mutegroup
-			8.9 8.95 0.01 1 mutegroup
-			8.95 9 0.01 1 mutegroup
-			9 9.05 0.01 1 mutegroup
-			9.05 9.1 0.01 1 mutegroup
-			9.1 9.15 0.01 1 mutegroup
-			9.15 9.2 0.01 1 mutegroup
-			9.2 9.25 0.01 1 mutegroup
-			9.25 9.3 0.01 1 mutegroup
-			9.3 9.35 0.01 1 mutegroup
-			9.35 9.4 0.01 1 mutegroup
-			9.4 9.45 0.01 1 mutegroup
-			9.45 9.5 0.01 1 mutegroup
-			9.5 9.55 0.01 1 mutegroup
-			9.55 9.6 0.01 1 mutegroup
-			9.6 9.65 0.01 1 mutegroup
-			9.65 9.7 0.01 1 mutegroup
+			5.85 5.9 0.01 2 mutegroup
+			5.9 5.95 0.01 2 mutegroup
+			5.95 6 0.01 2 mutegroup
+			6 6.05 0.01 2 mutegroup
+			6.05 6.1 0.01 2 mutegroup
+			6.1 6.15 0.01 2 mutegroup
+			6.15 6.2 0.01 2 mutegroup
+			6.2 6.25 0.01 2 mutegroup
+			6.25 6.3 0.01 2 mutegroup
+			6.3 6.35 0.01 2 mutegroup
+			6.35 6.4 0.01 2 mutegroup
+			6.4 6.45 0.01 2 mutegroup
+			6.45 6.5 0.01 2 mutegroup
+			6.5 6.55 0.01 2 mutegroup
+			6.55 6.6 0.01 2 mutegroup
+			6.6 6.65 0.01 2 mutegroup
+			6.65 6.7 0.01 2 mutegroup
+			6.7 6.75 0.01 2 mutegroup
+			6.75 6.8 0.01 2 mutegroup
+			6.8 6.85 0.01 2 mutegroup
+			6.85 6.9 0.01 2 mutegroup
+			6.9 6.95 0.01 2 mutegroup
+			6.95 7 0.01 2 mutegroup
+			7 7.05 0.01 2 mutegroup
+			7.05 7.1 0.01 2 mutegroup
+			7.1 7.15 0.01 2 mutegroup
+			7.15 7.2 0.01 2 mutegroup
+			7.2 7.25 0.01 2 mutegroup
+			7.25 7.3 0.01 2 mutegroup
+			7.3 7.35 0.01 2 mutegroup
+			7.35 7.4 0.01 2 mutegroup
+			7.4 7.45 0.01 2 mutegroup
+			7.45 7.5 0.01 2 mutegroup
+			7.5 7.55 0.01 2 mutegroup
+			7.55 7.6 0.01 2 mutegroup
+			7.6 7.65 0.01 2 mutegroup
+			7.65 7.7 0.01 2 mutegroup
+			7.7 7.75 0.01 2 mutegroup
+			7.75 7.8 0.01 2 mutegroup
+			7.8 7.85 0.01 2 mutegroup
+			7.85 7.9 0.01 2 mutegroup
+			7.9 7.95 0.01 2 mutegroup
+			7.95 8 0.01 2 mutegroup
+			8 8.05 0.01 2 mutegroup
+			8.05 8.1 0.01 2 mutegroup
+			8.1 8.15 0.01 2 mutegroup
+			8.15 8.2 0.01 2 mutegroup
+			8.2 8.25 0.01 2 mutegroup
+			8.25 8.3 0.01 2 mutegroup
+			8.3 8.35 0.01 2 mutegroup
+			8.35 8.4 0.01 2 mutegroup
+			8.4 8.45 0.01 2 mutegroup
+			8.45 8.5 0.01 2 mutegroup
+			8.5 8.55 0.01 2 mutegroup
+			8.55 8.6 0.01 2 mutegroup
+			8.6 8.65 0.01 2 mutegroup
+			8.65 8.7 0.01 2 mutegroup
+			8.7 8.75 0.01 2 mutegroup
+			8.75 8.8 0.01 2 mutegroup
+			8.8 8.85 0.01 2 mutegroup
+			8.85 8.9 0.01 2 mutegroup
+			8.9 8.95 0.01 2 mutegroup
+			8.95 9 0.01 2 mutegroup
+			9 9.05 0.01 2 mutegroup
+			9.05 9.1 0.01 2 mutegroup
+			9.1 9.15 0.01 2 mutegroup
+			9.15 9.2 0.01 2 mutegroup
+			9.2 9.25 0.01 2 mutegroup
+			9.25 9.3 0.01 2 mutegroup
+			9.3 9.35 0.01 2 mutegroup
+			9.35 9.4 0.01 2 mutegroup
+			9.4 9.45 0.01 2 mutegroup
+			9.45 9.5 0.01 2 mutegroup
+			9.5 9.55 0.01 2 mutegroup
+			9.55 9.6 0.01 2 mutegroup
+			9.6 9.65 0.01 2 mutegroup
+			9.65 9.7 0.01 2 mutegroup
 			9.7 9.8 0.01 2 5 100 rat mutegroup2
 			9.8 9.9 0.01 2 5 100 rat mutegroup2
 			9.9 10 0.01 2 5 100 rat mutegroup2

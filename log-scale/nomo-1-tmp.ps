@@ -13,7 +13,7 @@
 	in2mm
 	
 	0.2 setlinewidth
-	/eskd-b-font  findfont	2.5 scalefont setfont
+	/eskd-b-font  findfont	2.2 scalefont setfont
 	
 ${commonvar!<max_length>}
 ${commonvar!<tau_max>}
@@ -29,7 +29,9 @@ gsave
 	/dir {pop -90} def
 	/a {90 sub} def
 	/target { last middle } def
-
+	/space 1 def
+	/level0 4 def % Длина штриха нулевого уровня вложенности делений
+	/dlevel 1 def % Уменьшение длины штриха при увеличении уровня вложенности
 	
 	/startpos tau_min fun 2def
 	/posstep 
@@ -57,7 +59,7 @@ showpage
 	in2mm
 	
 	0.2 setlinewidth
-	/eskd-b-font  findfont	2.5 scalefont setfont
+	/eskd-b-font  findfont	2.2 scalefont setfont
 	
 %Транспарант
 gsave
@@ -66,6 +68,9 @@ gsave
 	/dir {pop 90} def
 	/a {90 sub} def
 	/target { first middle } def
+	/space 1 def
+	/level0 4 def % Длина штриха нулевого уровня вложенности делений
+	/dlevel 1 def % Уменьшение длины штриха при увеличении уровня вложенности
 
 	
 	/startpos tau_min fun 2def

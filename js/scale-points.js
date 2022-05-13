@@ -150,6 +150,18 @@ class Points{
 			}
 		}
 		return result;
+	}	
+	
+	minD(){
+		let result = Infinity;
+		for(let pair of this.pairsDown()){
+			let [cur, next, index] = pair;
+			let d = this.metric(next, cur);
+			if(d < result){
+				result = d;
+			}
+		}
+		return result;
 	}
 	
 	[inspect](depth, options){

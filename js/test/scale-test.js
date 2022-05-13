@@ -22,19 +22,19 @@ describe('labeled', ()=>{
 			y:(t)=>(0)
 		};
 		
-		const table = createLabeled(fun, euclid, [1.8,2.1], decimal25Levels, {min:3, max:6});
+		const table = createLabeled(fun, euclid, [1.1,1.3], decimal25Levels, {min:3, max:6});
 		
 		const muteTable = [];
 		console.log(table);
 		
 		for(let pair of table.pairsUp()){
-			let gr = createMute(fun, euclid, [pair[0].a, pair[1].a], decimalLevels, {min:0.5});
+			let gr = createMute(fun, euclid, [pair[0].a, pair[1].a], decimal25Levels, {min:0.5});
 			muteTable.push(gr);
 			//console.log(gr.step, gr.prev);
 			
-			let {step, prev, min, max} = gr;
-			if(step.equals(prev)){
-				console.log(`${min} ${max} ${step} 2 mutegroup`);
+			let {step, prev, min, max, two} = gr;
+			if(!two){
+				console.log(`${min} ${max} ${prev} 2 mutegroup`);
 			}
 			else{
 				let den = 10**(-step.e);

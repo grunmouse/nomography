@@ -200,12 +200,13 @@ class LevelsByFunctions{
 			}
 			else{
 				let result = this.getLessStepVariants(step);
-				map.set(step, results);
+				map.set(step, result);
 				return result;
 			}
 		};
 		
-		let queue = this.getLessStepVariants(sourceStep);
+		let queue = this.getLessStepVariants(sourceStep).map((val)=>([val]));
+		
 		if(n === 1){
 			return queue;
 		}
