@@ -29,4 +29,27 @@ describe('mark-levels', ()=>{
 			});
 		});
 	});
+	
+	describe('binaryLevels', ()=>{
+		const level = new LevelsByFunctions({
+			getStep(index){
+				return 2**index;
+			},
+			getIndex(step){
+				return Math.log2(step);
+			},
+			isUniversal(){
+				return true;
+			}
+		});
+		
+		it('create ok', ()=>{
+			assert(level);
+		});
+		
+		jsc.property('index<=>step', env.int(-55, 55), env, (index)=>{
+			return level.getIndex(level.getStep(index)) === index;
+		});
+
+	});
 });

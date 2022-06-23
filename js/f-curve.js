@@ -38,3 +38,5 @@ function rec_curve(f, points, index, step){
 	rec_curve(f, points, index+1, step);
 	rec_curve(f, points, index, step);
 }
+
+module.exports = fcurve;

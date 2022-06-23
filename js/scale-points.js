@@ -1,8 +1,8 @@
 const {
 	pairsDown,
 	pairsUp,
-	ctrlGroup,
-	unfullGroupDown2,
+	//ctrlGroup,
+	//unfullGroupDown2,
 	downsinglePoints
 } = require('./points-lib.js');
 

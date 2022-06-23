@@ -13,7 +13,7 @@ const {Vector} = require('@grunmouse/math-vector');
  * @property S : SquareMatrix3 - соответствующая ему матрица сдвига
  * @property Alpha : SquareMatrix3 - матрица афинного преобразования в форму (0;0),(1;0),(0;1)
  */
-function algo(A, B, C, D){
+function algo(A, B, D){
 	const S = new SquareMatrix3([
 		1, 0, -A.x,
 		0, 1, -A.y,

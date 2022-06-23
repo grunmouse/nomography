@@ -13,6 +13,7 @@
     "@grunmouse/convex": "link:..\\..\\convex",
     "@grunmouse/math-matrix": "link:..\\..\\math-matrix",
     "@grunmouse/math-vector": "link:..\\..\\math-vector",
+    "@grunmouse/multioperator-ariphmetic": "link:..\\..\\multioperator-ariphmetic",
     "decimal.js": "^10.3.1"
   },
   "devDependencies": {
