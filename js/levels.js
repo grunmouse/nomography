@@ -1,4 +1,21 @@
 const Decimal = require('decimal.js');
+const Rational = require('./rational-number.js');
+
+require('./decimal_mop.js');
+
+const {
+	symbols:{
+		ADD,
+		SUB,
+		NEG,
+		DIV,
+		MUL,
+		EQ,
+		LT,
+		GT
+	}
+} = require('@grunmouse/multioperator-ariphmetic');
+
 
 class LevelsByFunctions{
 	/**
@@ -31,6 +48,14 @@ class LevelsByFunctions{
 		this.getIndex = config.getIndex;
 		this.isUniversal = config.isUniversal;
 		this.hasDiv = config.hasDiv;
+		
+		if(config.getLimits){
+			this.getLimits = config.getLimits;
+		}
+		if(config.generateArgs){
+			this.generateArgs = config.generateArgs;
+		}
+		
 	}
 
 	/**
@@ -81,16 +106,16 @@ class LevelsByFunctions{
 	}
 	
 	getLimits(D, step){
-		let max = D[1].toNearest(step, Decimal.ROUND_FLOOR);
-		let min = D[0].toNearest(step, Decimal.ROUND_CEIL);
+		let max = new Rational(D[1]).floorBy(step, Decimal.ROUND_FLOOR);
+		let min = new Rational(D[0]).ceilBy(step, Decimal.ROUND_CEIL);
 		return {max, min, step};
 	}
 	
 	hasAllowStep(D, step){
 		let limits = this.getLimits(D, step);
-		let count = limits.max.minus(limits.min).dividedBy(step);
+		let count = limits.max[SUB](limits.min)[DIV](step);
 		if(count.isPositive()){
-			count = count.toNumber() + 1 + limits.min.greaterThan(D[0]) + limits.max.lessThan(D[1]);
+			count = count.toNumber() + 1 + limits.min[GT](D[0]) + limits.max[LT](D[1]);
 			if(count >= 3){
 				return  true;
 			}
@@ -253,18 +278,20 @@ class LevelsByFunctions{
 		const {min, max}  = this.getLimits(D, step);
 		
 		let args = [];
-		for(let x = min; x.lessThan(max); x = x.plus(step)){
+		for(let x = min; x[LT](max); x = x[ADD](step)){
 			args.push(x);
 		}
 		args.push(max);
-		if(max.lessThan(D[1])){
+		if(max[LT](D[1])){
 			args.push(D[1]);
 		}
-		if(min.greaterThan(D[0])){
+		if(min[GT](D[0])){
 			args.unshift(D[0]);
 		}
 		return args;		
 	}
 }
+
+LevelsByFunctions.symIndex = Symbol();
 
 module.exports = LevelsByFunctions;

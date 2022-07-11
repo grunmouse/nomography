@@ -2,13 +2,16 @@ const assert = require('assert');
 const jsc = require('jsverify');
 const {env} = require('@grunmouse/jsverify-env');
 const Decimal = require('decimal.js');
+const Rational = require('./rational-number.js');
+
 
 const {
 	toLevels, 
 	LevelsByFunctions, 
 	decimalLevels, 
-	decimal25Levels
-	} = require('../mark-levels.js');
+	decimal25Levels,
+	rational25Levels
+} = require('../mark-levels.js');
 
 describe('mark-levels', ()=>{
 	describe('decimal25Levels', ()=>{
@@ -27,6 +30,12 @@ describe('mark-levels', ()=>{
 				let vars = decimal25Levels.findSepVars(new Decimal(10), new Decimal(1));
 				assert.deepEqual(vars, [[10,5,1],[10,2,1]].map(arr=>arr.map(v=>(new Decimal(v)))));
 			});
+		});
+	});	
+	describe('rational25Levels', ()=>{
+		jsc.property('index<=>step', 'int16', env, (index)=>{
+			const level = rational25Levels;
+			return level.getIndex(level.getStep(index)) === index;
 		});
 	});
 	

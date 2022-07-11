@@ -5,6 +5,8 @@ const {
 	createMute,
 	decimalLevels,
 	decimal25Levels,
+	rational25Levels,
+	
 	euclid
 } = require('../scale.js');
 
@@ -22,13 +24,13 @@ describe('labeled', ()=>{
 			y:(t)=>(0)
 		};
 		
-		const table = createLabeled(fun, euclid, [1.1,1.3], decimal25Levels, {min:3, max:6});
+		const table = createLabeled(fun, euclid, [1,10], rational25Levels, {min:3, max:6});
 		
 		const muteTable = [];
 		console.log(table);
 		
 		for(let pair of table.pairsUp()){
-			let gr = createMute(fun, euclid, [pair[0].a, pair[1].a], decimal25Levels, {min:0.5});
+			let gr = createMute(fun, euclid, [pair[0].a, pair[1].a], rational25Levels, {min:0.5});
 			muteTable.push(gr);
 			//console.log(gr.step, gr.prev);
 			

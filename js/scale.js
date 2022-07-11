@@ -2,9 +2,11 @@ const {Vector2} = require('@grunmouse/math-vector');
 const {flags} = require('@grunmouse/binary');
 const Decimal = require('decimal.js');
 
+const {symbols:{SUB}}= require('@grunmouse/multioperator-ariphmetic');
+
 const toDecimal = (a)=>(new Decimal(a));
 
-const {toLevels, decimalLevels, decimal25Levels} = require('./mark-levels.js');
+const {toLevels, decimalLevels, decimal25Levels, rational25Levels} = require('./mark-levels.js');
 const ScalePoints = require('./scale-points.js');
 
 const euclid = (a, b)=>(Math.hypot(a.x - b.x, a.y - b.y));
@@ -24,7 +26,7 @@ const euclid = (a, b)=>(Math.hypot(a.x - b.x, a.y - b.y));
  * @return Array<{a, x, y}> - таблица значений надписанных штрихов
  */
 function createLabeled(f, metric, D, levels, labeldist){
-	D = D.map(toDecimal);
+	//D = D.map(toDecimal);
 	levels = toLevels(levels);
 	//Находим наибольших полезный шаг штрихов
 	let step = levels.findTop(D);
@@ -34,12 +36,12 @@ function createLabeled(f, metric, D, levels, labeldist){
 
 
 function createMute(f, metric, D, levels, dist){
-	D = D.map(toDecimal);
+	//D = D.map(toDecimal);
 	levels = toLevels(levels);
 
 	//Находим наибольший полезный шаг штрихов
 	//Предположим, что это меньший из шагов границ
-	let step = D.map(a=>levels.findLevel(a)).sort((a,b)=>(a.minus(b)))[0];
+	let step = D.map(a=>levels.findLevel(a)).sort((a,b)=>(a[SUB](b)))[0];
 
 	let variants;
 	if(levels.hasAllowStep(D, step)){
@@ -105,5 +107,6 @@ module.exports = {
 	createMute,
 	decimalLevels,
 	decimal25Levels,
+	rational25Levels,
 	euclid
 };
