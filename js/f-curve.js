@@ -7,12 +7,12 @@
  * @param b : Number
  * @param step : Number
  */
-function fcurve(f, args, step){
+function fcurve(f, a, b, step){
 	
 	let A = f(a);
 	let B = f(b);
 	
-	const points = args.[{t:a, P:A}, {t:b, P:B}];
+	const points = [{t:a, P:A}, {t:b, P:B}];
 	
 	rec_curve(f, points, 0, step);
 	
@@ -24,8 +24,8 @@ function fcurve(f, args, step){
  * @param f
  */
 function rec_curve(f, points, index, step){
-	let {a:t, A:P} = points[index];
-	let {b:t, B:P} = points[index+1];
+	let {t:a, P:A} = points[index];
+	let {t:b, P:B} = points[index+1];
 	
 	let l = B.sub(A).abs();
 	if(l <= step) return; 
