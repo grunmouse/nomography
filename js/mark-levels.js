@@ -127,7 +127,7 @@ const rational25Levels =  new LevelsByFunctions({
 		if(INDEX in step){
 			return step[INDEX];
 		}
-		if(step === 1 || step.eq(1)){
+		if(step == 1 || step.eq(1)){
 			return 0;
 		}
 		throw new Error('Empty algorithm of calculate index');

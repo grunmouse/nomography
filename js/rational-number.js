@@ -6,11 +6,17 @@ const {
 		neg,
 		div,
 		mul,
+		pow,
 		eq,
 		lt,
 		gt
 	}
 } = require('@grunmouse/multioperator-ariphmetic');
+
+const {
+	bigint,
+	float64
+} = require('@grunmouse/binary');
 
 /**
  * @param a : BigInt
@@ -42,11 +48,27 @@ class RationalNumber {
 		if(nom instanceof RationalNumber){
 			return nom;
 		}
-		nom = BigInt(nom);
 		if(den == null){
-			den = 1n;
+			if(typeof nom === 'number'){
+				if(Number.isInteger(nom)){
+					nom = BigInt(nom);
+					den = 1n;
+				}
+				else{
+					let {sign, sizedMant, sizedExp} = float64.decompFloat64(nom);
+					//abs(V) = sizedMant * 2**sizedExp = sizedMant / (2**(-sizedExp))
+					nom = sign*sizedMant;
+					den = 1n<<(-sizedExp);
+				}
+			}
+			else{
+				den = 1n;
+			}
 		}
-		den = BigInt(den);
+		else{
+			den = BigInt(den);
+			nom = BigInt(nom);
+		}
 		if(den<0n){
 			nom = -nom;
 			den = -den;
@@ -56,7 +78,7 @@ class RationalNumber {
 	}
 	
 	sign(){
-		return this.nom < 0n ? -1 : this.nom > 0n ? 1 : this.nom;
+		return this.nom < 0n ? -1 : this.nom > 0n ? 1 : 0;
 	}
 	
 	simple(){
@@ -68,6 +90,10 @@ class RationalNumber {
 		return nod > 1n ? new this.constructor(this.nom/nod, this.den/nod) : this;
 	}
 	
+	inv(){
+		return new this.constructor(this.den, this.nom);
+	}
+	
 	isPositive(){
 		return this.nom >= 0n;
 	}
@@ -77,11 +103,21 @@ class RationalNumber {
 	}
 	
 	isZero(){
-		return this.den === 0n;
+		return this.nom === 0n;
+	}
+	
+	isOne(){
+		return this.nom !== 0n && this.nom === this.den;
 	}
 	
 	valueOf(){
 		let {nom, den} = this.simple();
+		let lg = Math.max(bigint.ilog2(nom), bigint.ilog2(den));
+		if(lg > 52n){
+			let offset = lg - 52n;
+			nom = nom >> offset;
+			den = den >> offset;
+		}
 		return Number(nom)/Number(den);
 	}
 	
@@ -133,17 +169,42 @@ class RationalNumber {
 			throw new Error(`Rounding ${rounding} is not support`);
 		}
 	}
+	
+	floor(){
+		let f = this.floorBy().simple();
+		if(f.isInteger()){
+			return f.nom;
+		}
+		else{
+			throw new Error('Сломался floor');
+		}
+	}
+	
+	ceil(){
+		let f = this.ceilBy().simple();
+		if(f.isInteger()){
+			return f.nom;
+		}
+		else{
+			throw new Error('Сломался ceil');
+		}
+	}
 }
 
 const Ctor = RationalNumber;
 
+/**
+ * Добавляет бинарную операцию над RationalNumber,
+ * RationalNumber и BigInt
+ * RationalNumber и Number
+ */
 function defWithConvert(oper, fun){
 	const OPER = oper.valueOf();
 	oper.def(Ctor, Ctor, fun);
 	oper.def(Ctor, BigInt, (a, b)=>(a[OPER](new Ctor(b))));
 	oper.def(Ctor, Number, (a, b)=>(a[OPER](new Ctor(b))));
 	oper.def(BigInt, Ctor, (a, b)=>((new Ctor(a))[OPER](b)));
-	oper.def(Number, Ctor, (a, b)=>((new Ctor(b))[OPER](b)));
+	oper.def(Number, Ctor, (a, b)=>((new Ctor(a))[OPER](b)));
 }
 
 defWithConvert(add, (a, b)=>{
@@ -185,5 +246,13 @@ defWithConvert(gt, (a, b)=>{
 });
 gt.useName(Ctor);
 
+pow.def(Ctor, BigInt, (a, p)=>{
+	return new Ctor(a.nom**p, a.den**p);
+});
 
+pow.def(Ctor, Number, (a, p)=>{
+	return a[pow](BigInt(p));
+});
+
+pow.useName(Ctor);
 module.exports = RationalNumber;

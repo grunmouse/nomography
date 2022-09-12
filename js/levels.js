@@ -26,13 +26,13 @@ class LevelsByFunctions{
 	
 	/**
 	 * @function getIndex
-	 * @param step : (Number|Decimal) - значение шага
+	 * @param step : (Number|Rational) - значение шага
 	 * @param Integer - индекс шага
 	 */
 	
 	/**
 	 * @function isUniversal - проверяет универсальность делителя для всех больших делителей
-	 * @param divisor : (Number|Decimal) - проверяемый делитель
+	 * @param divisor : (Number|Rational) - проверяемый делитель
 	 * @return Boolean
 	 */
 	 
