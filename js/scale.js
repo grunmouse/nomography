@@ -1,10 +1,10 @@
 const {Vector2} = require('@grunmouse/math-vector');
 const {flags} = require('@grunmouse/binary');
-const Decimal = require('decimal.js');
+//const Decimal = require('decimal.js');
 
 const {symbols:{SUB}}= require('@grunmouse/multioperator-ariphmetic');
 
-const toDecimal = (a)=>(new Decimal(a));
+//const toDecimal = (a)=>(new Decimal(a));
 
 const {toLevels, decimalLevels, decimal25Levels, rational25Levels} = require('./mark-levels.js');
 const ScalePoints = require('./scale-points.js');

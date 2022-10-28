@@ -9,7 +9,9 @@ const {
 		pow,
 		eq,
 		lt,
-		gt
+		gt,
+		le,
+		ge
 	}
 } = require('@grunmouse/multioperator-ariphmetic');
 
@@ -43,6 +45,9 @@ function NOD(a, b){
 	return a;
 }
 
+BigInt.max = (...arr)=>arr.reduce((akk, a)=>(a > akk ? a : akk));
+BigInt.min = (...arr)=>arr.reduce((akk, a)=>(a < akk ? a : akk));
+
 class RationalNumber {
 	constructor(nom, den){
 		if(nom instanceof RationalNumber){
@@ -73,6 +78,7 @@ class RationalNumber {
 			nom = -nom;
 			den = -den;
 		}
+
 		this.nom = nom;
 		this.den = den;
 	}
@@ -111,8 +117,23 @@ class RationalNumber {
 	}
 	
 	valueOf(){
+		if(!this.isPositive()){
+			return - this.neg().valueOf()
+		}
+		
 		let {nom, den} = this.simple();
-		let lg = Math.max(bigint.ilog2(nom), bigint.ilog2(den));
+		if(nom === 0n){
+			return 0;
+		}
+		if(den === 0n){
+			if(nom === 0n){
+				return NaN;
+			}
+			else{
+				return Infinity;
+			}
+		}
+		let lg = BigInt.max(bigint.ilog2(nom), bigint.ilog2(den));
 		if(lg > 52n){
 			let offset = lg - 52n;
 			nom = nom >> offset;
@@ -126,11 +147,15 @@ class RationalNumber {
 	}
 	
 	floorBy(m){
+		if(!this.isPositive()){
+			return this.neg().ceilBy(m).neg();
+		}
+
 		const Ctor = this.constructor;
 		if(m == null){
 			m = new Ctor(1n, 1n);
 		}
-		else if(!m instanceof this.constructor){
+		else if(!(m instanceof Ctor)){
 			m = new Ctor(m, 1n);
 		}
 		
@@ -142,18 +167,22 @@ class RationalNumber {
 	}	
 	
 	ceilBy(m){
+		if(!this.isPositive()){
+			return this.neg().floorBy(m).neg();
+		}
+
 		const Ctor = this.constructor;
 		if(m == null){
 			m = new Ctor(1n, 1n);
 		}
-		else if(!m instanceof this.constructor){
+		else if(!(m instanceof Ctor)){
 			m = new Ctor(m, 1n);
 		}
 		
 		let den = this.den * m.den;
 		
 		let nom = mceil(this.nom*m.den, m.nom*this.den);
-		
+
 		return new Ctor(nom, den);
 	}
 	toNearest(m, rounding){
@@ -245,6 +274,16 @@ defWithConvert(gt, (a, b)=>{
 	return a.nom * b.den > b.nom * a.den;
 });
 gt.useName(Ctor);
+
+defWithConvert(le, (a, b)=>{
+	return a.nom * b.den <= b.nom * a.den;
+});
+le.useName(Ctor);
+
+defWithConvert(ge, (a, b)=>{
+	return a.nom * b.den >= b.nom * a.den;
+});
+ge.useName(Ctor);
 
 pow.def(Ctor, BigInt, (a, p)=>{
 	return new Ctor(a.nom**p, a.den**p);

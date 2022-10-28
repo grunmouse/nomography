@@ -1,5 +1,6 @@
 const Decimal = require('decimal.js');
 const Rational = require('./rational-number.js');
+const {ratlog} = require('./rational-ilog2.js');
 
 const {symbols:{DIV}}= require('@grunmouse/multioperator-ariphmetic');
 
@@ -130,7 +131,24 @@ const rational25Levels =  new LevelsByFunctions({
 		if(step == 1 || step.eq(1)){
 			return 0;
 		}
-		throw new Error('Empty algorithm of calculate index');
+		console.log('Index by log');
+		console.log(step);
+		//iexp - целая часть десятичного логарифма step
+		//step = part * 10**iexp
+		let {x: part, y: iexp} = ratlog(step, new Rational(10));
+		
+		let index = Number(iexp) * 3;
+		part = part.valueOf();
+		
+		let offset = [1,2,5].indexOf(part);
+		if(offset == -1){
+			throw new Error('Error in algorithm of calculating index');
+		}
+		index += offset;
+		
+		step[INDEX] = index;
+		
+		return index;
 	},
 	hasDiv(a, b){
 		return b[DIV](a).isInteger();

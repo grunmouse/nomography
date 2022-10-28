@@ -21,7 +21,7 @@ class LevelsByFunctions{
 	/**
 	 * @function getStep
 	 * @param index : Integer - индекс в порядке возрастания шага
-	 * @return Decimal - значение шага
+	 * @return Rational - значение шага
 	 */
 	
 	/**
@@ -106,8 +106,8 @@ class LevelsByFunctions{
 	}
 	
 	getLimits(D, step){
-		let max = new Rational(D[1]).floorBy(step, Decimal.ROUND_FLOOR);
-		let min = new Rational(D[0]).ceilBy(step, Decimal.ROUND_CEIL);
+		let max = new Rational(D[1]).floorBy(step);
+		let min = new Rational(D[0]).ceilBy(step);
 		return {max, min, step};
 	}
 	

@@ -29,19 +29,21 @@ const common = {
 };
 
 
-const table = scale.createLabeled(fun, scale.euclid, [1,10], scale.decimal25Levels, {min:3, max:6});
+const table = scale.createLabeled(fun, scale.euclid, [1,10], scale.rational25Levels, {min:3, max:6});
 
 const muteTable = [];
 for(let pair of table.pairsUp()){
-	let gr = scale.createMute(fun, scale.euclid, [pair[0].a, pair[1].a], scale.decimal25Levels, {min:0.5});
+	let gr = scale.createMute(fun, scale.euclid, [pair[0].a, pair[1].a], scale.rational25Levels, {min:0.5});
 	let {step, prev, min, max, two} = gr;
+	max = max.valueOf();
+	min = min.valueOf();
 	if(!two){
-		muteTable.push(`${min} ${max} ${prev} 2 mutegroup`);
+		muteTable.push(`${min} ${max} ${+prev} 2 mutegroup`);
 	}
 	else{
-		let den = 10**(-step.e);
-		let nom = prev.times(den).toNumber();
-		muteTable.push(`${min} ${max} ${step} 2 ${nom} ${den} rat mutegroup2`);
+		let den = Number(step.den);
+		let nom = Number(prev.nom * (step.den / prev.den));
+		muteTable.push(`${min} ${max} ${+step} 2 ${nom} ${den} rat mutegroup2`);
 	}
 }
 
@@ -53,7 +55,7 @@ const env = {
 		
 	},
 	marks:()=>{
-		const commands = table.map((item)=>(`\t\t\t${item.a} value`));
+		const commands = table.map((item)=>(`\t\t\t${+item.a} value`));
 		
 		return commands.join('\n');
 	},

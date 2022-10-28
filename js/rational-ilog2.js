@@ -25,20 +25,86 @@ function ilog2frac(b, a){
 
 
 function findy(a, b, c, d, ymin, ymax){
+	/*
+	Действует дополнительное соглашение, что c > d
+	*/
+	if(d > c){
+		throw new Error('Некорректное использование findy: c/d<1');
+	}
+	
+	/*	
+		Реслизует проверку найденного y
+		@return 0 - значение подошло
+				-1 - значение нужно уменьшить
+				1 - значение нужно увеличить
+	*/
 	function cond(y){
-		const bcy = b*c**y;
-		const ady = a*d**y;
-		
-		if(ady < bcy){
-			return 1;
+		//TODO проверить логику
+		/*
+			Проверяемая функция:
+			f(y) = a/b * (d/c)**y;
+			
+			Первое условие
+			1 <= f(y)
+			Второе условие
+			f(y) < c/d
+			
+			Т.к. d/c<1, функция f(y) убывает.
+			Если y будет слишком большим - нарушится первое условие.
+			Если y будет слишком маленьким - нарушится второе условие.
+			
+			Преобразование первого условия:
+			1 <= a/b * (d/c)**y; - исходный вариант
+			b * c**y <= a * d**y;
+			
+			1 <= a/b * (c/d)**(-y); - вариант для отрицательного y
+			b * d**(-y) <= a * c**(-y);
+			
+			Преобразование второго условия:
+			a/b * (d/c)**y < c/d; - исходный вариант
+			a * d**(y+1) < b * c**(y+1);
+			
+			a/b * (c/d)**(-y) < c/d; - вариант для отрицательного y
+			a * c**(-y)/d**(-y) < b * c/d;
+			a * c**(-y) < b * c * d**(-y-1);
+			a * c**(-y-1) < b * d**(-y-1);
+			
+		*/
+		if(y < 0n){
+			//Первое условие
+			if(b * d**(-y) <= a * c**(-y)){
+				//Второе условие
+				if(a * c**(-y-1n) < b * d**(-y-1n)){
+					return 0;
+				}
+				else{
+					//y слишком маленький
+					return 1; //увеличить
+				}
+			}
+			else{
+				//y слишком большой
+				return -1; //уменьшить
+			}
 		}
-		const bcy1 = bcy*c;
-		const ady1 = ady*d;
-		if(ady1 >= bcy1){
-			return -1;
+		else{
+			//Первое условие
+			if(b * c**y <= a * d**y){
+				//Второе условие
+				if(a * d**(y+1n) < b * c**(y+1n)){
+					return 0;
+				}
+				else{
+					//y слишком маленький
+					return 1; //увеличить
+				}
+			}
+			else{
+				//y слишком большой
+				return -1; //уменьшить
+			}
+			
 		}
-		
-		return 0;
 	}
 
 	let lmin = cond(ymin);
@@ -70,7 +136,6 @@ function findy(a, b, c, d, ymin, ymax){
 		}
 		else if(lmid === 1){
 			ymin = ymid;
-			ymax = ymid;
 		}
 	}
 }
@@ -78,8 +143,10 @@ function findy(a, b, c, d, ymin, ymax){
 /**
  * @param value : RationalNumber
  * @param base : RationalNumber
+ * @return {x, y} : value = x * base**y
  */
 function ratlog(value, base){
+
 	if(value.le(0)){
 		throw new RangeError('log(0)');
 	}
@@ -126,7 +193,13 @@ function ratlog(value, base){
 	
 	let y = findy(a, b, c, d, umin-1n, umax);
 	
-	let x = new RationalNumber(a*d**y, b*c**y).simple();
+	let x;
+	if(y<0n){
+		x = new RationalNumber(a*c**(-y), b*d**(-y)).simple();
+	}
+	else{
+		x = new RationalNumber(a*d**y, b*c**y).simple();
+	}
 	
 	return {y, x};
 }

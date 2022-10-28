@@ -28,6 +28,9 @@ $$\Rightarrow x \in \mathbb Q$$
 Целесообразно искать 
 $$ x \in \left[1; \frac{c}{d} \right) %]$$
 
+##### Вариант для $y<0$
+$$x(y) = \frac{a c ^{-y}}{b d^{-y}}$$
+
 #### Выражение $y$ черех $x$
 
 $$\log_2( a d^y) = \log_2(x b c^y); $$
@@ -61,6 +64,21 @@ $$\begin{cases}
 	b c^y \le a d ^y,\\
 	a d ^{y+1} < b c^{y+1}.
 \end{cases}$$
+
+##### Если $y<0$
+$$b c^y \le a d ^y 
+\Leftrightarrow
+\frac{b}{c^{-y}} \le \frac{a}{d ^{-y }};$$
+$$a d ^{y+1} < b c^{y+1} 
+\Leftrightarrow
+=\frac{a}{d ^{-y+1}} < \frac{b}{c^{-y+1}};
+$$
+$$-y+1 \le 0;$$
+$$\begin{cases}
+	b d^{-y} \le a c^{-y},\\
+	a c^{1-y} < b d^{1-y}.
+\end{cases}$$
+
 
 ### Вычисление приближенного $y$
 
