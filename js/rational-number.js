@@ -146,6 +146,11 @@ class RationalNumber {
 		return this.valueOf();
 	}
 	
+	join(separator){
+		separator = separator || ' ';
+		return this.nom + separator + this.den;
+	}
+	
 	floorBy(m){
 		if(!this.isPositive()){
 			return this.neg().ceilBy(m).neg();

@@ -29,23 +29,21 @@ const common = {
 };
 
 
-const table = scale.createLabeled(fun, scale.euclid, [1,10], scale.rational25Levels, {min:3, max:6});
+const report = scale.createScaleReport(fun, scale.euclid, [1,10], scale.rational25Levels, {min:3, max:6}, {min:0.5});
 
-const muteTable = [];
-for(let pair of table.pairsUp()){
-	let gr = scale.createMute(fun, scale.euclid, [pair[0].a, pair[1].a], scale.rational25Levels, {min:0.5});
+const table = report.labeledMarks;
+
+//console.log(table.points[0]);
+
+const muteTable = report.mutegroups.map((gr)=>{;
 	let {step, prev, min, max, two} = gr;
-	max = max.valueOf();
-	min = min.valueOf();
 	if(!two){
-		muteTable.push(`${min} ${max} ${+prev} 2 mutegroup`);
+		return `${min.simple().join()} ${max.simple().join()} ${prev.simple().join()} 2 mutegrouprat`;
 	}
 	else{
-		let den = Number(step.den);
-		let nom = Number(prev.nom * (step.den / prev.den));
-		muteTable.push(`${min} ${max} ${+step} 2 ${nom} ${den} rat mutegroup2`);
+		return `${min.simple().join()} ${max.simple().join()} ${step.simple().join()} 2 ${prev.simple().join()} mutegrouprat2`;
 	}
-}
+});
 
 const env = {
 	commonvar:(env)=>{

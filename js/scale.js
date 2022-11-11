@@ -1,12 +1,10 @@
 const {Vector2} = require('@grunmouse/math-vector');
 const {flags} = require('@grunmouse/binary');
-//const Decimal = require('decimal.js');
 
 const {symbols:{SUB}}= require('@grunmouse/multioperator-ariphmetic');
 
-//const toDecimal = (a)=>(new Decimal(a));
 
-const {toLevels, decimalLevels, decimal25Levels, rational25Levels} = require('./mark-levels.js');
+const {toLevels, rational25Levels} = require('./mark-levels.js');
 const ScalePoints = require('./scale-points.js');
 
 const euclid = (a, b)=>(Math.hypot(a.x - b.x, a.y - b.y));
@@ -26,7 +24,6 @@ const euclid = (a, b)=>(Math.hypot(a.x - b.x, a.y - b.y));
  * @return Array<{a, x, y}> - таблица значений надписанных штрихов
  */
 function createLabeled(f, metric, D, levels, labeldist){
-	//D = D.map(toDecimal);
 	levels = toLevels(levels);
 	//Находим наибольших полезный шаг штрихов
 	let step = levels.findTop(D);
@@ -36,7 +33,6 @@ function createLabeled(f, metric, D, levels, labeldist){
 
 
 function createMute(f, metric, D, levels, dist){
-	//D = D.map(toDecimal);
 	levels = toLevels(levels);
 
 	//Находим наибольший полезный шаг штрихов
@@ -102,11 +98,32 @@ function createMute(f, metric, D, levels, dist){
 }
 
 
+function createAllMute(f, metric, table, levels, dist){
+	const result = [];
+	for(let pair of table.pairsUp()){
+		let gr = createMute(f, metric, [pair[0].a, pair[1].a], levels, dist);
+		result.push(gr);
+	}
+	return result;
+}
+
+function createScaleReport(f, metric, D, levels, labeldist, mutedist){
+	const labeledMarks = createLabeled(f, metric, D, levels, labeldist);
+	const mutegroups = createAllMute(f, metric, labeledMarks, levels, mutedist);
+	
+	return {
+		labeledMarks,
+		mutegroups
+	};
+}
+
+
+
 module.exports = {
 	createLabeled,
 	createMute,
-	decimalLevels,
-	decimal25Levels,
+	createAllMute,
+	createScaleReport,
 	rational25Levels,
 	euclid
 };

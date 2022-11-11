@@ -1,7 +1,11 @@
 {(../../ps-math/) stealfolder} /2sub ifnotkey
 (struct-show.ps) stealfile
 
-
+% Применяет к паре чисел оператор, заданный матрицей входа
+% width, height - вектор размеров надписи
+% xw, xh, yw, yh - компоненты матрицы входа,
+% x = xw*width + xh*height;
+% y = yw*width + yh*height;
 %[width, height, xw, xh, yw, yh]
 /makepoint {
 	2 2index 2cdot % y
@@ -121,6 +125,7 @@
 } def
 
 % Выводит строку в нужной позиции относительно текущей точки
+% Текущая точка полагается точкой входа в прямоугольную область надписи
 % xw, xh, yw, yh - матрица точки прицеливания
 % a - курс входа
 %[str, xw, xh, yw, yh, a]
@@ -185,4 +190,35 @@
 
 		showlabel
 	grestore
+} def
+
+% Рисует выноску от текущей точки к заданной
+% x, y - точка прицеливания надписи
+%[x, y, str, xw, xh, yw, yh, a, dir, space]
+/out-label {
+	0 dict begin
+		/space exch def
+		/dir exch def
+		/a exch def
+		/ty 2edef
+		/tx 2edef
+		/str exch def
+		/target 2edef
+		
+		target
+		str struct-size 
+		2dup tx ty makepoint 
+		a
+		bordervector
+		2sub
+		currentpoint
+		2sub
+		2hypot
+		/linelength exch def
+		
+		str tx ty a dir space linelength
+		
+		
+			
+	end
 } def

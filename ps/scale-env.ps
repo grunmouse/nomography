@@ -175,7 +175,7 @@
 		% [ x1 x2 c level ]
 		/mutegroup {
 			0 dict begin
-				mark-len /len exch def
+				/level exch def
 				/c exch def
 				/x2 exch def
 				/x1 exch def
@@ -186,17 +186,75 @@
 				x2
 				{
 					%[x]
-					/x exch def
-					
-					x movepos
-					len
-					x dir
-					polar-line
+					level
+					mutemark
 				} for
 				grestore
 			end
 		} def		
-	
+		
+		%[nom1, den1, nom2, den2, nomC, denC, level]
+		/mutegrouprat {
+			0 dict begin
+				/level exch def
+				/c 2edef
+				/x2 2edef
+				/x1 2edef
+				
+				gsave
+				x1 c fraction-add
+				c
+				x2
+				{
+					%[nom, den]
+					div
+					%[x]
+					level
+					mutemark
+				} fraction-for
+				grestore
+			end
+		} def
+		
+		%[nom1, den1, nom2, den2, nomC, denC, level, nomM, denM]
+		/mutegrouprat2 {
+			/m 2edef
+			/level exch def
+			/c 2edef
+			/x2 2edef
+			/x1 2edef
+			
+			gsave
+				x1 c fraction-add
+				c
+				x2
+				{
+					%[nom, den]
+					2dup div
+					/x exch def
+					
+					%[nom, den]
+					m
+					fraction-has-div
+					{
+						%then
+						x
+						level 1 sub
+						mutemark
+					}
+					{
+						%else
+						x
+						level
+						mutemark
+					}
+					ifelse
+					
+				} fraction-for
+			
+			grestore
+		} def
+		
 		currentdict
 	end
 } def
