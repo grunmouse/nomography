@@ -1,4 +1,5 @@
 const {scale} = require('@grunmouse/nomography');
+
 const fmt = require('@grunmouse/format-recursive');
 
 const fs = require('fs');

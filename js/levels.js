@@ -1,7 +1,4 @@
-const Decimal = require('decimal.js');
 const Rational = require('./rational-number.js');
-
-require('./decimal_mop.js');
 
 const {
 	symbols:{
