@@ -30,13 +30,13 @@ const common = {
 };
 
 
-const report = scale.createScaleReport(fun, scale.euclid, [1,10], scale.rational25Levels, {min:3, max:6}, {min:0.5});
-
-const table = report.labeledMarks;
+const table = scale.createScaleReport(fun, scale.euclid, [1,10], scale.rational25Levels, {min:3, max:6}, {min:0.5});
 
 //console.log(table.points[0]);
 
-const muteTable = report.mutegroups.map((gr)=>{;
+const muteTable = table.map((point)=>{
+	let gr = point.muteGroup;
+	if(!gr) return '';
 	let {step, prev, min, max, two} = gr;
 	if(!two){
 		return `${min.simple().join()} ${max.simple().join()} ${prev.simple().join()} 2 mutegrouprat`;

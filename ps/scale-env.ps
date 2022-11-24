@@ -25,6 +25,16 @@
 	grestore
 } def
 
+%[length, dir]
+/polar-to {
+	exch
+	1 index 
+	% dir, length, dir
+	rotate
+	0 rlineto
+	neg
+	rotate
+} def
 
 %[f]
 /scale-env {
@@ -128,6 +138,30 @@
 				currentarg dir dup a exch
 				space level0 point-detail
 			end
+		} def
+		
+
+		% [label, dir2, lx, ly, x]
+		/out-label {
+			gsave
+			0 dict begin
+				%x TODO
+				movepos
+				level0 currentarg dir polar-to
+				%lx ly TODO
+				lineto
+				%dir2 TODO
+				/dir2 exch def
+				%label TODO
+				
+				target
+				dir2 a dir2 
+				space 
+				level0 
+				%str, xw, xh, yw, yh, a, dir, space, length
+				point-detail
+			end
+			grestore
 		} def
 		
 		%[x, level]

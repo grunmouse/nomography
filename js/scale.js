@@ -100,8 +100,9 @@ function createMute(f, metric, D, levels, dist){
 function createAllMute(table, dist){
 	const {f, metric, levels} = table;
 	const result = [];
-	for(let pair of table.pairsUp()){
+	for(let pair of table.pairs()){
 		let gr = createMute(f, metric, [pair[0].a, pair[1].a], levels, dist);
+		pair[1].muteGroup = gr;
 		result.push(gr);
 	}
 	return result;
@@ -111,10 +112,7 @@ function createScaleReport(f, metric, D, levels, labeldist, mutedist){
 	const labeledMarks = createLabeled(f, metric, D, levels, labeldist);
 	const mutegroups = createAllMute(labeledMarks, mutedist);
 	
-	return {
-		labeledMarks,
-		mutegroups
-	};
+	return labeledMarks;
 }
 
 

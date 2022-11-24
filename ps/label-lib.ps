@@ -192,33 +192,3 @@
 	grestore
 } def
 
-% Рисует выноску от текущей точки к заданной
-% x, y - точка прицеливания надписи
-%[x, y, str, xw, xh, yw, yh, a, dir, space]
-/out-label {
-	0 dict begin
-		/space exch def
-		/dir exch def
-		/a exch def
-		/ty 2edef
-		/tx 2edef
-		/str exch def
-		/target 2edef
-		
-		target
-		str struct-size 
-		2dup tx ty makepoint 
-		a
-		bordervector
-		2sub
-		currentpoint
-		2sub
-		2hypot
-		/linelength exch def
-		
-		str tx ty a dir space linelength
-		
-		
-			
-	end
-} def

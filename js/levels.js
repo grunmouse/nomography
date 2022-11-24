@@ -14,7 +14,7 @@ const {
 } = require('@grunmouse/multioperator-ariphmetic');
 
 
-class LevelsByFunctions{
+class Levels{
 	/**
 	 * @function getStep
 	 * @param index : Integer - индекс в порядке возрастания шага
@@ -289,6 +289,6 @@ class LevelsByFunctions{
 	}
 }
 
-LevelsByFunctions.symIndex = Symbol();
+Levels.symIndex = Symbol();
 
-module.exports = LevelsByFunctions;
+module.exports = Levels;

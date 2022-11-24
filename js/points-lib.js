@@ -17,21 +17,13 @@ function ctrlGroup(points, min){
 /**
  * Прореживает точки, удаляя некоторые из них в тех местах, где они слишком частые
  */
-function downsinglePoints(points, labeldist){
-	for(let group of unfullGroupDown2(points, labeldist)){
-		
-		let index = points.indexOf(group[0]), length = group.length;
-
-		group = handleUnfull(group, labeldist.min);
-		
-		points.splice(index, length, ...group);
-	}
-	
-	return points;
+function downsinglePoints(points, labeldist, metric){
+	return handleUnfull(points, labeldist, metric)
 }
 
 
-function handleUnfull(group, min){
+
+function handleUnfull(group, dist, metric){
 	const length = group.length;
 	const first = group[0];
 	const last = group[length-1];
@@ -47,8 +39,11 @@ function handleUnfull(group, min){
 	};
 	let minmaxD = Infinity, selgroup = group;
 
+	//let vars = filterVariants(gen(first, over), dist.min, metric);
+	let vars = generateVariants(group, dist, metric);
+	
 	const debugMap = [];
-	for(let points of filterVariants(gen(first, over), min)){
+	for(let points of vars){
 		if(points.maxD < minmaxD){
 			minmaxD = points.maxD;
 			selgroup = points;
@@ -62,15 +57,77 @@ function handleUnfull(group, min){
 	return selgroup;
 }
 
+/**
+ * Генерирует варианты прореженной группы
+ */
+function * generateVariants(group, dist, metric){
+	const mapCode = new WeakMap(group.map((p, i)=>([p, 1n<<BigInt(i)])));
+	
+	const codeIndex = (points)=>(points.reduce((akk, p)=>(akk + mapCode.get(p)), 0n));
+	
+	function getToDrop(points){
+		const ubound = points.length-1;
+		return Array.from(points, (b, i)=>{
+			if(i === 0 || i === ubound){
+				return {drop:0, leave:Infinity};
+			}
+			let a = points[i-1], c = points[i+1];
+			
+			let _min = dist.min / Math.min(metric(a,b), metric(b, c));
+			let drop = _min < 1 ? 0 : _min;
+			let _max = metric(a, c) / dist.max;
+			let leave = _max < 1 ? 0 : _max;
+			
+			return {drop, leave, i};
+		});
+	}
+	
+	const queue = [], exists = new Set();
+	const push = (points)=>{
+		let i = codeIndex(points);
+		if(!exists.has(i)){
+			queue.push(points);
+			exists.add(i);
+		}
+	};
+	
+	push(group);
+	let index = 0;
+	while(index < queue.length){
+		let current = queue[index];
+		
+		let anote = getToDrop(current);
+		
+		let isAccept = anote.every(({drop})=>(drop === 0));
+		
+		if(isAccept){
+			let maxD = current.reduce((d, p, i)=>(i=== 0 ? 0 : Math.max(d, metric(p, current[i-1]))), 0);
+			current.maxD = maxD;
+			yield current;
+		}
+		else{
+			for(let a of anote){
+				if(a.drop > 0){
+					//Для каждой точки, назначенной на удаление, создаём вариант без этой точки
+					let variant = current.filter((p, i)=>(i != a.i));
+					push(variant);
+				}
+			}
+		}
+		++index;
+	}
+	
+}
 
-function * filterVariants(genPoint, min){
+
+function * filterVariants(genPoint, min, metric){
 
 	byvalue:for(let points of genPoint){
 		let maxD = 0;
 		//Контроль дистанций
 		for(let pair of pairsUp(points)){
 			let [cur, next, i] = pair;
-			let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+			let d = metric(cur, next);
 			if(d<min){
 				continue byvalue;
 			}
@@ -84,11 +141,11 @@ function * filterVariants(genPoint, min){
 }
 
 
-function *unfullGroupDown2(points, dist){
+function *unfullGroupDown2(points, dist, metric){
 	let group, after;
 	for(let pair of pairsDown(points)){
 		let [cur, next, i] = pair;
-		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
+		let d = metric(cur, next);
 		if(d<=dist.min){
 			if(group){
 				group.unshift(cur);
@@ -151,9 +208,5 @@ function * pairsDown(arr){
 }
 
 module.exports = {
-	pairsDown,
-	pairsUp,
-	unfullGroupDown2,
-	downsinglePoints,
-	ctrlGroup
+	downsinglePoints
 }
