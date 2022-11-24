@@ -1,10 +1,86 @@
-const {
-	pairsLast,
-	pairsUp,
-	downsinglePoints
-} = require('./points-lib.js');
-
 const inspect = Symbol.for('nodejs.util.inspect.custom');
+
+function downsinglePoints(group, dist, metric){
+	let minmaxD = Infinity, selgroup = group;
+
+	let vars = downsingleVariants(group, dist, metric);
+	
+	//const debugMap = [];
+	for(let points of vars){
+		let maxD = points.reduce((d, p, i)=>(i=== 0 ? 0 : Math.max(d, metric(p, points[i-1]))), 0);
+		if(maxD < minmaxD){
+			minmaxD = maxD;
+			selgroup = points;
+		}
+		//debugMap.push([points, points.maxD]);
+	}
+	
+	//debugMap.sort(([A, ad], [B, bd])=>(ad-bd));
+	//console.dir(debugMap.slice(0,2), {depth:4});
+	
+	return selgroup;
+}
+
+/**
+ * Генерирует варианты прореженной группы
+ */
+function * downsingleVariants(group, dist, metric){
+	const mapCode = new WeakMap(group.map((p, i)=>([p, 1n<<BigInt(i)])));
+	
+	const codeIndex = (points)=>(points.reduce((akk, p)=>(akk + mapCode.get(p)), 0n));
+	
+	function getToDrop(points){
+		const ubound = points.length-1;
+		return Array.from(points, (b, i)=>{
+			if(i === 0 || i === ubound){
+				return {drop:0, leave:Infinity};
+			}
+			let a = points[i-1], c = points[i+1];
+			
+			let _min = dist.min / Math.min(metric(a,b), metric(b, c));
+			let drop = _min < 1 ? 0 : _min;
+			let _max = metric(a, c) / dist.max;
+			let leave = _max < 1 ? 0 : _max;
+			
+			return {drop, leave, i};
+		});
+	}
+	
+	const queue = [], exists = new Set();
+	const push = (points)=>{
+		let i = codeIndex(points);
+		if(!exists.has(i)){
+			queue.push(points);
+			exists.add(i);
+		}
+	};
+	
+	push(group);
+	let index = 0;
+	while(index < queue.length){
+		let current = queue[index];
+		
+		let anote = getToDrop(current);
+		
+		let isAccept = anote.every(({drop})=>(drop === 0));
+		
+		if(isAccept){
+			yield current;
+		}
+		else{
+			for(let a of anote){
+				if(a.drop > 0){
+					//Для каждой точки, назначенной на удаление, создаём вариант без этой точки
+					let variant = current.filter((p, i)=>(i != a.i));
+					push(variant);
+				}
+			}
+		}
+		++index;
+	}
+	
+}
+
 
 /**
  * Разбивает слишком длинное деление
@@ -213,15 +289,6 @@ class PointsBase{
 	}
 }
 
-class PointsExcluded extends PointsBase{
-	
-	constructor(source, code, metric, labeldist){
-		
-		super(points, metric, levels, labeldist);
-	}
-}
-
-
 class Points extends PointsBase{
 
 	constructor(f, metric, D, step, levels, labeldist){
@@ -234,9 +301,6 @@ class Points extends PointsBase{
 		this.f = f;
 		this.fun = fun;
 		this.step = step;
-		//this.downsingled = this.full = this.ctrlMin(labeldist.min);
-		//this.fulled = this.ctrlMax(labeldist.max);
-		//this.edited = false;
 	}
 	
 	/**
@@ -251,13 +315,17 @@ class Points extends PointsBase{
 			console.log('call downsingle after edit');
 			return this;
 		}
-
-		this.points = downsinglePoints(this.points, this.labeldist, this.metric);
+		const {points, labeldist, metric} = this;
+		this.points = downsinglePoints(points, labeldist, metric);
 		this.downsingled = true;
-		if(this.points.length === 2){
-			this.fulled = true;
-		}
 		
+		for(let pair of this.pairs()){
+			let i = pair.map(p=>points.indexOf(p));
+			if(i[1]-i[0] > 1){
+				pair[1].downsingled = true;
+			}
+		}
+
 		return this;
 	}
 	
@@ -273,16 +341,21 @@ class Points extends PointsBase{
 			console.log('call expand after edit');
 			return this;
 		}
-		const points = this;
+		const me = this;
 		const {f, metric, step, levels, labeldist} = this;
-		for(let pair of points.pairsLast()){
+
+		for(let pair of me.pairsLast()){
 			let [cur, next, index] = pair;
+			
+			if(next.downsingled) continue;
+			
 			let d = metric(next, cur);
 			if(d > labeldist.max){
 				let group = zwischenLabeled(f, metric, [cur.a, next.a], step, levels, labeldist);
-				points.pairToGroup(index, group);
+				me.pairToGroup(index, group);
 			}
 		}
+
 		this.fulled = true;
 		return this;
 	}

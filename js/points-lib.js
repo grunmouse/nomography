@@ -1,57 +1,24 @@
-const {flags} = require('@grunmouse/binary');
-
-/**
- * Проверяет группу точек на минимальное деление
- */
-function ctrlGroup(points, min){
-	for(let pair of pairsUp(points)){
-		let [cur, next, i] = pair;
-		let d = Math.hypot(next.x - cur.x, next.y - cur.y);
-		if(d<min){
-			return false;
-		}
-	}
-	return true;
-}
+//const {flags} = require('@grunmouse/binary');
 
 /**
  * Прореживает точки, удаляя некоторые из них в тех местах, где они слишком частые
  */
-function downsinglePoints(points, labeldist, metric){
-	return handleUnfull(points, labeldist, metric)
-}
-
-
-
-function handleUnfull(group, dist, metric){
-	const length = group.length;
-	const first = group[0];
-	const last = group[length-1];
-	const count = BigInt(length-2);
-	const over = 1n<<count;
-
-
-	const gen = function *(first, over){
-		for(let mask = 0n; mask<over; ++mask){
-			let points = [first].concat(flags.flagNumbers(mask).map((i)=>(group[Number(i)+1])), last);
-			yield points;
-		}
-	};
+function downsinglePoints(group, dist, metric){
 	let minmaxD = Infinity, selgroup = group;
 
-	//let vars = filterVariants(gen(first, over), dist.min, metric);
 	let vars = generateVariants(group, dist, metric);
 	
-	const debugMap = [];
+	//const debugMap = [];
 	for(let points of vars){
-		if(points.maxD < minmaxD){
-			minmaxD = points.maxD;
+		let maxD = points.reduce((d, p, i)=>(i=== 0 ? 0 : Math.max(d, metric(p, points[i-1]))), 0);
+		if(maxD < minmaxD){
+			minmaxD = maxD;
 			selgroup = points;
 		}
-		debugMap.push([points, points.maxD]);
+		//debugMap.push([points, points.maxD]);
 	}
 	
-	debugMap.sort(([A, ad], [B, bd])=>(ad-bd));
+	//debugMap.sort(([A, ad], [B, bd])=>(ad-bd));
 	//console.dir(debugMap.slice(0,2), {depth:4});
 	
 	return selgroup;
@@ -101,8 +68,6 @@ function * generateVariants(group, dist, metric){
 		let isAccept = anote.every(({drop})=>(drop === 0));
 		
 		if(isAccept){
-			let maxD = current.reduce((d, p, i)=>(i=== 0 ? 0 : Math.max(d, metric(p, current[i-1]))), 0);
-			current.maxD = maxD;
 			yield current;
 		}
 		else{
@@ -117,94 +82,6 @@ function * generateVariants(group, dist, metric){
 		++index;
 	}
 	
-}
-
-
-function * filterVariants(genPoint, min, metric){
-
-	byvalue:for(let points of genPoint){
-		let maxD = 0;
-		//Контроль дистанций
-		for(let pair of pairsUp(points)){
-			let [cur, next, i] = pair;
-			let d = metric(cur, next);
-			if(d<min){
-				continue byvalue;
-			}
-			if(d >= maxD){
-				maxD = d;
-			}
-		}
-		points.maxD = maxD;
-		yield points;
-	}
-}
-
-
-function *unfullGroupDown2(points, dist, metric){
-	let group, after;
-	for(let pair of pairsDown(points)){
-		let [cur, next, i] = pair;
-		let d = metric(cur, next);
-		if(d<=dist.min){
-			if(group){
-				group.unshift(cur);
-			}
-			else{
-				group = after ? [cur, next, after] : [cur, next];
-			}
-		}
-		else{
-			if(d<=dist.max){
-				if(group){
-					group.unshift(cur);
-					yield group;
-					group = null;
-					after = next;
-				}
-				else{
-					after = next;
-				}
-			}
-			else{
-				if(group){
-					yield group;
-					group = null;
-					after = null;
-				}
-				else{
-					after = null;
-				}
-			}
-		}
-	}
-	if(group){
-		yield group;
-		group = null;
-	}	
-}
-
-
-/**
- * Генерирует пары значений массива от начала к концу
- */
-function * pairsUp(arr){
-	let len = arr.length-1;
-	for(let i=0; i<len; ++i){
-		let pair = arr.slice(i, i+2).concat(i);
-		yield pair;
-	}	
-}
-
-/**
- * Генерирует пары значений массива от конца к началу
- */
-function * pairsDown(arr){
-	let len = arr.length-1;
-	for(let i=len; i--;){
-		let pair = arr.slice(i, i+2).concat(i);
-		yield pair;
-	}	
 }
 
 module.exports = {
