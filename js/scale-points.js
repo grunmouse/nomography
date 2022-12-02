@@ -1,5 +1,19 @@
 const inspect = Symbol.for('nodejs.util.inspect.custom');
 
+const {
+	symbols:{
+		ADD,
+		SUB,
+		NEG,
+		DIV,
+		MUL,
+		EQ,
+		LT,
+		GT
+	}
+} = require('@grunmouse/multioperator-ariphmetic');
+
+
 function downsinglePoints(group, dist, metric){
 	let minmaxD = Infinity, selgroup = group;
 
@@ -107,7 +121,7 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
 			groups.sort(cmp);
 			
 			if(groups[1] && cmp(groups[0], groups[1]) === 0){
-				debugger;
+				//debugger;
 			}
 			
 			return groups[0];
@@ -150,6 +164,8 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
  * @property downsingled : Boolean - признак выполнения требования labeldist.min
  * @property fulled : Boolean - признак выполнения требования labeldist.max
  * @property edited : Boolean - признак наличия ручных изменений в наборе точек (после этого нельзя применять автоматические методы)
+ * @property full : Boolean - признак того, что требование labeldist.min выполняется изначально, без прореживания
+ *
  */
 
 class PointsBase{
@@ -272,6 +288,9 @@ class PointsBase{
 		return result;
 	}
 	
+	[Symbol.iterator](){
+		return this.points[Symbol.iterator]();
+	}
 	
 	[inspect](depth, options){
 		//console.log(options);
@@ -297,6 +316,25 @@ class Points extends PointsBase{
 		let points = args.map(fun);
 
 		super(points, metric, levels, labeldist);
+		
+		const {min, max}  = levels.getLimits(D, step);
+		
+		const firstPoint = points[0];
+		const lastPoint = points[points.length-1];
+		
+		if(max[LT](lastPoint.a)){
+			lastPoint.anomal = true;
+		}
+		else if(lastPoint.anomal){
+			lastPoint.anomal = false;
+		}
+		
+		if(min[GT](firstPoint.a)){
+			firstPoint.anomal = true;
+		}		
+		else if(firstPoint.anomal){
+			firstPoint = false;
+		}
 		
 		this.f = f;
 		this.fun = fun;

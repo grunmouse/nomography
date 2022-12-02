@@ -4,9 +4,12 @@ const size = require('./affine-scale.js');
 const scale = require('./scale.js');
 const fcurve = require('./f-curve.js');
 
+const RationalNumber = require('./rational-number.js');
+
 module.exports = {
 	fcurve,
 	scale,
+	RationalNumber,
 	projective,
 	projMatrix:projective.getConvertMatrix,
 	affineMatrix:affine.getConvertMatrix,

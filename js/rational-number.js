@@ -20,6 +20,7 @@ const {
 	float64
 } = require('@grunmouse/binary');
 
+
 /**
  * @param a : BigInt
  * @param m : BigInt
@@ -36,10 +37,12 @@ function mceil(a, m){
 function NOD(a, b){
 	while(a != b){
 		if(a > b){
-			a = a - b;
+			a = a % b;
+			if(a === 0n) a = b;
 		}
 		else{
-			b = b - a;
+			b = b % a;
+			if(b === 0n) b = a;
 		}
 	}
 	return a;
@@ -54,20 +57,26 @@ class RationalNumber {
 			return nom;
 		}
 		if(den == null){
-			if(typeof nom === 'number'){
+			if(typeof nom === 'number' || nom instanceof Number){
 				if(Number.isInteger(nom)){
 					nom = BigInt(nom);
 					den = 1n;
 				}
 				else{
-					let {sign, sizedMant, sizedExp} = float64.decompFloat64(nom);
+					let {sign, sizedMant, sizedExp} = float64.decomp(nom);
 					//abs(V) = sizedMant * 2**sizedExp = sizedMant / (2**(-sizedExp))
-					nom = sign*sizedMant;
+					nom = sizedMant;
+					if(sign){
+						nom = -nom;
+					}
 					den = 1n<<(-sizedExp);
 				}
 			}
-			else{
+			else if(typeof nom === 'bigint' || nom instanceof BigInt){
 				den = 1n;
+			}
+			else{
+				throw new TypeError('Incorrect value for convert to RationalNumber');
 			}
 		}
 		else{
@@ -168,7 +177,7 @@ class RationalNumber {
 		
 		let nom = mfloor(this.nom*m.den, m.nom*this.den);
 		
-		return new Ctor(nom, den);
+		return new Ctor(nom, den).simple();
 	}	
 	
 	ceilBy(m){
@@ -188,7 +197,7 @@ class RationalNumber {
 		
 		let nom = mceil(this.nom*m.den, m.nom*this.den);
 
-		return new Ctor(nom, den);
+		return new Ctor(nom, den).simple();
 	}
 	toNearest(m, rounding){
 		if(rounding === 3){

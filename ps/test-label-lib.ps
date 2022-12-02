@@ -1,0 +1,43 @@
+%!PS-Adobe-3.0
+
+
+%ps2pdf -dNOSAFER 
+
+(../../ps-steal/steal.ps) run
+
+(../../ps-eskd/) stealfolder
+(../../ps-eskd-font/) stealfolder
+(./)(label-lib.ps) steal
+
+/cross {
+	gsave
+		currentpoint translate
+		0.2 setlinewidth
+		-5 0 moveto
+		5 0 lineto
+		0 -5 moveto
+		0 5 lineto
+		stroke
+	grestore
+} def
+
+
+in2mm
+
+
+
+0.2 setlinewidth
+/eskd-b-font  findfont	8 scalefont setfont
+
+
+100 250 moveto
+cross
+
+%[str, xw, xh, yw, yh, a]
+gsave
+(0.5 0 0 0.5 180) 0.5 0 0 0.5 180 showlabel
+grestore gsave
+(0.5 0 0 0.5 0) 0.5 0 0 0.5 0 showlabel
+grestore
+
+showpage

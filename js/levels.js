@@ -108,6 +108,10 @@ class Levels{
 		return {max, min, step};
 	}
 	
+	/**
+	 * Проверяет, является ли step хорошим шагом для разбиения интервала D
+	 * Арифметическая прогрессия 0 + step*i должна включать хотябы одну внутреннюю точку интервала D
+	 */
 	hasAllowStep(D, step){
 		let limits = this.getLimits(D, step);
 		let count = limits.max[SUB](limits.min)[DIV](step);
@@ -162,6 +166,9 @@ class Levels{
 		return {inner, over};
 	}
 	
+	/**
+	 * Находит для интервала D наибольший хороший шаг
+	 */
 	findTop(D){
 		let pair = this.findPair((index)=>(this.hasAllowStep(D, this.getStep(index))));
 		return this.getLimits(D, this.getStep(pair.inner));

@@ -50,7 +50,7 @@ function createMute(f, metric, D, levels, dist){
 	
 	let stats = variants.map((steps)=>{
 		let points = new ScalePoints(f, metric, D, steps[1], levels, dist);
-		let two = points.downsingled;
+		let two = points.full;
 		if(!two){
 			points = new ScalePoints(f, metric, D, steps[0], levels, dist);
 		}
@@ -101,6 +101,9 @@ function createAllMute(table, dist){
 	const {f, metric, levels} = table;
 	const result = [];
 	for(let pair of table.pairs()){
+		pair = pair.slice(0,2);
+		if(pair.some(p=>p.anomal)) continue;
+		
 		let gr = createMute(f, metric, [pair[0].a, pair[1].a], levels, dist);
 		pair[1].muteGroup = gr;
 		result.push(gr);
@@ -119,8 +122,8 @@ function createScaleReport(f, metric, D, levels, labeldist, mutedist){
 
 module.exports = {
 	createLabeled,
-	createMute,
-	createAllMute,
+	//createMute,
+	//createAllMute,
 	createScaleReport,
 	rational25Levels,
 	euclid
