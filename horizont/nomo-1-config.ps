@@ -1,0 +1,14 @@
+/R 6371 def
+/f_h {
+	dup
+	dup % h,h,h
+	mul
+	exch  % h^2,h
+	R 2
+	mul
+	mul h^2, 2*R*h
+	add
+	sqrt
+} def
+
+/f_l {} def %тождественная функция

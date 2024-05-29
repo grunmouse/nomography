@@ -1,6 +1,3 @@
-const {Vector2} = require('@grunmouse/math-vector');
-const {flags} = require('@grunmouse/binary');
-
 const {symbols:{SUB}}= require('@grunmouse/multioperator-ariphmetic');
 
 
@@ -16,12 +13,12 @@ const euclid = (a, b)=>(Math.hypot(a.x - b.x, a.y - b.y));
  * @property f.x : Function - отображает параметр на координату
  * @property f.y : Function
  * @param D : Array[2]<Number> - отрезок значений параметра, отображаемый на шкалу
- * @param levels : Array<Number> - хорошие кратности параметра для штрихов.
+ * @param levels : Levels - хорошие кратности параметра для штрихов.
  * @param labeldist : Object
  * @property labeldist.min : Number - наименьшее разрешённое расстояние между надписанными штрихами
  * @property labeldist.max : Number - наибольшее допустимое расстояние между надписанными штрихами
  *
- * @return Array<{a, x, y}> - таблица значений надписанных штрихов
+ * @return ScalePoints - таблица значений надписанных штрихов
  */
 function createLabeled(f, metric, D, levels, labeldist){
 
@@ -96,7 +93,11 @@ function createMute(f, metric, D, levels, dist){
 	
 }
 
-
+/**
+ * Создаёт описания групп немых штрихов между надписанными
+ * возвращает массив
+ * имеет побочный эффект - добавляет свойство muteGroup во вторую точку пары
+ */
 function createAllMute(table, dist){
 	const {f, metric, levels} = table;
 	const result = [];

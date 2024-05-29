@@ -9,7 +9,9 @@ const LevelsByFunctions = require('./levels.js');
 
 const INDEX = LevelsByFunctions.symIndex;
 
-
+/**
+ * Представляет двоично-пятеричную систему: 1, 2, 5, 10, 20, 50, ...
+ */
 const rational25Levels =  new LevelsByFunctions({
 	getStep(index){
 		if(index === 0){

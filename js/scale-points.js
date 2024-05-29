@@ -13,12 +13,15 @@ const {
 	}
 } = require('@grunmouse/multioperator-ariphmetic');
 
-
+/**
+ * Проредить группу точек, если в ней есть слишком короткие деления
+ */
 function downsinglePoints(group, dist, metric){
 	let minmaxD = Infinity, selgroup = group;
 
 	let vars = downsingleVariants(group, dist, metric);
 	
+	//Выбор среди вариантов разбивки лучшего (УТОЧНИТЬ)
 	//const debugMap = [];
 	for(let points of vars){
 		let maxD = points.reduce((d, p, i)=>(i=== 0 ? 0 : Math.max(d, metric(p, points[i-1]))), 0);
@@ -97,7 +100,9 @@ function * downsingleVariants(group, dist, metric){
 
 
 /**
- * Разбивает слишком длинное деление
+ * Для слишком длинного деления между надписанными штрихами ищет промежуточные цены деления
+ * Рекурсивно применяет возможные деления
+ * 
  */
 function zwischenLabeled(f, metric, D, step,  levels, labeldist){
 	if(levels.hasAllowStep(D, step)){ //Прореженные отрезки не делим
@@ -113,6 +118,7 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
 	else{
 		let steps = levels.getLessStepVariants(step);
 		if(steps.length>0){
+			//выбор лучшего варианта разбиения (УТОЧНИТЬ)
 			let groups = steps.map((step)=>{
 				return new Points(f, metric, D, step, levels, labeldist).downsingle().expand();
 			});
@@ -131,7 +137,7 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
 		}
 	}
 	
-	return createLabeled(f, D, levels, labeldist);
+	throw new Error('Неинтерпретированный путь в zwischenLabeled');
 	
 }
 
@@ -147,7 +153,7 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
  *
  * @class Poins
  * представляет множество помеченных точек некоторой шкалы;
- * хранит информацию о функции, для которой строится шкала, правилах построения шкалы и диапазон построения;
+ * хранит информацию о функции, для которой строится шкала, правилах построения шкалы и диапазоне построения;
  * предоставляет интерфейс для изменения множества помеченных точек;
  * хранит признаки завершённости некоторых манипуляций.
  * @property f : Object - пара функций, отображающих значение числовой пометки точки, на её координаты
@@ -168,6 +174,10 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
  *
  */
 
+/**
+ * @class PointsBase - абстрактный класс, предок класса Points
+ * инкапсулирует общую часть конструктора и наиболее общие методы возможных реализаций Points
+ */
 class PointsBase{
 
 	constructor(points, metric, levels, labeldist){
@@ -368,7 +378,7 @@ class Points extends PointsBase{
 	}
 	
 	/**
-	 * Разбивает слишком короткие деления.
+	 * Разбивает слишком длинные деления.
 	 * Ищет наиболее подходящую цену меньших делений
 	 */
 	expand(){

@@ -7,8 +7,8 @@ $$\frac{a}{b} = x \left( \frac{c}{d}\right )^y $$
 $$ a \in \mathbb N; b \in \mathbb N $$
 $$ c \in \mathbb N; d \in \mathbb N $$
 Найти:
-$$ y \in \mathbb Z; x > 0 $$
-
+$$ y \in \mathbb Z; x \in \left(0; \frac{c}{d} \right) %] $$
+$$ \left[ \log_{c/d}{x} \right] = 0$$
 #### Выбор более простой подзадачи, к которой сводятся другие
 Положим, что
 $$c > d$$

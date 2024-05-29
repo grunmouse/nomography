@@ -13,6 +13,11 @@ const {
 	}
 } = require('@grunmouse/multioperator-ariphmetic');
 
+/**
+ * @class Levels
+ * класс, представляющий множество хороших цен делений
+ * часть методов передаётся в конструктор для определения в экземпляре
+ */
 
 class Levels{
 	/**
