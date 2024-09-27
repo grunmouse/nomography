@@ -343,7 +343,7 @@ class Points extends PointsBase{
 			firstPoint.anomal = true;
 		}		
 		else if(firstPoint.anomal){
-			firstPoint = false;
+			firstPoint.anomal = false;
 		}
 		
 		this.f = f;
