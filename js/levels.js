@@ -283,6 +283,11 @@ class Levels{
 		return this.getStep(pair.inner);
 	}
 	
+/**
+ * Возвращает массив знаний для штрихов шкалы.
+ * @param D - интервал, который нужно разбить
+ * @param step - цена деления
+ */
 	generateArgs(D, step){
 		const {min, max}  = this.getLimits(D, step);
 		
