@@ -143,7 +143,7 @@ function findy(a, b, c, d, ymin, ymax){
 /**
  * @param value : RationalNumber
  * @param base : RationalNumber
- * @return {x, y} : value = x * base**y
+ * @return {x, y} : value = x * base**y \land y = floor(log(value)/log(base))
  */
 function ratlog(value, base){
 

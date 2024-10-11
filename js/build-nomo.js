@@ -1,3 +1,10 @@
+/**
+ *
+ * Функции генерации номограммы по шаблону
+ *
+ */
+
+
 const fmt = require('@grunmouse/format-recursive');
 
 const fs = require('fs');
