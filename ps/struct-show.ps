@@ -26,7 +26,8 @@
 	dup type /dicttype eq
 	{begin getsize end}
 	{
-		stringsize
+		stringwidth pop
+		currentfont /ScaleMatrix get 3 get
 	}
 	ifelse
 	

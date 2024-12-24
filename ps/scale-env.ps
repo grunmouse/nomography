@@ -141,18 +141,18 @@
 		} def
 		
 
-		% [label, dir2, lx, ly, x]
+		% [label, dir2, lx, ly, x] - рисует надписанный штрих в виде выноски
 		/out-label {
 			gsave
 			0 dict begin
-				%x TODO
+				%x
 				movepos
 				level0 currentarg dir polar-to
-				%lx ly TODO
+				%lx ly
 				lineto
-				%dir2 TODO
+				%dir2
 				/dir2 exch def
-				%label TODO
+				%label
 				
 				target
 				dir2 a dir2 
@@ -162,6 +162,18 @@
 				point-detail
 			end
 			grestore
+		} def
+		
+		% [label, dir2, dlx, dly, x] - то же, но с относительным смещением
+		/xout-label {
+			0 dict begin
+				/x exch def
+				x fun
+				2add
+				%[label, dir2, lx, ly]
+				x
+				out-label
+			end
 		} def
 		
 		%[x, level]
