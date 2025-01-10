@@ -6,6 +6,8 @@ const fcurve = require('./f-curve.js');
 
 const RationalNumber = require('./rational-number.js');
 
+const convertConfig = require('./equation/index.js').convertConfig;
+
 module.exports = {
 	fcurve,
 	scale,
@@ -13,5 +15,6 @@ module.exports = {
 	projective,
 	projMatrix:projective.getConvertMatrix,
 	affineMatrix:affine.getConvertMatrix,
-	sizeMatrix:size.toSizeMatrix
-}
+	sizeMatrix:size.toSizeMatrix,
+	convertConfig
+};
