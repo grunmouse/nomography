@@ -1,14 +1,16 @@
-const functions = ["log", "sqrt"];
+const functions = ["log", "sqrt", "log10"];
 
 
 const funJS = {
 	"log":"Math.log",
-	"sqrt":"Math.sqrt"
+	"sqrt":"Math.sqrt",
+	"log10":"Math.log10"
 };
 
 const funPS = {
 	"log":"ln",
-	"sqrt":"sqrt"
+	"sqrt":"sqrt",
+	"log10":"log"
 };
 
 const {
@@ -23,7 +25,9 @@ function convertConfig(source){
 	
 	let js = buildJsConfig(config, funJS);
 	
-	js += "\nmodule.exports = {" + config.functions.concat(config.variables).join(", ")+"};\n";
+	let exported = config.functions.filter(name=>(!functions.includes(name))).concat(config.variables);
+	
+	js += "\nmodule.exports = {" + exported.join(", ")+"};\n";
 	
 	let ps = buildPsConfig(config, funPS);
 	

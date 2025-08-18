@@ -1,5 +1,6 @@
 const jsoperators = {
 	'-negate':"-",
+	'+number':"+",
 	'**':"**",
 	'*':"*",
 	'/':"/",
@@ -9,6 +10,7 @@ const jsoperators = {
 
 const psoperators = {
 	'-negate':"neg",
+	'+number':"",
 	'**':"exp",
 	'*':"mul",
 	'/':"div",

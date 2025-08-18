@@ -1,5 +1,6 @@
 const operators = {
 	'-negate':{order:0, arity:1},
+	'+number':{order:0, arity:1},
 	'**':{order:1, right:true},
 	'*':{order:2},
 	'/':{order:2},
@@ -87,6 +88,15 @@ function equationLexer(str, functions){
 				}
 				else{
 					tokens[i] = operators["-negate"];
+				}
+			}
+			else if(token === "+"){
+				if(operand){
+					tokens[i] = operators["+"];
+					operand = false;
+				}
+				else{
+					tokens[i] = operators["+number"];
 				}
 			}
 			else{

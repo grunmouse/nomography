@@ -8,8 +8,8 @@ function buildJSFunction(name, argname, code){
 }
 
 function buildPSFunction(name, argname, code){
-	return `/${name} {\
-	0 begin
+	return `/${name} {
+	0 dict begin
 		/${argname} exch def
 		${code}
 	end
