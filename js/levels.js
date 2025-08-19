@@ -130,9 +130,9 @@ class Levels{
 	}
 	
 	/** 
-	 * Ищет минимальную вилку, такую, что ctrl(over)=== false && ctrl(inner)===true
+	 * Ищет минимальную вилку, такую, что over>inner && ctrl(over)=== false && ctrl(inner)===true 
 	 * @param ctrl : Function<Integer => Boolean> - полумонотонно убывает на целых числах (полагая, что true>false)
-	 * @return {inner:Integet, over:integer}
+	 * @return {inner:Integer, over:integer}
 	 */
 	findPair(ctrl){
 		let index = 0;
@@ -283,11 +283,11 @@ class Levels{
 		return this.getStep(pair.inner);
 	}
 	
-/**
- * Возвращает массив знаний для штрихов шкалы.
- * @param D - интервал, который нужно разбить
- * @param step - цена деления
- */
+	/**
+	 * Возвращает массив знаний для штрихов шкалы.
+	 * @param D - интервал, который нужно разбить
+	 * @param step - цена деления
+	 */
 	generateArgs(D, step){
 		const {min, max}  = this.getLimits(D, step);
 		

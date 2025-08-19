@@ -302,10 +302,14 @@ class PointsBase{
 		return this.points[Symbol.iterator]();
 	}
 	
-	[inspect](depth, options){
+	[inspect](depth, options, inspect){
 		//console.log(options);
 		let name = this.constructor.name;
-		let values = this.map(p=>(options.stylize(p.a, 'number')));
+		//const stylize = p=>(options.stylize(p.a, 'number'));
+		//const utils = require('utils');
+		//const stylize = p=>(inspect(p.a,options));
+		const stylize = p=>(inspect(p,options));
+		let values = this.map(stylize).slice(0,5);
 		
 		return `${name} { ${values.join(', ')} }`;
 	}		

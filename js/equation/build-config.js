@@ -3,6 +3,8 @@ const {
 	toJS
 } = require('./compil.js');
 
+const RationalNumber = require('../rational-number.js');
+
 function buildJSFunction(name, argname, code){
 	return `const ${name} = (${argname})=>(${code});`;
 }
@@ -24,6 +26,16 @@ function buildPSConst(name, code){
 	return `/${name} ${code} def`;
 }
 
+function handleJSLiteral(token){
+	let value = RationalNumber.parseDecimal(token.str);
+	if(value.isInteger()){
+		return token.value;
+	}
+	else{
+		return value.serialize();
+	}
+}
+
 function handleFunctions(system, declared){
 	let functions = Object.assign(
 		Object.fromEntries(declared.map(name=>([name,name]))),
@@ -43,12 +55,12 @@ function handleFunctions(system, declared){
 	
 }
 
-function builder(compil, toConst, toFunc){
+function builder(compil, toConst, toFunc, handleLiteral){
 	return function(config, functions){
 		functions = handleFunctions(functions, config.functions);
 		
 		let coderows = config.rows.map(({rowtype, name, argname, poliz, source})=>{
-			let code = compil(poliz, functions);
+			let code = compil(poliz, functions, handleLiteral);
 			if(rowtype === 'function'){
 				return toFunc(name, argname, code);
 			}
@@ -64,7 +76,7 @@ function builder(compil, toConst, toFunc){
 	
 }
 
-const buildJsConfig = builder(toJS, buildJSConst, buildJSFunction);
+const buildJsConfig = builder(toJS, buildJSConst, buildJSFunction, handleJSLiteral);
 const buildPsConfig = builder(toPS, buildPSConst, buildPSFunction);
 
 module.exports = {

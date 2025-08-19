@@ -54,7 +54,7 @@ function equationLexer(str, functions){
 			else{
 				value = parseFloat(token);
 			}
-			tokens[i] = {token:'literal', value};
+			tokens[i] = {token:'literal', value, str:token};
 			operand=true;
 		}
 		else if(/^[A-Za-z]/.test(first)){

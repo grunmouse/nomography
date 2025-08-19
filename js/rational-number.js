@@ -52,6 +52,25 @@ BigInt.max = (...arr)=>arr.reduce((akk, a)=>(a > akk ? a : akk));
 BigInt.min = (...arr)=>arr.reduce((akk, a)=>(a < akk ? a : akk));
 
 class RationalNumber {
+	/**
+	 * Парсит десятичную дробь
+	 */
+	static parseDecimal(str){
+		let [m,e] = str.split(/e/i);
+		let [a,b] = m.split('.');
+		e = e==null ? 0 : -parseInt(e);
+		if(b==null){
+			b = "";
+		}
+		else{
+			e+=b.length;
+		}
+		m = a+b;
+		let den = b ? new RationalNumber(10).pow(e) : 1;
+		let nom = new RationalNumber(BigInt(m));
+		return nom.div(den);
+	}
+	
 	constructor(nom, den){
 		if(nom instanceof RationalNumber){
 			return nom;
@@ -75,6 +94,9 @@ class RationalNumber {
 			else if(typeof nom === 'bigint' || nom instanceof BigInt){
 				den = 1n;
 			}
+			else if(typeof nom === 'object' && nom.nom != null){
+				return new RationalNumber(nom.nom, nom.den);
+			}
 			else{
 				throw new TypeError('Incorrect value for convert to RationalNumber');
 			}
@@ -90,6 +112,12 @@ class RationalNumber {
 
 		this.nom = nom;
 		this.den = den;
+	}
+	
+	serialize(){
+		let {nom, den} = this;
+		let code = `{nom:${nom.toString()}n, den:${den.toString()}n, valueOf:function(){return ${this.valueOf()};}}`;
+		return code;
 	}
 	
 	sign(){
@@ -300,7 +328,12 @@ defWithConvert(ge, (a, b)=>{
 ge.useName(Ctor);
 
 pow.def(Ctor, BigInt, (a, p)=>{
-	return new Ctor(a.nom**p, a.den**p);
+	if(p<0n){
+		return a.inv().pow(-p);
+	}
+	else{
+		return new Ctor(a.nom**p, a.den**p);
+	}
 });
 
 pow.def(Ctor, Number, (a, p)=>{

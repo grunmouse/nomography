@@ -21,12 +21,14 @@ const psoperators = {
 
 const brkt = (x)=>(`(${x})`);
 
-function toJS(tokens, functions){
+function toJS(tokens, functions, handleLiteral){
 	const stack = [];
+	
+	handleLiteral = handleLiteral || ((token)=>(token.value));
 	
 	for(let token of tokens){
 		if(token.token === "literal"){
-			stack.push({order:-1, code:token.value});
+			stack.push({order:-1, code:handleLiteral(token)});
 		}
 		else if(token.token === "variable"){
 			stack.push({order:-1, code:token.name});
