@@ -1,4 +1,4 @@
-const Rational = require('./rational-number.js');
+const Rational = require('../rational-number/index.js').RationalNumber;
 
 const {
 	symbols:{
@@ -9,7 +9,9 @@ const {
 		MUL,
 		EQ,
 		LT,
-		GT
+		GT,
+		LE,
+		GE
 	}
 } = require('@grunmouse/multioperator-ariphmetic');
 
@@ -302,7 +304,7 @@ class Levels{
 		if(min[GT](D[0])){
 			args.unshift(D[0]);
 		}
-		return args;		
+		return args;
 	}
 }
 

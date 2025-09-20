@@ -1,6 +1,7 @@
 {(../../ps-math/) stealfolder} /auto-diff-lib ifnotkey
 
 
+%тип данных верхнего элемента стека, стек под ним не изменяется
 /safetype {
 	count
 	0 eq
@@ -41,12 +42,12 @@
 	0 dict begin
 		/fun exch def % Запоминаемая функция шкалы
 		/diff {
-			%[x]
-			[ exch 1 ] % [ [x 1] ]
+			%[t]
+			[ exch 1 ] % [ [t 1] ]
 			auto-diff-lib begin
 				fun
 			end
-		} def % [ [f(x) f'(x)] ] - массив из пары значений: функции и первой производной
+		} def % [ [x(t) x'(t)] [y(t) y'(t)] ] - массив двух пар значений, покоординатно: функции и первой производной
 		
 		/curve-dir {
 			%[x]

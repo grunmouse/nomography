@@ -281,14 +281,14 @@ function defWithConvert(oper, fun){
 defWithConvert(add, (a, b)=>{
 	let den = a.den * b.den;
 	let nom = a.nom * b.den + b.nom * a.den;
-	return new Ctor(nom, den);
+	return new Ctor(nom, den).simple();
 });
 add.useName(Ctor);
 
 defWithConvert(sub, (a, b)=>{
 	let den = a.den * b.den;
 	let nom = a.nom * b.den - b.nom * a.den;
-	return new Ctor(nom, den);
+	return new Ctor(nom, den).simple();
 });
 sub.useName(Ctor);
 

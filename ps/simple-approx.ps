@@ -1,0 +1,212 @@
+%[xarray, yarray, x]
+/table-fun {
+	0 dict begin
+		/x exch def
+		/yarray exch def
+		/xarray exch def
+		
+		xarray x vilka %[nedolet, perelet]
+		2 copy
+		%[nedolet, perelet, nedolet, perelet]
+		eq
+		{
+			%(equal) ==
+			%[nedolet, nedolet]
+			-1 eq{
+				%[-1]
+				null
+			}
+			{
+				yarray exch get
+			}
+			ifelse
+		}
+		{
+			%[nedolet, perelet]
+			/perelet exch def
+			/nedolet exch def
+			xarray nedolet get
+			xarray perelet get
+			yarray nedolet get
+			yarray perelet get
+			x
+			line-approx
+		}
+		ifelse
+		
+	end
+} def
+%[y]
+
+%[x0, x1, y0, y1, x]
+/line-approx {
+	/x exch def
+	/y0 exch def
+	/y1 exch def
+	/x0 exch def
+	/x1 exch def
+	
+	x x0 sub %dx
+	y1 y0 sub x1 x0 sub div %k
+	mul %k*dx
+	y0 add
+	%(y1-y0)/(x1-x0) * (x-x0) + y0
+} def
+%[y]
+
+%[xarray, x]
+/vilka {
+	0 dict begin
+		/x exch def
+		/xarray exch def
+		/len xarray length def
+		/ubound len 1 sub def
+		
+		len 0 eq
+		{
+			(0) ==
+			-1 -1
+		}
+		{
+			xarray 0 get 
+			x
+			gt
+			xarray ubound get
+			x
+			lt
+			or
+			{
+				%значения в массиве нет
+				-1 -1
+			}
+			{
+				%основной алгоритм
+				/nedolet 0 def
+				/perelet ubound def
+				{
+					xarray nedolet get x eq
+					xarray perelet get x eq
+					or
+					perelet nedolet sub 1 le
+					or
+					{
+						exit
+					}
+					if
+					
+					nedolet perelet add 2 idiv
+					dup
+					%[middle, middle]
+					xarray exch get
+					x
+					le
+					{
+						/nedolet
+					}
+					{
+						/perelet
+					}
+					ifelse
+					%[middle, name]
+					exch
+					def
+				} loop
+
+				xarray nedolet get x eq
+				{
+					nedolet nedolet
+				}
+				{
+					xarray perelet get x eq
+					{
+						perelet perelet
+					}
+					{
+						nedolet perelet
+					}
+					ifelse
+				}
+				ifelse
+			}
+			ifelse
+		}
+		ifelse
+	end
+} def
+
+%[yarray, xarray, a, b]
+/div-subs {
+	0 dict begin
+		/b exch def
+		/a exch def
+		/xarray exch def
+		/yarray exch def
+		
+		yarray b get
+		yarray a get
+		sub
+		xarray b get
+		xarray a get
+		sub
+		div
+	end
+} def
+%[(yarray[b]-yarray[a])/(xarray[b]-xarray[a])
+
+%[yarray, xarray]
+/table-diff {
+	0 dict begin
+		/xarray exch def
+		/yarray exch def
+		
+		xarray length
+		yarray length
+		ne
+		yarray length 2 lt
+		or
+		{
+			yarray xarray
+			/rangecheck signalerror
+		}
+		if
+		
+		/len xarray length def
+		/ubound len 1 sub def
+		/prelast ubound 1 sub def
+		
+		[
+			yarray xarray 0 1 div-subs
+			1 1 prelast
+			{
+				%[i]
+				yarray exch
+				xarray exch
+				dup
+				1 sub exch
+				1 add
+				%[yarray, xarray, i-1, i+1]
+				div-subs
+			}
+			for
+			yarray xarray prelast ubound div-subs
+		]
+	end
+} def
+%[(dy/dx-array)]
+
+%[arr]
+/reverse {
+	0 dict begin
+		/arr exch def
+		/ubound arr length 1 sub def
+		[
+			ubound -1 0
+			{
+				%[i]
+				arr exch get
+			}
+			for
+		]
+	end
+} def
+%[inverted-arr]

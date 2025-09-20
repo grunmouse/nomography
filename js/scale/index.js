@@ -1,4 +1,4 @@
-const {symbols:{SUB}}= require('@grunmouse/multioperator-ariphmetic');
+const {symbols:{SUB, ADD, LT}}= require('@grunmouse/multioperator-ariphmetic');
 
 
 const {rational25Levels} = require('./mark-levels.js');
@@ -8,10 +8,11 @@ const euclid = (a, b)=>(Math.hypot(a.x - b.x, a.y - b.y));
 
 
 /**
- * Функция для заданной шкалы находит точки для надписанных и немых штрихов 
+ * Функция для заданной шкалы находит точки для надписанных штрихов 
  * @param f : Object - уравнение шкалы
  * @property f.x : Function - отображает параметр на координату
  * @property f.y : Function
+ * @param metric : Function({x,y}, {x,y})=>Number - функция расстояния между точками в принятой метрике
  * @param D : Array[2]<Number> - отрезок значений параметра, отображаемый на шкалу
  * @param levels : Levels - хорошие кратности параметра для штрихов.
  * @param labeldist : Object
@@ -119,10 +120,25 @@ function createScaleReport(f, metric, D, levels, labeldist, mutedist){
 	return labeledMarks;
 }
 
+function *allPoints(report){
+	yield report.points[0].a;
+	for(let pair of report.pairs()){
+		let point = pair[1];
+		if(point.muteGroup){
+			let {min, max, step} = point.muteGroup;
+			let a = min[ADD](step);
+			for(;a[LT](max); a=a[ADD](step)){
+				yield a;
+			}
+		}
+		yield point.a;
+	}
+}
 
 
 module.exports = {
 	createLabeled,
+	allPoints,
 	//createMute,
 	//createAllMute,
 	createScaleReport,

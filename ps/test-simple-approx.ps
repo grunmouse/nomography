@@ -1,0 +1,21 @@
+%!PS-Adobe-3.0
+
+
+%ps2pdf -dNOSAFER 
+
+(../../ps-steal/steal.ps) run
+
+(simple-approx.ps) stealfile
+
+
+
+[1 3 6 7 9 11]
+[0 1 2 3 4 5]
+reverse
+%table-diff
+%==
+%table-fun ==
+
+/t /x /tarray /yarray
+4 -1 roll
+pstack

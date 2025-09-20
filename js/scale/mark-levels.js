@@ -1,5 +1,5 @@
-const Rational = require('./rational-number.js');
-const {ratlog} = require('./rational-ilog2.js');
+const {RationalNumber:Rational, ratlog} = require('../rational-number/index.js');
+
 
 const {symbols:{DIV}}= require('@grunmouse/multioperator-ariphmetic');
 

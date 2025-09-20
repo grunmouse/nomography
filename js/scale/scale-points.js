@@ -9,7 +9,9 @@ const {
 		MUL,
 		EQ,
 		LT,
-		GT
+		GT,
+		LE,
+		GE
 	}
 } = require('@grunmouse/multioperator-ariphmetic');
 
@@ -54,7 +56,17 @@ function * downsingleVariants(group, dist, metric){
 			}
 			let a = points[i-1], c = points[i+1];
 			
-			let _min = dist.min / Math.min(metric(a,b), metric(b, c));
+			let dist_a = dist.min/metric(a, b);
+			let dist_c = dist.min/metric(b, c);
+			 //Защищаем от удаления надписанный штрих, соседствующий с немым концом шкалы
+			if(i===1 && a.anomal){
+				dist_a = 0;
+			}
+			if(i=== ubound-1 && c.anomal){
+				dist_c = 0;
+			}
+			
+			let _min = Math.max(dist_a, dist_c);
 			let drop = _min < 1 ? 0 : _min;
 			let _max = metric(a, c) / dist.max;
 			let leave = _max < 1 ? 0 : _max;
@@ -325,7 +337,28 @@ class PointsBase{
 class Points extends PointsBase{
 
 	constructor(f, metric, D, step, levels, labeldist){
-		let fun = (a)=>({a, x:f.x(a), y:f.y(a)});
+		let fun;
+		if(typeof f == "function"){
+			fun = (a)=>{
+				let v = f(a);
+				if(Array.isArray(v)){
+					return {a, x:v[0], y:v[1]};
+				}
+				else if(!isNaN(v.x*v.y)){
+					return {a, x:v.x, y:v.y};
+				}
+				else{
+					throw new Error(`Invalid function return ${v}`);
+				}
+			};
+		}
+		else if(typeof f.x == "function" && typeof f.y == "function"){
+			fun = (a)=>({a, x:f.x(a), y:f.y(a)});
+		}
+		else{
+			throw new TypeError(`Incorrect argument type f ${typeof f}`);
+		}
+		
 		let args = levels.generateArgs(D, step);
 		let points = args.map(fun);
 

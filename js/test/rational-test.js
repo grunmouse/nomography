@@ -1,7 +1,7 @@
 const assert = require('assert');
 const jsc = require('jsverify');
 const {env} = require('@grunmouse/jsverify-env');
-const Rational = require('../rational-number.js');
+const Rational = require('../rational-number/index.js').RationalNumber;
 
 describe('rational-number', ()=>{
 	describe('constructor', ()=>{

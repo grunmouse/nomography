@@ -3,7 +3,7 @@ const {
 	toJS
 } = require('./compil.js');
 
-const RationalNumber = require('../rational-number.js');
+const {RationalNumber} = require('../rational-number/index.js');
 
 function buildJSFunction(name, argname, code){
 	return `const ${name} = (${argname})=>(${code});`;
