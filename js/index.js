@@ -8,9 +8,12 @@ const convertConfig = require('./equation/index.js').convertConfig;
 
 const transform = require('./transform/index.js');
 
+const Curve = require('./curve/curve.js');
+
 module.exports = {
 	fcurve,
 	scale,
+	Curve,
 	RationalNumber,
 	...transform,
 	convertConfig
