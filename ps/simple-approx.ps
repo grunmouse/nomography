@@ -210,3 +210,48 @@
 	end
 } def
 %[inverted-arr]
+
+%[arr, start, end]
+/slice {
+	dup 1 lt {
+		2 index length add % если end<1 - отсчитывать его с конца
+	} if
+	%lenght = end - start
+	1 index
+	sub
+	getinterval
+} def
+
+%Применяет функцию к нескольким элементам стека
+%[...items, len, fun]
+/for-stack-items {
+	0 dict begin
+		/fun exch def
+		%[...items, len]
+		array
+		astore
+		%[array(...items)]
+		/fun load
+		forall
+	end
+} def
+%[...items-after-fun]
+
+%Генерирует словарь с массивами для кривой, заданной таблицей
+%[tarray, xarray, yarray]
+/make-polyline {
+	0 dict begin
+		/yarray exch def
+		/xarray exch def
+		/tarray exch def
+		
+		/dxdtarray xarray tarray table-diff def
+		/dydtarray yarray tarray table-diff def
+		
+		currentdict
+	end
+} def
+%[curve-dict]
+
+
+

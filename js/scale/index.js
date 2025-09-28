@@ -80,15 +80,18 @@ function createMute(f, metric, D, levels, dist){
 	
 	let accepted = stats[0];
 	
+	let two = accepted.two;
 	let prev = accepted.steps[0];
-	let acceptedStep = accepted.steps[accepted.steps.length-1];
+	let acceptedStep = two ? accepted.steps[accepted.steps.length-1] : prev;
+
+	
 
 	return {
 		min:D[0], 
 		max:D[1], 
 		step:acceptedStep, 
-		two: accepted.two, 
-		levels:accepted.two ? 2: 1, 
+		two: two, 
+		levels: two ? 2: 1, 
 		prev:prev
 	};
 	

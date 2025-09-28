@@ -301,7 +301,17 @@
 			
 			grestore
 		} def
-		
+
+		/fun load type
+		/dicttype eq
+		{
+			fun
+			currentdict
+			copy
+			pop
+		}
+		if
+
 		currentdict
 	end
 } def

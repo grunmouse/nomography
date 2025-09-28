@@ -17,133 +17,8 @@ function getKey(vec){
 const sign = Math.sign;
 const abs = Math.abs;
 
-function dichotom(f, y, a, b, delta){
-	var A = f(a), B, x, Y, d, k, n=10000;
-	if(abs(A-y)<delta){
-		return a;
-	}
-	B = f(b);
-	if(abs(B-y)<delta){
-		return b;
-	}
-	if(A>y && B>y || A<y && B<y){
-		return undefined;
-	}
-	d = B-A;
-	x = (a+b)/2;
-	Y=f(x);
-	while(abs(Y-y)>=delta && --n && (x>a && x<b) ){
-		k = (Y-y)*d;
-		if(k>0){
-			B=Y;
-			b=x;
-		}
-		else{
-			A=Y;
-			a=x;
-		}
-		x = (a+b)/2;
-		Y=f(x);
-	}
+const dichotom = require('./dichotom.js');
 
-	return n && !isNaN(Y) ? x : undefined;
-}
-
-function expandInterval(f, y, a, b, delta) {
-	[a,b] = ensureLimits(f, a, b);
-	let A = f(a), B = f(b);
-	const Y = [A,B]; //Учёт всех пройденных точек
-	const X = [a,b]; //Учёт всех пройденных точек
-	
-	let step_a = step_b = b-a;
-	
-	//Процедуры увеличения пределов
-	//Побочные эффекты 
-	// меняют a, b, A, B, step_a, step_b
-	//добавляют значения 
-	/**
-	 * увеличение b
-	 * меняет b, B, step_b
-	 * добавляет значения в конец X, Y
-	 */
-	function incB(){
-		let q = b+step_b;
-		let Q = f(q);
-		if(isNaN(Q)){
-			step_b /= 2;
-		}
-		else{
-			b = q;
-			B = Q;
-			Y.push(B);
-			X.push(b);
-			step_b *= 2;
-		}
-		return Q;
-	}
-	/**
-	 * уменьшение a
-	 * меняет a, A, step_a
-	 * добавляет значения в начало X, Y
-	 */
-	function decA(){
-		let p = a-step_a;
-		let P = f(p);
-		if(isNaN(P)){
-			step_a /= 2;
-		}
-		else{
-			a = p;
-			A = P;
-			Y.unshift(A);
-			X.unshift(a);
-			step_a *=2;
-		}
-		return P;
-	}
-	
-	let tol = 8*delta;
-	while(abs(A-B)<tol){
-		let P = decA()
-		let Q = incB()
-
-		if(isNaN(Q) && isNaN(P) && abs(Q-P)<tol){
-			break;
-		}
-	}
-	
-	let d = sign(B-A); //Признак возрастания
-	//Цель sing(B-y) === sign(y-A) === sign(B - A)
-	while(sign(B-y)!==sign(y-A)){ //y не между A и B
-		if(sign(B-y) !== d){
-			incB();
-		}
-		if(sign(y-A) !== d){
-			decA();
-		}
-		d = sign(B-A);
-	}
-	
-	
-	return [a,b];
-}
-
-/**
- * Находит
- */
-function ensureLimits(f, a, b){
-	let A = f(a);
-	let B = f(b);
-	while(isNaN(A)){
-		a = (a+b)/2;
-		A = f(a);
-	}
-	while(isNaN(B)){
-		b = (a+b)/2;
-		B = f(b);
-	}
-	return [a,b];
-}
 /**
  * Представляет кривую с ассоциированными точками и методами анализа.
  * Каждая точка соответствует значениям разных функций в этой точке.
@@ -158,13 +33,34 @@ class Curve {
 		this.value = value;
 		this.equation = `${name} = ${value}`;
 		this.functions = functions;
+		this.tolerance = tolerance;
 		this.fun = f;
 		this.coords = coords; //Имена параметров, служащих координатами
 		this.points = points.map((p)=>(this._calcPoint(p))); // Инициализировать массив точек
 		this.closed = closed;
-		
+		this._calcTolerance();
 		this._hashPoints();
 		
+	}
+	
+	_calcTolerance(){
+		const keys = this.coords.concat(Object.keys(this.functions));
+		const min = Object.fromEntries(keys.map(key=>([key, Infinity])));
+		const points = this.points;
+		let prev = points[0], len = points.length;
+		for(let i=1; i<len; ++i){
+			for(let key of keys){
+				let diff = abs(points[i][key]-prev[key]);
+				if(diff<min[key]){
+					min[key] = diff;
+				}
+			}
+		}
+		for(let key of keys){
+			if(!this.tolerance[key]){
+				this.tolerance[key] = min[key]/128;
+			}
+		}
 	}
 	
 	_hashPoints(){
@@ -179,41 +75,49 @@ class Curve {
 			map.set(key, P);
 		}
 	}
-
-	/**
-	 * Проверяет, находится ли разница в именованном свойстве между двумя последовательными точками ниже порога дельта.
-	 * @param {string} name - Имя свойства.
-	 * @param {number} index - Индекс первой точки.
-	 * @returns {boolean} True, если разница субдельта.
-	 */
-	_isSubDelta(name, index, delta) {
-		const points = this.points;
-		return abs(points[index][name] - points[index + 1][name]) < delta;
-	}
 	
 	_getVector(index){
 		const [x,y] = this.coords;
 		const P = this.points[index];
 		return new Vector2(P[x], P[y]);
 	}
+	
+	/**
+	 * Проверяет, находится ли разница в именованном свойстве между двумя последовательными точками ниже порога дельта.
+	 * @param {string} name - Имя свойства.
+	 * @param {number} index - Индекс первой точки.
+	 * @returns {boolean} True, если разница субдельта.
+	 */
+	 //TODO
+	_isSubDelta(name, index, delta) {
+		const points = this.points;
+		return abs(points[index][name] - points[index + 1][name]) < delta;
+	}
+
 	/**
 	 * Проверяет, достигло ли расстояние между точками по 'p' или 'eps' предела точности.
 	 * @param {number} index - Индекс первой точки.
 	 * @returns {boolean} True, если расстояние нулевое (точность достигнута).
 	 */
 	_isNullDistance(name, index) {
+		const tol = 10000 * Number.EPSILON;
+		const points = this.points;
 		if(index ==null && typeof name === 'number'){
 			index = name;
-			return this.coords.some((name)=>this._isNullDistance(name, index));
+			if(index >= points.length-1) --index;
+			if(index < 0) ++index;
+			return this._getVector(index+1).sub(this._getVector(index)).abs()<tol;
 		}
-		const points = this.points;
 		if(index >= points.length-1) --index;
+		if(index < 0) ++index;
 		const index1 = index + 1;
 		
-		const tol = 100 * Number.EPSILON;
+		if(!points[index]){
+			console.log(points.length, index);
+		}
 		let a = points[index][name];
 		let b = points[index1][name];
-		let middle = (a + b) / 2;
+		
 		if (abs((a-b)/b) < tol && abs((b-a)/a) < tol) {
 			return true;
 		}
@@ -284,7 +188,22 @@ class Curve {
 		refineIndex = curIndex + 1;
 		return points[refineIndex];
 	}
-
+	
+	/**
+	 * Возвращает пару индексов, которые останутся неизменными при добавлении точек между ними
+	 * Первый отсчитывается от начала, второй - от конца.
+	 */
+	invariantIndex(a, b){
+		const len = this.points.length;
+		if(a<0){
+			a = a + len;
+		}
+		if(b>0){
+			b = b - len;
+		}
+		return [a,b];
+	}
+	
 	/**
 	 * Находит точки, где yName равно yValue, используя дихотомию.
 	 * @param {string} yName - Имя y-свойства.
@@ -292,7 +211,7 @@ class Curve {
 	 * @param {Function} control - Функция для проверки точности.
 	 * @returns {Array} Массив точек, где yName равно yValue.
 	 */
-	_find(yName, yValue, control) {
+	_find(yName, yValue, control, a=0, b=-1) {
 		const points = this.points;
 		const getY = (index) => points[index][yName];
 		const dich = (index) => {
@@ -321,10 +240,13 @@ class Curve {
 			return points[curIndex];
 		};
 		const p = [];
-		let i = points.length - 1;
+		if(b<0){
+			b = b+points.length;
+		}
+		let i = b;
 		if(getY(i)===yValue) p.push(points[i]);
 		--i;
-		for (; i >= 0; --i) {
+		for (; i >= a; --i) {
 			const A = getY(i);
 			if(A===yValue) p.push(points[i]);
 			const B = getY(i+1);
@@ -378,6 +300,9 @@ class Curve {
 		return true;
 	}
 	
+	/**
+	 * Улучшить кривую до необходимой гладкости
+	 */
 	refine(h_max){
 		let cond = false, n = 100;
 		while(!cond && n>0){
@@ -421,12 +346,16 @@ class Curve {
 		}
 	}
 	
+	/**
+	 * Оптимизировать кривую, с контролем гладкости
+	 */
 	generalize(h_min){
 		this._generalize(0, this.points.length-1, h_min);
+		this._hashPoints();
 	}
 	
 	/**
-	 * Получает максимальную точку для заданного yName, кэшируя результат.
+	 * Уточняет максимальную точку для заданного yName, кэшируя результат.
 	 * @param {string} yName - Имя y-свойства.
 	 * @returns {Object} Максимальная точка.
 	 */
@@ -436,7 +365,7 @@ class Curve {
 	}
 
 	/**
-	 * Получает минимальную точку для заданного yName, кэшируя результат.
+	 * Уточняет минимальную точку для заданного yName, кэшируя результат.
 	 * @param {string} yName - Имя y-свойства.
 	 * @returns {Object} Минимальная точка.
 	 */
@@ -451,11 +380,12 @@ class Curve {
 	 * @param {number} yValue - Целевое значение.
 	 * @returns {Array} Массив точек.
 	 */
-	find(yName, yValue) {
+	find(yName, yValue, a, b) {
 		return this._find(
 			yName,
 			yValue,
-			(index) => this._isNullDistance(index) || this._isNullDistance(index + 1)
+			(index) => this._isNullDistance(index) || this._isNullDistance(index - 1),
+			a, b
 		);
 	}
 
@@ -472,33 +402,28 @@ class Curve {
 			return this.fun(X.x, X.y);
 		}
 		
-		let x = expandInterval(f, this.value, -1, 1, Number.EPSILON*this.value);
-		let t = dichotom(f, this.value, x[0],x[1], Number.EPSILON*this.value);
+		let t = dichotom(f, this.value, -1, 1, Number.EPSILON*this.value);
 		
 		let X = xy(t);
 		
 		let key = getKey(X);
 		if(this._hash.has(key)){
-			debugger;
+			let exIndex = points.indexOf(this._hash.get(key));
+			console.log(d.abs());
+			if(abs(index-exIndex)>1){
+				console.log(this._getVector(exIndex).sub(a).abs());
+				throw new Error(`Heresy ${index} ${exIndex}`);
+			}
+			return;
 		}
 		
+		//Заинлайнил создание новой точки
 		let point = {};
 		coords.forEach((name, index)=>{point[name]=X[index];});
-		
-		point = this._addNewPoint(index, point);
-		this._hash.set(key, points);
-	}
-	
-	/**
-	 * Добавляет новую точку после указанного индекса.
-	 * @param {number} index - Индекс для вставки после.
-	 * @param {number} p - Значение p.
-	 * @param {number} eps - Значение eps.
-	 */
-	_addNewPoint(index, coord) {
-		let point = this._calcPoint(coord);
+		point = this._calcPoint(point);
 		this.points.splice(index + 1, 0, point);
-		return this._calcPoint(coord);
+		
+		this._hash.set(key, point);
 	}
 
 	/**
@@ -514,10 +439,14 @@ class Curve {
 		return point;
 	}
 
-	limits(yName){
+	limits(yName, a=0, b=-1){
 		let min = Infinity, max = -Infinity;
-		for(let point of this.points){
-			let value = point[yName];
+		const points = this.points, len = points.length;
+		if(b<0){
+			b = b+len;
+		}
+		for(let i=a; i<=b; ++i){
+			let value = points[i][yName];
 			if(value<min) min = value;
 			if(value>max) max = value;
 		}
@@ -543,6 +472,24 @@ class Curve {
 		return {parts, ext};
 	}
 
+	precisionExtremums(funnames){
+		const control = (index) => this._isNullDistance(index) || this._isNullDistance(index + 1); //Для экстремума надо так
+		let exts = [];
+		for(let funname of funnames){
+			let report = this.analyse(funname);
+			for(let ext of report.ext){
+				ext.isMaximum = ext.type[0]>ext.type[1];
+				ext.funname = funname;
+				exts.push(ext);
+			}
+		}
+		exts.sort((a,b)=>(b.index-a.index)); //По убыванию индексов
+		for(let ext of exts){
+			let point = this._extremum(ext.funname, control, ext.isMaximum, ext.index);
+			point.protect = true;
+		}
+	}
+
 	slice(begin, end){
 		let points;
 		if(this.closed){
@@ -561,6 +508,14 @@ class Curve {
 			points = this.points.slice(begin, end);
 		}
 		return new Curve(this.name, this.value, this.fun, this.coords, points, false, this.functions);
+	}
+	
+	/**
+	 * Вставляет кривую между двумя точками. Предполагается, что концы кривой совпадают с этими точками
+	 */
+	merge(index, curve){
+		points = curve.points.slice(1,-1).map((p)=>(this._calcPoint(p))); // Инициализировать массив точек
+		this.points.splice(index+1, 0, points);
 	}
 }
 
