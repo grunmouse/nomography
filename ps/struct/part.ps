@@ -52,12 +52,14 @@
 						%Устанавливаем начало координат на начало линии
 						0 fraction-line-y 
 						translate
-
+						
+						gsave
 						fraction-line-width setlinewidth
 						0 0 moveto
 						width 0 lineto
 						stroke
-
+						grestore
+						
 						%Устанавливаем начало координат на середину линии
 						width 2 div 0
 						translate

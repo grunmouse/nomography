@@ -1,0 +1,24 @@
+%Структура, оборачивающая строку, чтобы отрисовать её в обход стандартного show
+
+/str-to-struct {
+	0 dict begin
+		/text exch def
+		
+		/doshow {
+			text 
+			%show 
+			currentfont show-as-curve
+		} def
+		
+		/getsize {
+			text currentfont calc-string-width
+			currentfont /ScaleMatrix get 3 get
+		} def
+		
+		/getbaseline {
+			0
+		} def
+		
+		currentdict
+	end
+} def

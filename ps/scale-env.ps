@@ -104,42 +104,46 @@
 		/middle {0 0.5} def % средняя ордината
 		/bottom {0 0} def % ордината базовой линии
 
-		/rat {
-			3 dict begin
-				/den exch def
-				/nom exch def
-				[
-					[ den /mul /round /cvi nom /mod 0 /eq ] {cvx} forall 
-				] cvx
-			end
-		} def
-
 		%Рисует надписанный штрих для указанного значения
 		%[label, x] 
+		%[x, label]
 		%[x] - если строка опущена, то она будет создана их x
 		/value {
 			0 dict begin
-				/x exch def
+				dup type
+				dup
+				dup 
+				/integertype eq
+				exch
+				/realtype eq or
+				{
+					pop
+					/x exch def
+					safetype /stringtype eq
+						{}
+						{x tostring}
+						ifelse
+					str-to-struct
+					%[label]
+				}
+				{
+					<<
+						/stringtype {str-to-struct}
+						/arraytype {str-to-struct}
+						/dicttype {}
+					>>
+					exch get exec
+					exch
+					/x exch def
+					%[label]
+				} ifelse
 				x movepos
-				safetype /stringtype eq
-					{}
-					{currentarg tostring}
-					ifelse
+				
 				target 
 				currentarg dir dup a exch
 				space level0 point-detail
 			end
 		} def		
-		
-		/struct-value {
-			0 dict begin
-				/x exch def
-				x movepos
-				target 
-				currentarg dir dup a exch
-				space level0 point-detail
-			end
-		} def
 		
 
 		% [label, dir2, lx, ly, x] - рисует надписанный штрих в виде выноски
@@ -148,13 +152,18 @@
 			0 dict begin
 				%x
 				movepos
+				
 				level0 currentarg dir polar-to
 				%lx ly
 				lineto
+				%pop pop
 				%dir2
 				/dir2 exch def
 				%label
 				
+				dup type /stringtype eq
+				{str-to-struct} if
+
 				target
 				dir2 a dir2 
 				space 
@@ -190,28 +199,17 @@
 		% (x1; x2) - интервал построения
 		% c - цена малых делений
 		% level - уровень штрихов делений, level-1 - уровень штрихов больших делений
-		% cond - функция, опознающая штрих большого деления
-		% [ x1 x2 c level cond ]
+		% m - цена больших делений
+		% [ x1 x2 c level m ]
 		/mutegroup2 {
 			0 dict begin
-				/cond exch def
+				tofrac /m 2edef
 				/level exch def
-				/c exch def
-				/x2 exch def
-				/x1 exch def
+				tofrac /c 2edef
+				tofrac /x2 2edef
+				tofrac /x1 2edef
 				
-				
-				gsave
-				x1 c add
-				c
-				x2
-				{
-					%[x]
-					dup % [x, x]
-					cond {level  1 sub}{ level} ifelse % [x, level]
-					mutemark
-				} for
-				grestore
+				x1 x2 c level m mutegrouprat2
 			end
 		} def				
 		
@@ -223,20 +221,11 @@
 		/mutegroup {
 			0 dict begin
 				/level exch def
-				/c exch def
-				/x2 exch def
-				/x1 exch def
+				tofrac /c 2edef
+				tofrac /x2 2edef
+				tofrac /x1 2edef
 				
-				gsave
-				x1 c add
-				c
-				x2
-				{
-					%[x]
-					level
-					mutemark
-				} for
-				grestore
+				x1 x2 c level mutegrouprat
 			end
 		} def		
 		
@@ -302,6 +291,7 @@
 			grestore
 		} def
 
+		%Если вместо функции пришёл словарь - значит нужно перенести из него всё в текущий словарь
 		/fun load type
 		/dicttype eq
 		{

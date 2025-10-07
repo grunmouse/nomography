@@ -144,7 +144,10 @@
 		bordervector 2neg
 		rmoveto %cross
 		target 2neg
-		rmoveto struct-show
+		rmoveto 
+		
+		struct-show
+		
 	end
 } def
 
@@ -163,8 +166,11 @@
 		rotate
 		0 rlineto
 		0 rmoveto
-		gsave stroke grestore
-
+		
+		currentpoint %кладём точку на стек
+		stroke
+		moveto %берём точку со стека
+		
 		dup neg rotate
 
 		showlabel

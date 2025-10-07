@@ -39,10 +39,10 @@ const muteTable = table.map((point)=>{
 	if(!gr) return '';
 	let {step, prev, min, max, two} = gr;
 	if(!two){
-		return `${min.simple().join()} ${max.simple().join()} ${step.simple().join()} 2 mutegrouprat`;
+		return `[${min.simple().join()}] [${max.simple().join()}] [${step.simple().join()}] 2 mutegroup`;
 	}
 	else{
-		return `${min.simple().join()} ${max.simple().join()} ${step.simple().join()} 2 ${prev.simple().join()} mutegrouprat2`;
+		return `[${min.simple().join()}] [${max.simple().join()}] [${step.simple().join()}] 2 [${prev.simple().join()}] mutegroup2`;
 	}
 });
 
