@@ -109,6 +109,9 @@ class RationalNumber {
 			nom = -nom;
 			den = -den;
 		}
+		if(nom == 0n){
+			den = 1n;
+		}
 
 		this.nom = nom;
 		this.den = den;
@@ -142,7 +145,15 @@ class RationalNumber {
 	}
 	
 	isInteger(){
-		return this.den === 1n || this.simple().den === 1n;
+		return this.nom===0n || this.den === 1n || this.simple().den === 1n;
+	}
+	
+	isFinite(){
+		return this.den !== 0n;
+	}
+	
+	isNaN(){
+		return this.den === 0n && this.nom === 0n;
 	}
 	
 	isZero(){
@@ -154,6 +165,9 @@ class RationalNumber {
 	}
 	
 	valueOf(){
+		if(this.isNaN()){
+			return NaN;
+		}
 		if(!this.isPositive()){
 			return - this.neg().valueOf()
 		}

@@ -123,6 +123,9 @@ class Levels{
 		let limits = this.getLimits(D, step);
 		let count = limits.max[SUB](limits.min)[DIV](step);
 		if(count.isPositive()){
+			if(count[GE](3)){
+				return true;
+			}
 			count = count.toNumber() + 1 + limits.min[GT](D[0]) + limits.max[LT](D[1]);
 			if(count >= 3){
 				return  true;
@@ -280,6 +283,9 @@ class Levels{
 	 * Ищет наибольший шаг, являющийся делителем
 	 */
 	findLevel(value){
+		if(value[EQ](0)){
+			return NaN;
+		}
 		let pair = this.findPair((index)=>(this.hasDiv(this.getStep(index), value)));
 		
 		return this.getStep(pair.inner);

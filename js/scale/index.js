@@ -25,16 +25,18 @@ function createLabeled(f, metric, D, levels, labeldist){
 
 	//Находим наибольших полезный шаг штрихов
 	let step = levels.findTop(D);
+	
+	step.step = levels.getLessUniversalStep(step.step);
 
-	return new ScalePoints(f, metric, D, step.step, levels, labeldist).downsingle().expand();
+	return new ScalePoints(f, metric, D, step.step, levels, labeldist).downsample().expand();
 }
 
 
-function createMute(f, metric, D, levels, dist){
+function createMute(f, metric, D, levels, dist, anomal){
 
 	//Находим наибольший полезный шаг штрихов
 	//Предположим, что это меньший из шагов границ
-	let step = D.map(a=>levels.findLevel(a)).sort((a,b)=>(a[SUB](b)))[0];
+	let step = D.map(a=>levels.findLevel(a)).filter(a=>(!isNaN(a.valueOf()))).sort((a,b)=>(a[SUB](b)))[0];
 
 	let variants;
 	if(levels.hasAllowStep(D, step)){
@@ -58,13 +60,18 @@ function createMute(f, metric, D, levels, dist){
 		
 		let rate = [-two, minD, Math.abs(male-4)];
 		
+		let firstPoint = points.points[0];
+		let lastPoint = points.points.slice(-1)[0];
+		
 		return {
 			two,
 			male,
 			steps,
 			maxD,
 			minD,
-			rate
+			rate,
+			firstPoint,
+			lastPoint
 		};
 	});
 	
@@ -84,15 +91,14 @@ function createMute(f, metric, D, levels, dist){
 	let prev = accepted.steps[0];
 	let acceptedStep = two ? accepted.steps[accepted.steps.length-1] : prev;
 
-	
-
 	return {
 		min:D[0], 
 		max:D[1], 
 		step:acceptedStep, 
 		two: two, 
 		levels: two ? 2: 1, 
-		prev:prev
+		prev:prev,
+		anomal: accepted.firstPoint.anomal || accepted.lastPoint.anomal
 	};
 	
 }
@@ -107,9 +113,12 @@ function createAllMute(table, dist){
 	const result = [];
 	for(let pair of table.pairs()){
 		pair = pair.slice(0,2);
-		if(pair.some(p=>p.anomal)) continue;
+		let anomal = pair.some(p=>p.anomal);
 		
-		let gr = createMute(f, metric, [pair[0].a, pair[1].a], levels, dist);
+		let gr = createMute(f, metric, [pair[0].a, pair[1].a], levels, dist, anomal);
+		if(anomal && gr.anomal){
+			continue;
+		}
 		pair[1].muteGroup = gr;
 		result.push(gr);
 	}

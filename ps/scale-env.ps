@@ -57,7 +57,7 @@
 		} def % - положительное направление кривой в данной точке
 
 		/step 1 def % Шаг черчения кривой
-		/tostring {12 string cvs} def % Функция преобразования значения параметра в текст подписи
+		/tostring {dup dup round eq {cvi} if 12 string cvs} def % Функция преобразования значения параметра в текст подписи
 		/target { 0.5 0 0 0.5} def % Матрица расчёта точки прицеливания
 		/space 2 def % Отступ подписи
 		/level0 5 def % Длина штриха нулевого уровня вложенности делений
@@ -209,57 +209,6 @@
 				tofrac /x2 2edef
 				tofrac /x1 2edef
 				
-				x1 x2 c level m mutegrouprat2
-			end
-		} def				
-		
-		% Группа немых штрихов на интервале 
-		% (x1; x2) - интервал построения
-		% c - цена делений
-		% level - уровень штрихов делений
-		% [ x1 x2 c level ]
-		/mutegroup {
-			0 dict begin
-				/level exch def
-				tofrac /c 2edef
-				tofrac /x2 2edef
-				tofrac /x1 2edef
-				
-				x1 x2 c level mutegrouprat
-			end
-		} def		
-		
-		%[nom1, den1, nom2, den2, nomC, denC, level]
-		/mutegrouprat {
-			0 dict begin
-				/level exch def
-				/c 2edef
-				/x2 2edef
-				/x1 2edef
-				
-				gsave
-				x1 c fraction-add
-				c
-				x2
-				{
-					%[nom, den]
-					div
-					%[x]
-					level
-					mutemark
-				} fraction-for
-				grestore
-			end
-		} def
-		
-		%[nom1, den1, nom2, den2, nomC, denC, level, nomM, denM]
-		/mutegrouprat2 {
-			/m 2edef
-			/level exch def
-			/c 2edef
-			/x2 2edef
-			/x1 2edef
-			
 			gsave
 				x1 c fraction-add
 				c
@@ -289,8 +238,75 @@
 				} fraction-for
 			
 			grestore
+			
+			end
 		} def
-
+		
+		% Группа немых штрихов на интервале 
+		% (x1; x2) - интервал построения
+		% c - цена делений
+		% level - уровень штрихов делений
+		% [ x1 x2 c level ]
+		/mutegroup {
+			0 dict begin
+				/level exch def
+				tofrac /c 2edef
+				tofrac /x2 2edef
+				tofrac /x1 2edef
+				
+				%x1 x2 c level 
+				%/level exch def
+				%/c 2edef
+				%/x2 2edef
+				%/x1 2edef
+				
+				gsave
+				x1 c fraction-add
+				c
+				x2
+				{
+					%[nom, den]
+					div
+					%[x]
+					level
+					mutemark
+				} fraction-for
+				grestore
+			end
+		} def
+		
+		%[x1, x1, step, mutestep, mutestep2]
+		/linear-scale {
+			0 dict begin
+				/mutestep2 exch def
+				/mutestep exch def
+				tofrac /step 2edef
+				tofrac /x2 2edef
+				tofrac /x1 2edef
+				mutestep2 null eq 
+				{
+					/mute {
+						mutestep 2 mutegroup
+					} def
+				}
+				{
+					/mute {
+						mutestep2 2 mutestep mutegroup2
+					} def
+				} ifelse
+				
+				x1 div value
+				/currentarg x1 2def
+				x1 step x2
+				{
+					/nextarg 2edef
+					[currentarg] [nextarg] mute
+					nextarg div value
+					/currentarg nextarg 2def
+				} fraction-for
+			end
+		} def		
+		
 		%Если вместо функции пришёл словарь - значит нужно перенести из него всё в текущий словарь
 		/fun load type
 		/dicttype eq

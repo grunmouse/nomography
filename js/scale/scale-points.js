@@ -18,10 +18,10 @@ const {
 /**
  * Проредить группу точек, если в ней есть слишком короткие деления
  */
-function downsinglePoints(group, dist, metric){
+function downsamplePoints(group, dist, metric){
 	let minmaxD = Infinity, selgroup = group;
 
-	let vars = downsingleVariants(group, dist, metric);
+	let vars = downsampleVariants(group, dist, metric);
 	
 	//Выбор среди вариантов разбивки лучшего (УТОЧНИТЬ)
 	//const debugMap = [];
@@ -43,7 +43,7 @@ function downsinglePoints(group, dist, metric){
 /**
  * Генерирует варианты прореженной группы
  */
-function * downsingleVariants(group, dist, metric){
+function * downsampleVariants(group, dist, metric){
 	const mapCode = new WeakMap(group.map((p, i)=>([p, 1n<<BigInt(i)])));
 	
 	const codeIndex = (points)=>(points.reduce((akk, p)=>(akk + mapCode.get(p)), 0n));
@@ -124,7 +124,7 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
 	
 	let points = new Points(f, metric, D, lessUniversal, levels, labeldist);
 	
-	if(points.downsingled){
+	if(points.downsampled){
 		return points.expand();
 	}
 	else{
@@ -132,7 +132,7 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
 		if(steps.length>0){
 			//выбор лучшего варианта разбиения (УТОЧНИТЬ)
 			let groups = steps.map((step)=>{
-				return new Points(f, metric, D, step, levels, labeldist).downsingle().expand();
+				return new Points(f, metric, D, step, levels, labeldist).downsample().expand();
 			});
 			
 			const cmp = (a, b)=>(b.length - a.length || b.full - a.full || a.maxD() - b.maxD());
@@ -145,7 +145,7 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
 			return groups[0];
 		}
 		else{
-			return points.downsingle().expand();
+			return points.downsample().expand();
 		}
 	}
 	
@@ -179,7 +179,7 @@ function zwischenLabeled(f, metric, D, step,  levels, labeldist){
  * @property labeldist.min : number - наименьшее расстояние между надписанными штрихами
  * @property step : V - заданная наибольшая цена деления, с которой начинается построение шкалы
  * @property points : Array<P> - массив помеченных точек
- * @property downsingled : Boolean - признак выполнения требования labeldist.min
+ * @property downsampled : Boolean - признак выполнения требования labeldist.min
  * @property fulled : Boolean - признак выполнения требования labeldist.max
  * @property edited : Boolean - признак наличия ручных изменений в наборе точек (после этого нельзя применять автоматические методы)
  * @property full : Boolean - признак того, что требование labeldist.min выполняется изначально, без прореживания
@@ -199,7 +199,7 @@ class PointsBase{
 		
 		this.points = points;
 
-		this.downsingled = this.full = this.ctrlMin(labeldist.min);
+		this.downsampled = this.full = this.ctrlMin(labeldist.min);
 		this.fulled = this.ctrlMax(labeldist.max);
 		this.edited = false;
 	}
@@ -310,6 +310,19 @@ class PointsBase{
 		return result;
 	}
 	
+	variance(){
+		let d = [];
+		for(let pair of this.pairsLast()){
+			let [cur, next, index] = pair;
+			d.push(this.metric(next, cur));
+		}
+		
+		let m = d.reduce((a,b)=>(a+b),0)/d.length;
+		let dd2 = d.map(a=>((m-a)**2));
+		let s = dd2.reduce((a,b)=>(a+b),0)/d.length;
+		return s;
+	}
+	
 	[Symbol.iterator](){
 		return this.points[Symbol.iterator]();
 	}
@@ -392,22 +405,22 @@ class Points extends PointsBase{
 	 * Объединяет слишком короткие деления.
 	 * Ищет наилучший вариант объединения
 	 */
-	downsingle(){
-		if(this.downsingled){
+	downsample(){
+		if(this.downsampled){
 			return this;
 		}
 		if(this.edited){
-			console.log('call downsingle after edit');
+			console.log('call downsample after edit');
 			return this;
 		}
 		const {points, labeldist, metric} = this;
-		this.points = downsinglePoints(points, labeldist, metric);
-		this.downsingled = true;
+		this.points = downsamplePoints(points, labeldist, metric);
+		this.downsampled = true;
 		
 		for(let pair of this.pairs()){
 			let i = pair.map(p=>points.indexOf(p));
 			if(i[1]-i[0] > 1){
-				pair[1].downsingled = true;
+				pair[1].downsampled = true;
 			}
 		}
 
@@ -432,7 +445,7 @@ class Points extends PointsBase{
 		for(let pair of me.pairsLast()){
 			let [cur, next, index] = pair;
 			
-			if(next.downsingled) continue;
+			if(next.downsampled) continue;
 			
 			let d = metric(next, cur);
 			if(d > labeldist.max){

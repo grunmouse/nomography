@@ -1,7 +1,7 @@
 const {RationalNumber:Rational, ratlog} = require('../rational-number/index.js');
 
 
-const {symbols:{DIV}}= require('@grunmouse/multioperator-ariphmetic');
+const {symbols:{DIV, EQ}}= require('@grunmouse/multioperator-ariphmetic');
 
 const mod = (a, b)=>(((a % b) + b) % b); //Честный остаток
 
@@ -37,10 +37,13 @@ const rational25Levels =  new LevelsByFunctions({
 		return value;
 	},
 	getIndex(step){
+		if(step === 0){
+			throw new Error('Incorrect step === 0');
+		}
 		if(INDEX in step){
 			return step[INDEX];
 		}
-		if(step == 1 || step.eq(1)){
+		if(step == 1 || step[EQ](1)){
 			return 0;
 		}
 		console.log('Index by log');

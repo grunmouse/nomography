@@ -16,5 +16,6 @@ module.exports = {
 	Curve,
 	RationalNumber,
 	...transform,
-	convertConfig
+	convertConfig,
+	makePS:require('./make-ps.js')
 };
