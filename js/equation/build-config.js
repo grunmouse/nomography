@@ -5,14 +5,15 @@ const {
 
 const {RationalNumber} = require('../rational-number/index.js');
 
-function buildJSFunction(name, argname, code){
-	return `const ${name} = (${argname})=>(${code});`;
+function buildJSFunction(name, argnames, code){
+	return `const ${name} = (${argnames.join(',')})=>(${code});`;
 }
 
-function buildPSFunction(name, argname, code){
+function buildPSFunction(name, argnames, code){
+	let argdef = argnames.map((argname)=>(`\t\t/${argname} exch def`)).reverse().join('\n');
 	return `/${name} {
 	0 dict begin
-		/${argname} exch def
+${argdef}
 		${code}
 	end
 } def`;
@@ -32,7 +33,7 @@ function handleJSLiteral(token){
 		return token.value;
 	}
 	else{
-		return value.serialize();
+		return `new RationalNumber(${value.nom}, ${value.den})`;
 	}
 }
 
@@ -59,10 +60,10 @@ function builder(compil, toConst, toFunc, handleLiteral){
 	return function(config, functions){
 		functions = handleFunctions(functions, config.functions);
 		
-		let coderows = config.rows.map(({rowtype, name, argname, poliz, source})=>{
+		let coderows = config.rows.map(({rowtype, name, argnames, poliz, source})=>{
 			let code = compil(poliz, functions, handleLiteral);
 			if(rowtype === 'function'){
-				return toFunc(name, argname, code);
+				return toFunc(name, argnames, code);
 			}
 			else if(rowtype === 'const'){
 				return toConst(name, code);

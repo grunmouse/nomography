@@ -1,4 +1,4 @@
-/R 6371 def
+/R 6371302 def
 /f_h {
 	dup
 	dup % h,h,h
@@ -6,7 +6,7 @@
 	exch  % h^2,h
 	R 2
 	mul
-	mul h^2, 2*R*h
+	mul % h^2, 2*R*h
 	add
 	sqrt
 } def

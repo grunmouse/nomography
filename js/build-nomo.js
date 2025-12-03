@@ -33,7 +33,17 @@ function buildTmpCodeSync(tmp, env, outFile){
 }
 
 function buildPsFileSync(inFile, outFile){
-	return child_process.execSync(`ps2pdf -dNOSAFER ${inFile} ${outFile}`);
+	if(!outFile){
+		outFile = inFile.replace(rePsFileExt, '.pdf');
+	}
+	let command = `ps2pdf -dNOSAFER ${inFile} ${outFile}`;
+	console.log(command);
+	try{
+		child_process.execSync(command);
+	}
+	catch(e){
+		return e.stdout.toString('utf8');
+	}
 }
 
 module.exports = {

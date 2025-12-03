@@ -64,6 +64,7 @@ class Levels{
 
 	/**
 	 * Находит для разбивки деления ценой max на деления ценой min варианты цены промежуточных делений
+	 * @return Array<Array<as max>>
 	 */
 	findSepVars(max, min){
 		if(!this.hasDiv(min, max)){
@@ -109,6 +110,15 @@ class Levels{
 		return result;
 	}
 	
+	/**
+	 * Отсекает концы диапазона, до значений кратных шагу
+	 * @param D : Array(2)<Number|Rational>
+	 * @param step : Rational
+	 * @return Object
+	 * @property max : Rational
+	 * @property min : Rational
+	 * @property step : Rational === step
+	 */
 	getLimits(D, step){
 		let max = new Rational(D[1]).floorBy(step);
 		let min = new Rational(D[0]).ceilBy(step);
@@ -178,6 +188,11 @@ class Levels{
 	
 	/**
 	 * Находит для интервала D наибольший хороший шаг
+	 * @param D : Array(2)<Number|Rational>
+	 * @return Object
+	 * @property max : Rational
+	 * @property min : Rational
+	 * @property step : Rational === step
 	 */
 	findTop(D){
 		let pair = this.findPair((index)=>(this.hasAllowStep(D, this.getStep(index))));
@@ -186,6 +201,8 @@ class Levels{
 	
 	/**
 	 * Находит деления, которые являются делителями переданного, но не являются делителями друг друга
+	 * @param sourceStep : Rational
+	 * @return Array<Rational>
 	 */
 	getLessStepVariants(sourceStep){
 		let result = [];

@@ -4,7 +4,7 @@ const {symbols:{SUB, ADD, LT}}= require('@grunmouse/multioperator-ariphmetic');
 const {rational25Levels} = require('./mark-levels.js');
 const ScalePoints = require('./scale-points.js');
 
-const euclid = (a, b)=>(Math.hypot(a.x - b.x, a.y - b.y));
+const euclid = (a, b)=>(Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2));
 
 
 /**

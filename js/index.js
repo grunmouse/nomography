@@ -4,11 +4,13 @@ const fcurve = require('./f-curve.js');
 
 const {RationalNumber} = require('./rational-number/index.js');
 
-const convertConfig = require('./equation/index.js').convertConfig;
+const {convertConfig, evalConfig} = require('./equation/index.js');
 
 const transform = require('./transform/index.js');
 
 const Curve = require('./curve/curve.js');
+
+const build = require('./build-nomo.js');
 
 module.exports = {
 	fcurve,
@@ -17,5 +19,7 @@ module.exports = {
 	RationalNumber,
 	...transform,
 	convertConfig,
-	makePS:require('./make-ps.js')
+	evalConfig,
+	makePS:require('./make-ps.js'),
+	build
 };

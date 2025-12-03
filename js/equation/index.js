@@ -1,17 +1,10 @@
-const functions = ["log", "sqrt", "log10"];
 
+const {
+	funJS,
+	funPS
+} = require('./functions.js');
 
-const funJS = {
-	"log":"Math.log",
-	"sqrt":"Math.sqrt",
-	"log10":"Math.log10"
-};
-
-const funPS = {
-	"log":"ln",
-	"sqrt":"sqrt",
-	"log10":"log"
-};
+const functions = Object.keys(funJS);
 
 const {
 	buildJsConfig,
@@ -34,6 +27,9 @@ function convertConfig(source){
 	return {js, ps};
 }
 
+const evalConfig = require('./eval-config.js');
+
 module.exports = {
-	convertConfig
+	convertConfig,
+	evalConfig
 };

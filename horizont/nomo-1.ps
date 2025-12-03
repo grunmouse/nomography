@@ -1,0 +1,91 @@
+%!PS-Adobe-3.0
+%%BeginSetup
+  << /PageSize [595 842] /Orientation 0 >> setpagedevice
+%%EndSetup
+
+(../../ps-steal/steal.ps) run
+(../../ps-eskd/) stealfolder
+(../../ps-eskd-font/) stealfolder
+(../../nomography/ps/) stealfolder
+(./nomo-1-config.ps) stealfile
+
+	in2mm
+	
+	0.2 setlinewidth
+	/eskd-b-font  findfont	2.2 scalefont setfont
+
+/module 0.001 def % =1/1000, в 1 мм 1000 м = 1:1М
+
+/scale_h_mm {
+	0 10 1 2 5 mutegroup2
+	10 value
+	10 20 2 2 mutegroup
+	20 value
+	20 30 2 2 mutegroup
+	30 value
+	35 2 mutemark
+	40 1 mutemark
+	45 2 mutemark
+	50 value
+	55 2 mutemark
+	60 1 mutemark
+	65 2 mutemark
+	70 value
+	70 100 5 2 10 mutegroup2
+	100 value
+	100 150 5 2 10 mutegroup2
+	150 value
+	150 200 10 2 mutegroup
+	200 value
+	200 300 10 2 50 mutegroup2
+	300 value
+	300 400 10 2 50 mutegroup2
+	400 value
+	400 500 10 2 50 mutegroup2
+	500 value
+	500 600 10 2 50 mutegroup2
+	600 value
+} def
+
+105 270 translate
+gsave
+{f_h 1.06 mul module mul 0} scale-env begin
+	/dir {pop 90} def
+	
+	0 600 line
+	
+	0 value
+	scale_h_mm
+	
+end
+
+{f_h 1.06 mul module mul neg 0} scale-env begin
+	/dir {pop 90} def
+	
+	0 600 line
+	
+	scale_h_mm
+
+end
+grestore
+
+/eskd-b-font  findfont	2.5 scalefont setfont
+
+50 20 moveto
+(Расстояние: в 1 мм 1 км) show
+-10 15 moveto
+(Высота, м) show
+
+
+%{1000 mul f_l module mul 0} scale-env begin
+%	/dir {pop -90} def
+%	%0 fun == ==
+%			%center top settarget
+%		/level0 3.5 def
+%		/dlevel 1 def
+%	0 150 line
+%	%0 3 [1 10] [1 20] [1 100] linear-scale
+%	0 150 10 5 1 linear-scale
+%	
+%end
+

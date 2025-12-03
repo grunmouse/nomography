@@ -1,0 +1,83 @@
+//lambda_star, subsat-geo
+
+//tan(lam) = cos(i)*tan(tet)
+limitTheta = (lam, i) => atan(tan(lam)/cos(i));
+
+f_lam = (x)=>(log10(tan(x)));
+f_tet = (x)=>(log10(tan(x)));
+f_i = (x)=>(log10(cos(x)));
+
+pointLambda = (lam)=>(Vector(0, f_lam(lam)));
+pointI = (i)=>(Vector(1, -f_i(i)));
+pointTheta = (tet)=>(Vector(0.5, f_tet(tet)/2));
+
+minLambda = 0.5;
+maxLambda = 45;
+minTheta = 0.5;
+maxTheta = 45;
+minI = 0;
+maxI = 89.5;
+
+***
+//theta, subsat-geo
+limitTheta = (lam, i) => asin(sin(lam)/sin(i));
+
+
+f = (x)=>(log10(sin(x)));
+
+minI = 0.5;
+minPhi = 0.5;
+minTheta = 0.5;
+
+maxI = 90;
+maxPhi = maxI;
+maxTheta = 90;
+
+minTheta1 = 90;
+maxTheta1 = 179.5;
+
+
+
+pointPhi = (phi)=>(Vector(0, f(phi)));
+pointI = (i)=>(Vector(1, -f(i)));
+pointTheta = (theta)=>(Vector(0.5, f(theta)/2));
+
+***
+
+// V = -log(m1) - m0*(1-m1)
+
+g1 = (m1)=>(m1-1);
+f1 = (m1)=>(-log(m1));
+
+x_m1 = (m1)=>(-1/(m1-2));
+y_m1 = (m1)=>(f1(m1)/(m1-2));
+
+y_m0 = (m0)=>(-m0);
+x_m0 = (m0)=>(0);
+
+y_V = (V)=>(-V);
+x_V = (V)=>(1);
+
+pointM1 = (m1)=>(Vector(x_m1(m1), y_m1(m1)));
+pointM0 = (m0)=>(Vector(x_m0(m0), y_m0(m0)));
+pointV = (V)=>(Vector(x_V(V), y_V(V)));
+
+***
+
+//h = m1*log(m1) + (1-m1) -0.5*(1-m1)**2;
+
+g1 = (m1)=>(-((1-m1)**2/2));
+f1 = (m1)=>(m1*log(m1) + 1 - m1);
+
+x_m1 = (m1)=>(-1/(g1(m1)-1));
+y_m1 = (m1)=>(f1(m1)/(g1(m1)-1));
+
+y_m0 = (m0)=>(-m0);
+x_m0 = (m0)=>(0);
+
+y_h = (h)=>(-h);
+x_h = (h)=>(1);
+
+pointM1 = (m1)=>(Vector(x_m1(m1), y_m1(m1)));
+pointM0 = (m0)=>(Vector(x_m0(m0), y_m0(m0)));
+pointH = (h)=>(Vector(x_h(h), y_h(h)));

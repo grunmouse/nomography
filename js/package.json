@@ -11,6 +11,8 @@
   "dependencies": {
     "@grunmouse/binary": "link:..\\..\\binary",
     "@grunmouse/convex": "link:..\\..\\convex",
+    "@grunmouse/equation-engine": "link:..\\..\\equation-engine",
+    "@grunmouse/format-recursive": "link:..\\..\\format-recursive",
     "@grunmouse/math-matrix": "link:..\\..\\math-matrix",
     "@grunmouse/math-vector": "link:..\\..\\math-vector",
     "@grunmouse/multioperator-ariphmetic": "link:..\\..\\multioperator-ariphmetic"

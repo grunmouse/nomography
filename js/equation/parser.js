@@ -15,6 +15,8 @@ for(let [sign, obj]  of Object.entries(operators)){
 	obj.right = obj.right === true;
 }
 
+const engine = require('@grunmouse/equation-engine');
+
 /**
  * @param functions : Array<String> - имена доступных функций
  */
@@ -60,7 +62,7 @@ function equationLexer(str, functions){
 		else if(/^[A-Za-z]/.test(first)){
 			//имя
 			if(functions.includes(token)){
-				tokens[i] = {token:"function", name:token};
+				tokens[i] = {token:"function", name:token, arity:-1};
 				operand = false;
 			}
 			else{
@@ -116,74 +118,9 @@ function equationLexer(str, functions){
 	return tokens;
 }
 
-/**
- * Алгоритм сортировочной станции
- *
- * return Array<{token:("literal"|"variable"
- */
-function shuntingYard(tokens){
-	const stack = [{token:'bottom'}];
-	const output = [];
-	stack.top = function(){return this[this.length-1];};
-	
-	for(let token of tokens){
-		if(token.token === "literal" || token.token==="variable"){
-			output.push(token);
-		}
-		else if(token.token === "function"){
-			stack.push(token);
-		}
-		else if(token.token === "operator"){
-			while(stack.top().token === "operator"){
-				let top = stack.top();
-				if(top.order < token.order){
-					output.push(stack.pop());
-				}
-				else if(top.order === token.order){
-					if(top.right){
-						break;
-					}
-					else{
-						output.push(stack.pop());
-					}
-				}
-				else{
-					break;
-				}
-			}
-			stack.push(token);
-		}
-		else if(token.token === "open"){
-			stack.push(token);
-		}
-		else if(token.token === "close"){
-			while(["bottom", "open"].indexOf(stack.top().token)==-1){
-				output.push(stack.pop());
-			}
-			if(stack.top().token !== "open"){
-				throw new Error("Unpaired brackets");
-			}
-			stack.pop();
-			while(stack.top().token === "function"){
-				output.push(stack.pop());
-			}
-		}
-		else if(token.token === "colon"){
-			while(["bottom", "open"].indexOf(stack.top().token)==-1){
-				output.push(stack.pop());
-			}
-		}
-	}
-	
-	while(stack.top().token !== "bottom"){
-		output.push(stack.pop());
-	}
-	
-	return output;
-}
 
 module.exports = {
 	operators,
 	equationLexer,
-	shuntingYard
+	shuntingYard:engine.shuntingYard
 };

@@ -1,3 +1,4 @@
+const inspect = Symbol.for('nodejs.util.inspect.custom');
 
 const {
 	operators:{
@@ -5,6 +6,7 @@ const {
 		sub,
 		neg,
 		div,
+		mod,
 		mul,
 		pow,
 		eq,
@@ -69,6 +71,16 @@ class RationalNumber {
 		let den = b ? new RationalNumber(10).pow(e) : 1;
 		let nom = new RationalNumber(BigInt(m));
 		return nom.div(den);
+	}
+	
+	static LCM(ab, cd){
+		// LCM(a/b, c/d) = (a*c) / GCD(a*c, b*d) 
+		let a = ab.nom, b = ab.den;
+		let c = cd.nom, d = cd.den;
+		
+		let result = new RationalNumber(a*c, NOD(a*d, b*c));
+		
+		return result.simple();
 	}
 	
 	constructor(nom, den){
@@ -193,6 +205,19 @@ class RationalNumber {
 		return Number(nom)/Number(den);
 	}
 	
+	toString(){
+		return this.nom.toString()+'/'+this.den.toString();
+	}
+	
+	[inspect](depth, options, inspect){
+		let name = this.constructor.name;
+		
+		return options.stylize('( ', 'special')
+			+ inspect(this.nom, options) + '/' + inspect(this.den, options)
+			+ ' = ' + inspect(+this, options)
+			+ options.stylize(' )', 'special');
+	}		
+	
 	toNumber(){
 		return this.valueOf();
 	}
@@ -256,7 +281,7 @@ class RationalNumber {
 	}
 	
 	floor(){
-		let f = this.floorBy().simple();
+		let f = this.floorBy();
 		if(f.isInteger()){
 			return f.nom;
 		}
@@ -266,7 +291,7 @@ class RationalNumber {
 	}
 	
 	ceil(){
-		let f = this.ceilBy().simple();
+		let f = this.ceilBy();
 		if(f.isInteger()){
 			return f.nom;
 		}
@@ -313,8 +338,11 @@ defWithConvert(mul, (a, b)=>(new Ctor(a.nom*b.nom, a.den*b.den)));
 
 defWithConvert(div, (a, b)=>(new Ctor(a.nom*b.den, a.den*b.nom)));
 
+defWithConvert(mod, (a, b)=>(a[sub](a.floorBy(b))));
+
 mul.useName(Ctor);
 div.useName(Ctor);
+mod.useName(Ctor);
 
 defWithConvert(eq, (a, b)=>{
 	return a.nom * b.den === b.nom * a.den;

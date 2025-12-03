@@ -51,12 +51,22 @@
 		
 		/curve-dir {
 			%[x]
+			dup
 			[ exch diff]
-			{1 get} forall
-			exch atan
+			{
+				dup type
+				/arraytype eq
+				{1 get} % если вошёл массив - значит это значение и производная
+				{pop 0} % если не массив, значит это константа, её производная 0
+				ifelse 
+			} forall
+			exch 
+			atan
+			exch pop
 		} def % - положительное направление кривой в данной точке
 
 		/step 1 def % Шаг черчения кривой
+		/prepare {} def %функция подготовки значения прежде чем преобразовать его в строку
 		/tostring {dup dup round eq {cvi} if 12 string cvs} def % Функция преобразования значения параметра в текст подписи
 		/target { 0.5 0 0 0.5} def % Матрица расчёта точки прицеливания
 		/space 2 def % Отступ подписи
@@ -121,7 +131,7 @@
 					/x exch def
 					safetype /stringtype eq
 						{}
-						{x tostring}
+						{x prepare tostring}
 						ifelse
 					str-to-struct
 					%[label]
@@ -212,12 +222,11 @@
 			gsave
 				x1 c fraction-add
 				c
-				x2
+				x2 c fraction-sub
 				{
 					%[nom, den]
 					2dup div
 					/x exch def
-					
 					%[nom, den]
 					m
 					fraction-has-div
@@ -254,16 +263,10 @@
 				tofrac /x2 2edef
 				tofrac /x1 2edef
 				
-				%x1 x2 c level 
-				%/level exch def
-				%/c 2edef
-				%/x2 2edef
-				%/x1 2edef
-				
 				gsave
 				x1 c fraction-add
 				c
-				x2
+				x2 c fraction-sub
 				{
 					%[nom, den]
 					div
@@ -295,7 +298,6 @@
 					} def
 				} ifelse
 				
-				x1 div value
 				/currentarg x1 2def
 				x1 step x2
 				{
