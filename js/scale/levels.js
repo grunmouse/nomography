@@ -280,6 +280,15 @@ class Levels{
 		return step;
 	}
 	
+	getGreatUniversalStep(step){
+		let index = this.getIndex(step);
+		step = this.getStep(++index);
+		while(!this.isUniversal(step)){
+			step = this.getStep(++index);
+		}
+		return step;
+	}
+	
 	getStepsBetween(a, b){
 		a = this.getIndex(a);
 		b = this.getIndex(b);

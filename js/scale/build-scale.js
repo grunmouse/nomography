@@ -20,6 +20,12 @@ const {
 	RationalNumber
 } = require('../rational-number/index.js');
 
+const downsamplePoints = require('./downsample.js');
+
+const PointsBase = require('./scale-points-base.js');
+
+
+
 function gapArea(obj1, obj2) {
     const s1 = obj1.start;
     const e1 = obj1.end;
@@ -107,26 +113,9 @@ function metricArea(start, end, step, distance, mutedist){
 	
 }
 
-/**
- * Функция для заданной шкалы находит отрезки с хорошим шагом немых штрихов
- *
- * @param fun : Function - уравнение шкалы, отображает параметр на координату
- * @param metric : Function({x,y}, {x,y})=>Number - функция расстояния между точками в принятой метрике
- * @param D : Array[2]<Number> - отрезок значений параметра, отображаемый на шкалу
- * @param levels : Levels - хорошие кратности параметра для штрихов.
- * @param mutedist : Object
- * @property mutedist.min : Number - наименьшее разрешённое расстояние между немыми штрихами
- * @property mutedist.max : Number - наибольшее допустимое расстояние между немыми штрихами
- *
- */
-function muteArea(distance, D, levels, mutedist){
-	let maxStepLimits = levels.findTop(D); //Наибольшее значение шага, отмечаемое на данном интервале хотя бы одним штрихом.
-	
-	//const distance = (a, b)=>(metric(fun(a),fun(b)));
-	
+function getMinStep(distance, D, levels, mutedist){
 	const stepLengthInc = (start, step)=>(distance(start, start[ADD](step)));
-	
-	
+
 	const isMinorDistance = (a, b)=>(distance(a,b)<mutedist.min);
 	
 	const isMinorCutStart = (index)=>(isMinorDistance(levels.getLimits(D, levels.getStep(index)).min, D[0]));
@@ -144,7 +133,7 @@ function muteArea(distance, D, levels, mutedist){
 	*/
 	
 	const minorCutStep = (isMinor)=>{
-		let index = levels.findPair(isMinorCutStart).inner;
+		let index = levels.findPair(isMinor).inner;
 		let step = levels.getStep(index);
 		if(!levels.isUniversal(step)){
 			step = levels.getLessUniversalStep(step);
@@ -156,41 +145,17 @@ function muteArea(distance, D, levels, mutedist){
 	let stepEnd = minorCutStep(isMinorCutEnd);
 	
 	let minStep = stepStart[LT](stepEnd) ? stepStart : stepEnd;
-	
-	
+
 	let lim = levels.getLimits(D, minStep);
 	while(stepLengthInc(lim.min, minStep)>mutedist.min){
 		minStep = levels.getStep(levels.getIndex(minStep)-1);
 	}
 	
-	function startingSteps(minStep){
-		const minIndex = levels.getIndex(minStep);
-		const range = D[1][SUB](D[0]);
-		let index = levels.getIndex(minStep);
-		let steps = [], pos = D[0];
-		for(;steps.length === 0 && pos[LE](D[1]); pos=pos[ADD](minStep)){
-			let index = minIndex;
-			for(; true; ++index){
-				let step = levels.getStep(index);
-				if(step[GT](range)){
-					break;
-				}
-				if(levels.hasDiv(step, pos)){
-					let dist = stepLengthInc(pos, step);
-					//console.log(pos,step, dist);
-					if(dist>mutedist.max){
-						break;
-					}
-					if(dist<mutedist.min){
-						continue;
-					}
-					let limits = {min:pos, max:new RationalNumber(D[1]).floorBy(step), step};
-					steps.push(limits);
-				}
-			}
-		}
-		return steps;
-	}
+	return minStep;
+}
+
+	
+function collectAreas(D, firstStep, distance, levels, mutedist){
 	
 	function traceSteps(start, limit, step, OPER, skip){
 		let end = start, prev = start, inc = 0;
@@ -230,8 +195,6 @@ function muteArea(distance, D, levels, mutedist){
 		}
 	}
 	
-
-	
 	function findCommonMark(start, step, step1, OPER){
 		let current = start;
 		while(true){
@@ -240,34 +203,94 @@ function muteArea(distance, D, levels, mutedist){
 			}
 			current = current[OPER](step);
 		}
-	}
+	}		
 	
-	function collectAreas(D, firstStep){
-		let start = D[0];
-		let step = firstStep;
-		let result = [];
-		let area = traceSteps(start, D[1], step, ADD, false);
+	let start = D[0];
+	let step = firstStep;
+	let result = [];
+	let area = traceSteps(start, D[1], step, ADD, false);
+	result.push(area);
+	while(true){
+		let stepIndex = levels.getIndex(area.step) + area.inc;
+		step = levels.getStep(stepIndex);
+		start = findCommonMark(area.end, area.step, step, SUB);
+		area = traceSteps(start, D[1], step, ADD, -area.inc);
+		let prevArea = traceSteps(area.start, D[0], step, SUB, false);
+		area = joinArea(prevArea, area, {inc:area.inc});
 		result.push(area);
-		while(true){
-			let stepIndex = levels.getIndex(area.step) + area.inc;
-			step = levels.getStep(stepIndex);
-			start = findCommonMark(area.end, area.step, step, SUB);
-			area = traceSteps(start, D[1], step, ADD, -area.inc);
-			let prevArea = traceSteps(area.start, D[0], step, SUB, false);
-			area = joinArea(prevArea, area, {inc:area.inc});
-			result.push(area);
-			if(area.end[GE](D[1])){
+		if(area.end[GE](D[1])){
+			break;
+		}
+	}
+	return result;
+}
+
+function startingSteps(minStep, distance, D, levels, mutedist){
+
+	const minIndex = levels.getIndex(minStep);
+	const range = D[1][SUB](D[0]);
+	let index = levels.getIndex(minStep);
+	let steps = [], pos = D[0];
+	//
+	for(;steps.length === 0 && pos[LE](D[1]); pos=pos[ADD](minStep)){
+		let index = minIndex;
+		for(; true; ++index){
+			let step = levels.getStep(index);
+			if(step[GT](range)){
 				break;
 			}
+			if(levels.hasDiv(step, pos)){
+				let dist = distance(pos, pos[ADD](step));
+				//console.log(pos,step, dist);
+				if(dist>mutedist.max){
+					break;
+				}
+				if(dist<mutedist.min){
+					continue;
+				}
+				let limits = {min:pos, max:D[1], step};
+				steps.push(limits);
+			}
 		}
-		return result;
 	}
+	return steps;
+}
+
+/**
+ * Функция для заданной шкалы находит отрезки с хорошим шагом немых штрихов
+ *
+ * @param fun : Function - уравнение шкалы, отображает параметр на координату
+ * @param metric : Function({x,y}, {x,y})=>Number - функция расстояния между точками в принятой метрике
+ * @param D : Array[2]<Number> - отрезок значений параметра, отображаемый на шкалу
+ * @param levels : Levels - хорошие кратности параметра для штрихов.
+ * @param mutedist : Object
+ * @property mutedist.min : Number - наименьшее разрешённое расстояние между немыми штрихами
+ * @property mutedist.max : Number - наибольшее допустимое расстояние между немыми штрихами
+ *
+ */
+function muteArea(distance, D, levels, mutedist){
+	let maxStepLimits = levels.findTop(D); //Наибольшее значение шага, отмечаемое на данном интервале хотя бы одним штрихом.
 	
-	const startSteps = startingSteps(minStep);
+	let minStep = getMinStep(distance, D, levels, mutedist);
+	
+
+	const startSteps = startingSteps(minStep, distance, D, levels, mutedist);
 	//console.log(startSteps);
 	let limits = startSteps[0];
 	
-	return collectAreas([limits.min, limits.max], limits.step);
+	return collectAreas([limits.min, limits.max], limits.step, distance, levels, mutedist);
+}
+
+function labeledArea(D, step, distance, levels, labeldist){
+	if(!levels.isUniversal(step)){
+		step = levels.getGreatUniversalStep(step);
+	}
+	
+	const startSteps = startingSteps(step, distance, D, levels, labeldist);
+	//console.log(startSteps);
+	let limits = startSteps[0];
+	
+	return collectAreas([limits.min, limits.max], limits.step, distance, levels, mutedist);
 }
 
 function computeCommonTicks(intersect, levels) {
@@ -403,14 +426,17 @@ function convertToScaleReport(points, fun,  metric, levels, labeldist){
 		if(p.step){
 			point.muteGroup = {
 				min: points[i-1].a,
-				max: a,
+				max: point.a,
 				step: p.step,
 				levels: 1
 			};
 		}
+		return point;
 	});
 	
 	let scale = new PointsBase(repPoints,  metric, levels, labeldist);
+	
+	scale.fun = fun;
 	
 	return scale;
 }
@@ -442,10 +468,13 @@ function wrapFunction(f){
 
 function createScaleReport(f, metric, D, levels, labeldist, mutedist){
 	const fun = wrapFunction(f);
+	const distance = (a, b)=>(metric(fun(a),fun(b)));
 	
 	let areas = muteArea(distance, D, levels, mutedist);
 	let points = makePoints(areas, levels);
+
 	points = resolveUnknownPoints(points, distance, mutedist);
+	//console.log(points);
 	return convertToScaleReport(points, fun,  metric, levels, labeldist);
 }
 

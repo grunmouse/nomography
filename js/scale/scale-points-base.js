@@ -96,6 +96,12 @@ class PointsBase{
 	ctrlMin(min){
 		for(let pair of this.pairsLast()){
 			let [cur, next, i] = pair;
+			if(!next) {
+				console.log(i);
+				console.log(this.points.length);
+				console.log(this.points[i+1]);
+				console.log(this.points);
+			}
 			let d = this.metric(next, cur);
 			if(d<min){
 				return false;

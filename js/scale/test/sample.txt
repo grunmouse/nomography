@@ -11,6 +11,8 @@ pointLambda = (lam)=>(Vector(0, f_lam(lam)));
 pointI = (i)=>(Vector(1, -f_i(i)));
 pointTheta = (tet)=>(Vector(0.5, f_tet(tet)/2));
 
+***
+
 minLambda = 0.5;
 maxLambda = 45;
 minTheta = 0.5;
@@ -18,31 +20,54 @@ maxTheta = 45;
 minI = 0;
 maxI = 89.5;
 
-***
+A = pointLambda(minLambda);
+B = pointLambda(maxLambda);
+C = pointI(maxI);
+D = pointI(minI);
+
+===
+
 //theta, subsat-geo
 limitTheta = (lam, i) => asin(sin(lam)/sin(i));
 
 
 f = (x)=>(log10(sin(x)));
 
+***
 minI = 0.5;
-minPhi = 0.5;
-minTheta = 0.5;
-
 maxI = 90;
+
+***
+
+minPhi = 0.5;
 maxPhi = maxI;
+
++++
+
+minPhi = 50
+maxPhi = maxI;
+
+***
+
+minTheta = 0.5;
 maxTheta = 90;
 
 minTheta1 = 90;
 maxTheta1 = 179.5;
 
-
+***
 
 pointPhi = (phi)=>(Vector(0, f(phi)));
 pointI = (i)=>(Vector(1, -f(i)));
 pointTheta = (theta)=>(Vector(0.5, f(theta)/2));
 
-***
+A = pointPhi(minPhi);
+B = pointPhi(maxPhi);
+C = pointI(minI);
+D = pointI(maxI);
+
+
+===
 
 // V = -log(m1) - m0*(1-m1)
 
@@ -63,6 +88,19 @@ pointM0 = (m0)=>(Vector(x_m0(m0), y_m0(m0)));
 pointV = (V)=>(Vector(x_V(V), y_V(V)));
 
 ***
+minM0 = 0
+maxM0 = 1
+minV = 0
+maxV = 3
+maxM1 = 1
+minM1 = 0.02
+
+A = pointM0(0);
+B = pointM0(1);
+C = pointV(3);
+D = pointV(0);
+
+===
 
 //h = m1*log(m1) + (1-m1) -0.5*(1-m1)**2;
 
@@ -81,3 +119,17 @@ x_h = (h)=>(1);
 pointM1 = (m1)=>(Vector(x_m1(m1), y_m1(m1)));
 pointM0 = (m0)=>(Vector(x_m0(m0), y_m0(m0)));
 pointH = (h)=>(Vector(x_h(h), y_h(h)));
+
+***
+
+minM0 = 0
+maxM0 = 1
+minH = 0
+maxH = 0.5
+maxM1 = 1
+minM1 = 0.02
+
+A = pointM0(0)
+B = pointM0(1)
+C = pointH(0.5)
+D = pointH(0)
