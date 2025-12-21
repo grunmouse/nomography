@@ -68,6 +68,7 @@ const rational25Levels =  new Levels({
 		return index;
 	},
 	hasDiv(a, b){
+		if(b[EQ](0)) return true;
 		return b[DIV](a).isInteger();
 	},	
 	isUniversal(step){

@@ -310,7 +310,7 @@ class Levels{
 	 */
 	findLevel(value){
 		if(value[EQ](0)){
-			return NaN;
+			return Infinity;
 		}
 		let pair = this.findPair((index)=>(this.hasDiv(this.getStep(index), value)));
 		
