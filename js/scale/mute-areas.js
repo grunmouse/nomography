@@ -29,13 +29,14 @@ const {metricArea} = require('./penalty.js');
  * @returns {*} minStep - Минимальный подходящий шаг.
  */
 function getMinStep(distance, D, levels, mutedist){
-	const stepLengthInc = (start, step)=>(distance(start, start[ADD](step)));
+	const oneStepLength = (start, step)=>(distance(start, start[ADD](step)));
 
-	const isMinorDistance = (a, b)=>(distance(a,b)<mutedist.min);
-	
-	const isMinorCutStart = (index)=>(isMinorDistance(levels.getLimits(D, levels.getStep(index)).min, D[0]));
-	const isMinorCutEnd = (index)=>(isMinorDistance(levels.getLimits(D, levels.getStep(index)).max, D[1]));
+	//Длина (геометрическая) куска шкалы, который остаётся непокрытым при выборе цены деления index
+	const cutStartDistance = (index)=>(distance(levels.getLimits(D, levels.getStep(index)).min, D[0]));
+	const cutEndDistance = (index)=>(distance(levels.getLimits(D, levels.getStep(index)).max, D[1]));
 
+	const isMinorCutStart = (index)=>(cutStartDistance(index)<mutedist.min);
+	const isMinorCutEnd = (index)=>(cutEndDistance(index)<mutedist.min);
 
 	/*
 		функции isMinor скорее всего ложны при больших шагах и, скорее всего верны - при малых.
@@ -59,15 +60,54 @@ function getMinStep(distance, D, levels, mutedist){
 	let stepStart = minorCutStep(isMinorCutStart);
 	let stepEnd = minorCutStep(isMinorCutEnd);
 	
-	let minStep = stepStart[LT](stepEnd) ? stepStart : stepEnd;
-
-	let lim = levels.getLimits(D, minStep);
-	while(stepLengthInc(lim.min, minStep)>mutedist.min){
-		minStep = levels.getStep(levels.getIndex(minStep)-1);
+	let lim = levels.getLimits(D, stepStart);
+	while(oneStepLength(lim.min, stepStart)>mutedist.min){
+		stepStart = levels.getStep(levels.getIndex(stepStart)-1);
 	}
 	
-	return minStep;
+	return stepStart;
 }
+
+/**
+ * Найти начальные позиции и шаги для шкалы, начиная с minStep.
+ * @param {*} minStep - Минимальный шаг.
+ * @param {Function} distance - Расстояние.
+ * @param {Array[2]} D - Диапазон.
+ * @param {*} levels - Уровни.
+ * @param {Object} mutedist - Диапазон.
+ * @returns {Array} Список начальных лимитов: [{min, max, step}].
+ */
+function startingSteps(minStep, distance, D, levels, mutedist){
+
+	const minIndex = levels.getIndex(minStep);
+	const range = D[1][SUB](D[0]);
+	let index = levels.getIndex(minStep);
+	let steps = [], pos = D[0];
+	//
+	for(;steps.length === 0 && pos[LE](D[1]); pos=pos[ADD](minStep)){
+		let index = minIndex;
+		for(; true; ++index){
+			let step = levels.getStep(index);
+			if(step[GT](range)){
+				break;
+			}
+			if(levels.hasDiv(step, pos)){
+				let dist = distance(pos, pos[ADD](step));
+				//console.log(pos,step, dist);
+				if(dist>mutedist.max){
+					break;
+				}
+				if(dist<mutedist.min){
+					continue;
+				}
+				let limits = {min:pos, max:D[1], step};
+				steps.push(limits);
+			}
+		}
+	}
+	return steps;
+}
+
 
 /**
  * Собирает список областей с хорошими шагами для mute штрихов.
@@ -88,8 +128,31 @@ function collectAreas(D, firstStep, distance, levels, mutedist){
 		}
 	}
 	
-	function traceSteps(start, limit, step, OPER, skip){
+	function operByLimits(start, end){
+		if(start[LT](end)){
+			return ADD;
+		}
+		else if(start[GT](end)){
+			return SUB;
+		}
+		else{
+			throw new Error(`Incorrect start: ${start}; end: ${end}.`);
+		}
+	}
+	
+	/**
+	 * Трассирует шаги начиная со start до limit c шагом step, в направлении OPER, с разрешением пропустить в начале шаги определённого инкремента (step)
+	 * @param start : RationalNumber
+	 * @param limit : RationalNumber
+	 * @param step : RationalNumber
+	 * @param skip = -1|0|+1 - разрешает пропускать деления в начале (начиная со start) если они -1 - слишком маленькие, +1 - слишком большие, 0 - запрещает пропускать
+	 */
+	function traceSteps(start, limit, step, skip){
+		if(start[EQ](limit)){
+			return {start, end:limit, step, inc:0, OPER, overlimit:true};
+		}
 		let end = start, prev = start, inc = 0, overlimit;
+		OPER = operByLimits(start, limit);
 		let COND = condByOper(OPER);
 		while(true){
 			let next = prev[OPER](step);
@@ -141,14 +204,14 @@ function collectAreas(D, firstStep, distance, levels, mutedist){
 	let start = D[0];
 	let step = firstStep;
 	let result = [];
-	let area = traceSteps(start, D[1], step, ADD, false);
+	let area = traceSteps(start, D[1], step, false);
 	result.push(area);
 	while(true){
 		let stepIndex = levels.getIndex(area.step) + area.inc;
 		step = levels.getStep(stepIndex);
 		start = findCommonMark(area.end, area.step, step, SUB);	//идём по area назад и ищем точку общую для area.step и step
-		area = traceSteps(start, D[1], step, ADD, -area.inc);
-		let prevArea = traceSteps(area.start, D[0], step, SUB, false); //Проверяем нельзя ли расширить новую область в сторону начала
+		area = traceSteps(start, D[1], step, -area.inc);
+		let prevArea = traceSteps(area.start, D[0], step, false); //Проверяем нельзя ли расширить новую область в сторону начала
 		//area = joinArea(prevArea, area, {inc:area.inc, overlimit: area.overlimit}); //Если можно, расширяем
 		
 		if(area.start[EQ](area.end) && !area.overlimit){
@@ -165,45 +228,6 @@ function collectAreas(D, firstStep, distance, levels, mutedist){
 	return result;
 }
 
-/**
- * Найти начальные позиции и шаги для шкалы, начиная с minStep.
- * @param {*} minStep - Минимальный шаг.
- * @param {Function} distance - Расстояние.
- * @param {Array[2]} D - Диапазон.
- * @param {*} levels - Уровни.
- * @param {Object} mutedist - Диапазон.
- * @returns {Array} Список начальных лимитов: [{min, max, step}].
- */
-function startingSteps(minStep, distance, D, levels, mutedist){
-
-	const minIndex = levels.getIndex(minStep);
-	const range = D[1][SUB](D[0]);
-	let index = levels.getIndex(minStep);
-	let steps = [], pos = D[0];
-	//
-	for(;steps.length === 0 && pos[LE](D[1]); pos=pos[ADD](minStep)){
-		let index = minIndex;
-		for(; true; ++index){
-			let step = levels.getStep(index);
-			if(step[GT](range)){
-				break;
-			}
-			if(levels.hasDiv(step, pos)){
-				let dist = distance(pos, pos[ADD](step));
-				//console.log(pos,step, dist);
-				if(dist>mutedist.max){
-					break;
-				}
-				if(dist<mutedist.min){
-					continue;
-				}
-				let limits = {min:pos, max:D[1], step};
-				steps.push(limits);
-			}
-		}
-	}
-	return steps;
-}
 
 /**
  * Функция для заданной шкалы находит отрезки с хорошим шагом немых штрихов

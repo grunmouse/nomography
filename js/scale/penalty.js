@@ -18,6 +18,23 @@ const {
 	RationalNumber
 } = require('../rational-number/index.js');
 
+/*
+	Требования к операции
+	_sum(a, b) = _sum(b, a);
+	_sum(_sum(a,b),c) = _sum(a,_sum(b,c));
+	для a>b => _sum(a,c) >= _sum(b,c);
+	Желательно:
+	_sum(a, 0) = a
+	_sum(a,b) < _sum(a+b, 0) или _sum(a,b)< a+b
+*/
+
+function _sum(a, b){
+	return Math.max(a, b);
+}
+
+function penaltySum(...values){
+	return values.reduce(_sum, 0);
+}
 
 /**
  * Вычисляет метрическую "штрафную" функцию области: сумма квадратов отклонений расстояний от mutedist.
@@ -41,15 +58,13 @@ function metricArea(start, end, step, distance, mutedist){
 		}
 	}
 	
-	let k =0;
-	if(max>mutedist.max){
-		k += (max-mutedist.max)**2/mutedist.max**2;
-	}
-	if(min<mutedist.min){
-		k += (min-mutedist.min)**2/mutedist.min**2;
-	}
+	let a = max>mutedist.max ? (max-mutedist.max)/mutedist.max : 0;
+	let b = min<mutedist.min ? (mutedist.min-min)/mutedist.min : 0;
 	
-	return k;
+	return _sum(a, b);
 }
 
-module.exports = {metricArea};
+module.exports = {
+	metricArea,
+	penaltySum
+};
