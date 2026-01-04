@@ -69,6 +69,77 @@ function getMinStep(distance, D, levels, mutedist){
 }
 
 /**
+ * Находит минимальный шаг для начала шкалы, основываясь на расстояниях и mutedist.
+ * @param {Function} distance - Функция расстояния.
+ * @param {Array[2]} D - [start, end] параметра.
+ * @param {*} levels - Объект уровней шкалы.
+ * @param {Object} mutedist - {min, max}.
+ * @returns {*} minStep - Минимальный подходящий шаг.
+ */
+function getMinStepStart(distance, D, levels, mutedist) {
+    const oneStepLength = (start, step) => (distance(start, start[ADD](step)));
+
+    // Длина (геометрическая) куска шкалы, который остаётся непокрытым при выборе цены деления index (для начала)
+    const cutStartDistance = (index) => (distance(levels.getLimits(D, levels.getStep(index)).min, D[0]));
+
+    const isMinorCutStart = (index) => (cutStartDistance(index) < mutedist.min);
+
+    const minorCutStep = (isMinor) => {
+        let index = levels.findPair(isMinor).inner;
+        let step = levels.getStep(index);
+        if (!levels.isUniversal(step)) {
+            step = levels.getLessUniversalStep(step);
+        }
+        return step;
+    };
+
+    let stepStart = minorCutStep(isMinorCutStart);
+
+    let lim = levels.getLimits(D, stepStart);
+    while (oneStepLength(lim.min, stepStart) > mutedist.min) {
+        stepStart = levels.getStep(levels.getIndex(stepStart) - 1);
+    }
+
+    return stepStart;
+}
+
+/**
+ * Находит минимальный шаг для конца шкалы, основываясь на расстояниях и mutedist.
+ * @param {Function} distance - Функция расстояния.
+ * @param {Array[2]} D - [start, end] параметра.
+ * @param {*} levels - Объект уровней шкалы.
+ * @param {Object} mutedist - {min, max}.
+ * @returns {*} minStep - Минимальный подходящий шаг.
+ */
+function getMinStepEnd(distance, D, levels, mutedist) {
+    const oneStepLength = (start, step) => (distance(start, start[SUB](step)));
+
+    // Длина (геометрическая) куска шкалы, который остаётся непокрытым при выборе цены деления index (для конца)
+    const cutEndDistance = (index) => (distance(levels.getLimits(D, levels.getStep(index)).max, D[1]));
+
+    const isMinorCutEnd = (index) => (cutEndDistance(index) < mutedist.min);
+
+    const minorCutStep = (isMinor) => {
+        let index = levels.findPair(isMinor).inner;
+        let step = levels.getStep(index);
+        if (!levels.isUniversal(step)) {
+            step = levels.getLessUniversalStep(step);
+        }
+        return step;
+    };
+
+    let stepEnd = minorCutStep(isMinorCutEnd);
+
+    let lim = levels.getLimits(D, stepEnd);
+    while (oneStepLength(lim.max, stepEnd) > mutedist.min) {
+        stepEnd = levels.getStep(levels.getIndex(stepEnd) - 1);
+    }
+
+    return stepEnd;
+}
+
+
+/**
  * Найти начальные позиции и шаги для шкалы, начиная с minStep.
  * @param {*} minStep - Минимальный шаг.
  * @param {Function} distance - Расстояние.
@@ -244,7 +315,7 @@ function collectAreas(D, firstStep, distance, levels, mutedist){
 function muteArea(distance, D, levels, mutedist){
 	let maxStepLimits = levels.findTop(D); //Наибольшее значение шага, отмечаемое на данном интервале хотя бы одним штрихом.
 	
-	let minStep = getMinStep(distance, D, levels, mutedist);
+	let minStep = getMinStepStart(distance, D, levels, mutedist);
 	
 
 	const startSteps = startingSteps(minStep, distance, D, levels, mutedist);
