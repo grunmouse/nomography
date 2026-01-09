@@ -21,14 +21,15 @@ const {
 } = require('../rational-number/index.js');
 
 const downsamplePoints = require('./downsample.js');
+const betweenPoints = require('./between.js');
 
 //const PointsBase = require('./scale-points-base.js');
 
-const { gapArea, getIntersection, getSpacing, joinArea, commonTicks, fillArea} = require('./interval-utils.js');
+const { gapArea, getIntersection, getSpacing, joinArea, commonTicks, fillArea, sortArea, getNestedAreas} = require('./interval-utils.js');
 
 const {metricArea} = require('./penalty.js');
 
-const { startingSteps, collectAreas, muteArea } = require('./mute-areas.js');
+const { startingSteps, collectAreas, muteArea, resolveNested } = require('./mute-areas.js');
 
 const {convertToScaleReport, makePoints, resolveUnknownPoints} = require('./points-utils.js');
 /**
@@ -106,28 +107,46 @@ function createScaleReport(f, metric, D, levels, labeldist, mutedist){
 	
 	let areas = muteArea(distance, D, levels, mutedist);
 	
+	let nested = getNestedAreas(areas);
+	for(let cmp of nested){
+		if(cmp.length === 1){
+			let action = resolveNested(cmp[0], distance, levels, mutedist, labeldist);
+			//console.log(action);
+			if(action.created){
+				areas.splice(areas.indexOf(action.removed), 1, ...action.created)
+			}
+			else{
+				areas.splice(areas.indexOf(action.removed), 1);
+			}
+		}
+		else{
+			throw new Error('STUB. Many nested unsupported');
+		}
+	}
+	
+	areas.sort(sortArea);
+	
 	let points = makePoints(areas, levels);
-	//console.log(points[1].alt);
+	
 	points = resolveUnknownPoints(points, distance, mutedist);
 	
+	//if(!false){
 	for(let i = points.length-1; i>0; --i){
 		let a = points[i-1], b = points[i];
 		let d = distance(a.a, b.a);
 		if(d>labeldist.max){
-			//console.log(points[i]);
-			let lareas = labeledArea([a.a, b.a], b.step, distance, levels, labeldist);
-			if(lareas && lareas.length){
-				let lpoints = lareas.map(fillArea).flat();
-				console.log(lpoints);
-				//console.log(lareas);
-				console.log({a, b});
-			}
+			let p = betweenPoints(a.a, b.a, b.step, distance, levels, labeldist);
+			p = p.slice(1,-1).map((a)=>({a, step:b.step}));
 			
-			//break;
+			points.splice(i, 0, ...p); //Вставляем точки перед p;
+			
+		}
+		else if(d<labeldist.min){
+			//Нужна какая-то обработка
 		}
 	}
+	//}
 	
-	//console.log(points);
 	return convertToScaleReport(points, fun,  metric, levels, labeldist);
 }
 

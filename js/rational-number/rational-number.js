@@ -14,7 +14,8 @@ const {
 		gt,
 		le,
 		ge
-	}
+	},
+	symbols:{LT, GT}
 } = require('@grunmouse/multioperator-ariphmetic');
 
 const {
@@ -81,6 +82,28 @@ class RationalNumber {
 		let result = new RationalNumber(a*c, NOD(a*d, b*c));
 		
 		return result.simple();
+	}
+	
+	static max(...values){
+		let result = values[0];
+		for(let i=1; i<values.length; ++i){
+			let value = values[i];
+			if(value[GT](result)){
+				returt = value;
+			}
+		}
+		return value;
+	}
+	
+	static min(...values){
+		let result = values[0];
+		for(let i=1; i<values.length; ++i){
+			let value = values[i];
+			if(value[LT](result)){
+				returt = value;
+			}
+		}
+		return value;
 	}
 	
 	constructor(nom, den){
@@ -381,6 +404,8 @@ pow.def(Ctor, BigInt, (a, p)=>{
 pow.def(Ctor, Number, (a, p)=>{
 	return a[pow](BigInt(p));
 });
+
+
 
 pow.useName(Ctor);
 module.exports = RationalNumber;

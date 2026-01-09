@@ -59,20 +59,7 @@ function labeledArea(D, step, distance, levels, labeldist){
  * @returns {Array} Точки: {a: Rational, step?, alt?}.
  */
 function makePoints(areas, levels){
-	/*
-	@typedef Point : object
-	@property x : Number?
-	@property y : Number?
-	@property a : RationalNumber
-	@property muteGroup : Object?
-	@property mutegroup.min : RationalNumber
-	@property mutegroup.max : RationalNumber
-	@property mutegroup.step : RationalNumber
-	@property mutegroup.levels : 1 | 2 
-	@property mutegroup.two : Boolean? levels===2
-	@property mutegroup.prev : RationalNumber?
-	*/
-	
+
 	let points = [{a:areas[0].start}].concat(areas.map((area, i)=>{
 		let next = areas[i+1];
 		let a = area.end;

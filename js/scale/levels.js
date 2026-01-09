@@ -127,21 +127,11 @@ class Levels{
 	
 	/**
 	 * Проверяет, является ли step хорошим шагом для разбиения интервала D
-	 * Арифметическая прогрессия 0 + step*i должна включать хотябы одну внутреннюю точку интервала D
+	 * Арифметическая прогрессия 0 + step*i должна включать хотябы две внутренние точки интервала D
 	 */
 	hasAllowStep(D, step){
 		let limits = this.getLimits(D, step);
-		let count = limits.max[SUB](limits.min)[DIV](step);
-		if(count.isPositive()){
-			if(count[GE](3)){
-				return true;
-			}
-			count = count.toNumber() + 1 + limits.min[GT](D[0]) + limits.max[LT](D[1]);
-			if(count >= 3){
-				return  true;
-			}
-		}
-		return false;
+		return limits.max[GT](limits.min);
 	}
 	
 	/** 

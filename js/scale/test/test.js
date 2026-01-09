@@ -60,7 +60,7 @@ function scaleArguments(config, name){
 
 const scales = samples.map(config=>(listSample(config).map(name=>scaleArguments(config, name)))).flat();
 
-let sc = cur.createScaleReport(...scales[0]);
+let sc = cur.createScaleReport(...scales[1]);
 
 //console.log(sc);
 

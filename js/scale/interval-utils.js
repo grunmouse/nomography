@@ -1,5 +1,7 @@
 const inspect = Symbol.for('nodejs.util.inspect.custom');
 
+const {zOrder} = require('@grunmouse/binary');
+
 const {
 	symbols:{
 		ADD,
@@ -171,5 +173,93 @@ function fillArea(area){
 	return p;
 }
 
+const sortArea =  (a,b)=>(a.start[SUB](b.start).valueOf() || b.end[SUB](a.end).valueOf() );
 
-module.exports = { gapArea, getIntersection, getSpacing, joinArea , commonTicks:computeCommonTicks, fillArea};
+function uniqueAreas(areas){
+	areas = areas.slice(0).sort(sortArea);
+	let last = areas[0];
+	const result = [last];
+	for(let i=1;i<areas.length; ++i){
+		let current = areas[i];
+		if(current.start[EQ](last.start) && current.end[EQ](last.end)){
+			if(current.step[EQ](last.step)){
+				//Тождественны
+			}
+			else{
+				//Совпадают интервалы с разным шагом
+				//Предпочитаем - с меньшим шагом, но альтернативный шаг запоминаем
+				let step = current.step[LT](last.step) ? current.step : last.step;
+				let altSteps = last.altSteps || [last.step];
+				altSteps.push(current.step);
+				last.step = step;
+				last.altSteps = altSteps;
+			}
+		}
+		else{
+			last = current;
+			result.push(current);
+		}
+	}
+	return result;
+}
+
+/**
+ * Принимает массив уникальных отрезков (равные отрезки обработаны раньше)
+ * возвращает массив компонент свзяности графа вхождения отрезков друг в друга
+ * @param areas : Array<{start, end, step, ...any}>
+ * @return Array<{inner:Area, outer:Area}> - Area - член массива areas
+ */
+function getNestedAreas(areas){
+	const inners = [];
+	for(let a of areas){
+		for(let b of areas){
+			if(a !== b){
+				if(a.start[GE](b.start) && a.end[LE](b.end)){
+					inners.push({outer:b, inner:a});
+				}
+			}
+		}
+	}
+	const components = [];
+	const comp = new Map();
+	for(let link of inners){
+		let cmp = comp.get(link.inner) || comp.get(link.outer);
+		if(comp.has(link.inner)){
+			let cmp = comp.get(link.inner);
+			if(comp.has(link.outer)){
+				let cmp2 = comp.get(link.outer);
+				if(cmp2 !== cmp){
+					cmp.push(link, ...cmp2);
+					for(let lnk of cmp2){
+						comp.set(lnk.inner, cmp);
+						comp.set(lnk.outer, cmp);
+					}
+					components.splice(components.indexOf(cmp2), 1);
+				}
+				else{
+					throw new Error("Unexpected: both nodes already in same component");
+				}
+			}
+			else{
+				cmp.push(link);
+				comp.set(link.outer, cmp);
+			}
+		}
+		else if(comp.has(link.outer)){
+			let cmp = comp.get(link.outer);
+			cmp.push(link);
+			comp.set(link.inner, cmp);
+		}
+		else{
+			let cmp = [link];
+			components.push(cmp);
+			comp.set(link.inner, cmp);
+			comp.set(link.outer, cmp);
+		}
+	}
+	
+	return components;
+}
+
+
+module.exports = { gapArea, getIntersection, getSpacing, joinArea , commonTicks:computeCommonTicks, fillArea, uniqueAreas, getNestedAreas, sortArea};
