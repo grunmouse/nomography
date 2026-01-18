@@ -47,24 +47,39 @@ function scaleArguments(config, name){
 	let limits = [resolveConfig(config, name, 'min'),resolveConfig(config, name, 'max')];
 	let M = config.M;
 	
-	return [
-			(t) => (M.mul(pointFn(t).extend(1)).cut(2)),  // Общий паттерн для проекции
-			scale.euclid,
-			limits,
-			scale.rational25Levels,
-			labeldist,
-			mutedist
-	]
+	return {
+		source: config.source,
+		name: name,
+		args: [
+				(t) => (M.mul(pointFn(t).extend(1)).cut(2)),  // Общий паттерн для проекции
+				scale.euclid,
+				limits,
+				scale.rational25Levels,
+				labeldist,
+				mutedist
+		]
+	};
 
 }
 
 const scales = samples.map(config=>(listSample(config).map(name=>scaleArguments(config, name)))).flat();
 
-let sc = cur.createScaleReport(...scales[1]);
+function testingScale({source, name, args}, index){
+	
+	console.log(index);
+	//console.log(source.trim().replace(/(\r?\n){3,}/g, "\n\n"));
+	//console.log();
+	//console.log(name);
 
-//console.log(sc);
+	let sc = cur.createScaleReport(...args);
 
-let res = controlDist(sc, scale.euclid, labeldist, mutedist);
+	//console.log(sc);
 
-console.log(res);
-//createScaleReport(f, metric, D, levels, labeldist, mutedist)
+	let res = controlDist(sc, scale.euclid, labeldist, mutedist);
+
+	console.log(res);
+}
+
+scales
+.slice(0,1)
+.map(testingScale);

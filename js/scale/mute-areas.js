@@ -45,9 +45,9 @@ function getMinStepStart(distance, D, levels, mutedist) {
 		return step;
 	};
 	
-	console.log(D);
+	//console.log(D);
 	let topStep = levels.findTop(D)
-	console.log(D[0]);
+	//console.log(D[0]);
 	let topStepIndex = levels.getIndex(topStep.step);
 	let strongStep = levels.findLevel(D[0]);
 	let preMinStep = levels.findPair((index)=>(index<=topStepIndex && oneStepLength(D[0], levels.getStep(index))<mutedist.min));
@@ -291,14 +291,17 @@ function collectAreas(D, firstStep, distance, levels, mutedist, rev = false){
  */
 function muteArea(distance, D, levels, mutedist){
 	let maxStepLimits = levels.findTop(D); //Наибольшее значение шага, отмечаемое на данном интервале хотя бы одним штрихом.
-	debugger;
+	
 	let minStep = getMinStepStart(distance, D, levels, mutedist);
-	console.log(minStep);
+	//console.log(minStep);
 
 	const startSteps = startingSteps(minStep, distance, D, levels, mutedist);
+	
+	//console.log(minStep);
+	//console.log(startSteps);
 	//console.log(startSteps);
 	let limits = startSteps[0];
-	console.log(limits);
+	//console.log(limits);
 	/*
 		Правила сортировки: первым идёт тот, который начинается раньше. Из двух с общим началом первым идёт более длинный
 	*/
@@ -350,6 +353,7 @@ function resolveNested(link, distance, levels, mutedist, labeldist){
 				if(distance(outer.start, lastStart)<labeldist.min){
 					//Невозможно создать B1
 					//Проверить возможность не создавать B1
+					return {action:"remove inner", removed:inner};
 				}
 				else{
 					B1 = {...outer, end:lastStart};
@@ -364,6 +368,7 @@ function resolveNested(link, distance, levels, mutedist, labeldist){
 				if(distance(outer.end, firstEnd)<labeldist.min){
 					//Невозможно создать B2
 					//Проверить возможность не создавать B2
+					return {action:"remove inner", removed:inner};
 				}
 				else{
 					B2 = {...outer, start:firstEnd};
@@ -379,6 +384,10 @@ function resolveNested(link, distance, levels, mutedist, labeldist){
 			};
 		}
 	}
+	
+}
+
+function resolveManyNested(links, distance, levels, mutedist, labeldist){
 	
 }
 

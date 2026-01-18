@@ -28,7 +28,12 @@ function parseSample(code, a, b){
 		return variants;
 	}).flat()
 	
-	samples = samples.map((config)=>(evalConfig(convertConfig(config).js)));
+	samples = samples.map((config)=>{
+		let js = convertConfig(config).js;
+		let sample = evalConfig(js);
+		sample.source = config;
+		return sample;
+	});
 	
 	return samples;
 }

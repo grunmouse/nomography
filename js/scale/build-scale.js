@@ -91,6 +91,26 @@ function wrapFunction(f){
 }
 
 
+function handlePointsLabeled(points, distance, levels, labeldist){
+	for(let i = points.length-1; i>0; --i){
+		let a = points[i-1], b = points[i];
+		let d = distance(a.a, b.a);
+		if(d>labeldist.max){
+			console.log(a);
+			console.log(b);
+			let p = betweenPoints(a.a, b.a, b.step, distance, levels, labeldist);
+			p = p.slice(1,-1).map((a)=>({a, step:b.step}));
+			
+			points.splice(i, 0, ...p); //Вставляем точки перед p;
+			
+		}
+		else if(d<labeldist.min){
+			//Нужна какая-то обработка
+		}
+	}
+	
+	return points;
+}
 /**
  * Основная функция: создает отчет о шкале из функции, метрики и параметров.
  * @param {Function|Object} f - Функция отображения.
@@ -113,7 +133,7 @@ function createScaleReport(f, metric, D, levels, labeldist, mutedist){
 			let action = resolveNested(cmp[0], distance, levels, mutedist, labeldist);
 			//console.log(action);
 			if(action.created){
-				areas.splice(areas.indexOf(action.removed), 1, ...action.created)
+				areas.splice(areas.indexOf(action.removed), 1, ...action.created);
 			}
 			else{
 				areas.splice(areas.indexOf(action.removed), 1);
@@ -130,22 +150,7 @@ function createScaleReport(f, metric, D, levels, labeldist, mutedist){
 	
 	points = resolveUnknownPoints(points, distance, mutedist);
 	
-	//if(!false){
-	for(let i = points.length-1; i>0; --i){
-		let a = points[i-1], b = points[i];
-		let d = distance(a.a, b.a);
-		if(d>labeldist.max){
-			let p = betweenPoints(a.a, b.a, b.step, distance, levels, labeldist);
-			p = p.slice(1,-1).map((a)=>({a, step:b.step}));
-			
-			points.splice(i, 0, ...p); //Вставляем точки перед p;
-			
-		}
-		else if(d<labeldist.min){
-			//Нужна какая-то обработка
-		}
-	}
-	//}
+	points = handlePointsLabeled(points, distance, levels, labeldist);
 	
 	return convertToScaleReport(points, fun,  metric, levels, labeldist);
 }

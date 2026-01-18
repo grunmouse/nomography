@@ -175,13 +175,21 @@ function fillArea(area){
 
 const sortArea =  (a,b)=>(a.start[SUB](b.start).valueOf() || b.end[SUB](a.end).valueOf() );
 
+function equalLimits(a, b){
+	return a.start[EQ](b.start) && a.end[EQ](b.end);
+}
+
+function equalInterval(a, b){
+	return a === b || equalLimits(a, b) && a.step[EQ](b.step);
+}
+
 function uniqueAreas(areas){
 	areas = areas.slice(0).sort(sortArea);
 	let last = areas[0];
 	const result = [last];
 	for(let i=1;i<areas.length; ++i){
 		let current = areas[i];
-		if(current.start[EQ](last.start) && current.end[EQ](last.end)){
+		if(equalLimits(current, last)){
 			if(current.step[EQ](last.step)){
 				//Тождественны
 			}
@@ -201,6 +209,50 @@ function uniqueAreas(areas){
 		}
 	}
 	return result;
+}
+
+function isInner(a, b){
+	return a.start[GE](b.start) && a.end[LE](b.end);
+}
+
+function sortByNestingOrder(pairs) {
+  const reverseGraph = new Map(); // inner -> [outers]
+  const allNodes = new Set();
+
+  // 1. Построение обратного графа
+  for (const { outer, inner } of pairs) {
+    if (!reverseGraph.has(inner)) {
+      reverseGraph.set(inner, []);
+    }
+    reverseGraph.get(inner).push(outer);
+    allNodes.add(outer);
+    allNodes.add(inner);
+  }
+
+  // 2. Вычисление глубины узлов через DFS
+  const depthMemo = new Map();
+
+  function computeDepth(node) {
+    if (depthMemo.has(node)) return depthMemo.get(node);
+
+    let parents = reverseGraph.get(node);
+    let maxDepth = parents && parents.length ? Math.max(...reverseGraph.get(node).map(computeDepth))+1 : 0;
+
+    depthMemo.set(node, maxDepth);
+    return maxDepth;
+  }
+
+  // Вычисляем глубину для всех узлов
+  for (const node of allNodes) {
+    if (!depthMemo.has(node)) {
+      computeDepth(node);
+    }
+  }
+
+  // 3. Сортировка пар по глубине inner (по убыванию)
+  return pairs.slice().sort((a, b) => {
+    return depthMemo.get(b.inner) - depthMemo.get(a.inner) || depthMemo.get(b.outer) - depthMemo.get(a.outer);
+  });
 }
 
 /**
@@ -237,7 +289,7 @@ function getNestedAreas(areas){
 					components.splice(components.indexOf(cmp2), 1);
 				}
 				else{
-					throw new Error("Unexpected: both nodes already in same component");
+					cmp.push(link);
 				}
 			}
 			else{
@@ -258,7 +310,7 @@ function getNestedAreas(areas){
 		}
 	}
 	
-	return components;
+	return components.map(sortByNestingOrder);
 }
 
 
