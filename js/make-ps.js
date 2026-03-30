@@ -110,4 +110,8 @@ function manyCurvesToPS(curves, keys){
 	return code.join('\n\n');
 }
 
-module.exports = {curveToPS,manyCurvesToPS,scaleToPS};
+function curveList(curves, name){
+	return `/${name} [ ${curves.map(curve=>('/' + curve.name + curve.caption)).join(' ')} ] def`;
+}
+
+module.exports = {curveToPS,manyCurvesToPS,curveList,scaleToPS};

@@ -152,7 +152,9 @@
 				target 
 				currentarg dir dup a exch
 				space level0 point-detail
+				currentarg
 			end
+			movepos
 		} def		
 		
 
@@ -280,12 +282,30 @@
 		
 		%[x1, x1, step, mutestep, mutestep2]
 		/linear-scale {
+			true true -private-linear-scale
+		} def			
+		
+		%[x1, x1, step, mutestep, mutestep2]
+		/next-linear-scale {
+			false true -private-linear-scale
+		} def				
+
+		%[x1, x1, step, mutestep, mutestep2]
+		/inner-linear-scale {
+			false false -private-linear-scale
+		} def				
+		
+		%[x1, x1, step, mutestep, mutestep2 first last]
+		/-private-linear-scale {
 			0 dict begin
+				/islast exch def
+				/isfirst exch def
 				/mutestep2 exch def
 				/mutestep exch def
 				tofrac /step 2edef
 				tofrac /x2 2edef
 				tofrac /x1 2edef
+				
 				mutestep2 null eq 
 				{
 					/mute {
@@ -298,15 +318,25 @@
 					} def
 				} ifelse
 				
+				
 				/currentarg x1 2def
 				x1 step x2
 				{
 					/nextarg 2edef
-					[currentarg] [nextarg] mute
-					nextarg div value
+					currentarg nextarg fraction-eq not {
+						[currentarg] [nextarg] mute
+					} if
+					nextarg x1 fraction-eq not isfirst or
+					nextarg x2 fraction-eq not islast or
+					and
+					{
+						nextarg div value
+					} if
 					/currentarg nextarg 2def
 				} fraction-for
+				x2 div
 			end
+			movepos
 		} def		
 		
 		%Если вместо функции пришёл словарь - значит нужно перенести из него всё в текущий словарь
