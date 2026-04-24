@@ -1,0 +1,53 @@
+
+% [arr]
+/concat-struct {
+	0 dict begin
+		/struct-array exch def
+		
+		/doshow {
+			struct-array {struct-show} forall
+		} def
+		
+		/getsize {
+			0 dict begin {
+				/width 0 def
+				/height 0 def
+				
+				struct-array {
+					struct-size
+					%[width, height]
+					dup
+					ge height
+					{/heigth exch def}
+					{pop}
+					ifelse
+					
+					width add /width exch def
+				} forall
+				
+				width height
+			} def
+		} def
+		
+		/getbaseline {
+			0 dict begin {
+				/baseline 0 def
+				
+				struct-array {
+					struct-baseline
+					%[baseline]
+					dup
+					ge baseline
+					{/baseline exch def}
+					{pop}
+					ifelse
+				} forall
+				
+				baseline
+			} def
+		
+		} def
+		
+		currentdict
+	end
+} def
