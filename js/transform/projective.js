@@ -55,6 +55,7 @@ function getConvertMatrix(from, to){
 	const Rfrom = algo(...from).R;
 	const intRto = algo(...to).R;
 	const Rto = intRto.inverse();
+	
 	const R = Rto.mul(Rfrom);
 	
 	return R;

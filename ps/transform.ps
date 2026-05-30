@@ -1,0 +1,277 @@
+
+% Процедура для обращения матрицы 3x3
+/3inverse {
+  % [a b c d e f g h i] -> [inv_a inv_b inv_c inv_d inv_e inv_f inv_g inv_h inv_i]
+  0 dict begin
+	aload pop
+    /i exch def /h exch def /g exch def
+    /f exch def /e exch def /d exch def
+    /c exch def /b exch def /a exch def
+
+    % Вычисляем определитель
+	/det
+	  a 
+	  e i mul       % ei
+	  f h mul       % fh
+	  sub              % ei - fh
+	  mul            % a(ei - fh)
+
+	  b 
+	  d i mul       % di
+	  f g mul       % fg
+	  sub              % di - fg
+	  mul            % b(di - fg)
+	  neg              % -b(di - fg)
+		
+	  c 
+	  d h mul       % dh
+	  e g mul       % eg
+	  sub              % dh - eg
+	  mul            % c(dh - eg)
+
+	  add add          % a(ei-fh) - b(di-fg) + c(dh-eg)
+	def
+
+    % Алгебраические дополнения
+    [
+      e i mul f h mul sub det div
+      c h mul b i mul sub det div
+      b f mul c e mul sub det div
+
+      f g mul d i mul sub det div
+      a i mul c g mul sub det div
+      c d mul a f mul sub det div
+
+      d h mul e g mul sub det div
+      b g mul a h mul sub det div
+      a e mul b d mul sub det div
+    ]
+  end
+} def
+
+% Умножение матриц 3x3
+/3mmul {
+  0 dict begin
+    % [A] [B] -> [A*B]
+    /B exch def 
+	/A exch def
+    [
+      % Первая строка
+      A 0 get B 0 get mul A 1 get B 3 get mul add A 2 get B 6 get mul add
+      A 0 get B 1 get mul A 1 get B 4 get mul add A 2 get B 7 get mul add
+      A 0 get B 2 get mul A 1 get B 5 get mul add A 2 get B 8 get mul add
+
+      % Вторая строка
+      A 3 get B 0 get mul A 4 get B 3 get mul add A 5 get B 6 get mul add
+      A 3 get B 1 get mul A 4 get B 4 get mul add A 5 get B 7 get mul add
+      A 3 get B 2 get mul A 4 get B 5 get mul add A 5 get B 8 get mul add
+
+      % Третья строка
+      A 6 get B 0 get mul A 7 get B 3 get mul add A 8 get B 6 get mul add
+      A 6 get B 1 get mul A 7 get B 4 get mul add A 8 get B 7 get mul add
+      A 6 get B 2 get mul A 7 get B 5 get mul add A 8 get B 8 get mul add
+    ]
+  end
+} def
+
+% Умножение матрицы 3x3 на вектор 3 (проективный)
+%[matrix, x, y, z]
+/3vmul {
+  0 dict begin
+    /z exch def 
+    /y exch def 
+    /x exch def 
+	/M exch def
+    
+      M 0 get x mul M 1 get y mul add M 2 get z mul add
+      M 3 get x mul M 4 get y mul add M 5 get z mul add
+      M 6 get x mul M 7 get y mul add M 8 get z mul add
+    
+  end
+} def
+
+%[x, y]
+/shift_matrix {
+	0 dict begin
+		/y exch def
+		/x exch def
+		
+		[ 
+			1 0 x neg
+			0 1 y neg
+			0 0 1
+		]
+	end
+} def
+%[[...matrix]]
+
+%[x, y]
+/scale_matrix {
+	0 dict begin
+		/y exch def
+		/x exch def
+		
+		[ x 0 0 0 y 0 0 0 1	]
+	end
+} def
+
+% Основная процедура
+/algoProjective {
+  0 dict begin
+    /D 2edef /C 2edef /B 2edef /A 2edef
+
+    % Шаг 1: матрица сдвига S
+    /S A shift_matrix def
+
+    % Шаг 2: векторы Bs и Ds
+    /Bs B A 2sub 2def
+    /Ds D A 2sub 2def
+
+    % Шаг 3: матрица invAlpha
+    /invAlpha [
+      Ds pop Bs pop 0
+      Ds exch pop Bs exch pop 0
+      0 0 1
+    ] def
+
+    % Шаг 4: обращение invAlpha для получения Alpha
+    /Alpha invAlpha 3inverse def
+    % Шаг 5: матрица AS и вектор Ca
+    /AS Alpha S 3mmul def
+    
+    /Ca AS C 1 3vmul pop 2def
+	
+	Ca /Cay exch def /Cax exch def
+
+    % Шаг 6: матрица Psi
+    /Psi [
+      Cay 1 sub Cax div 1 add   0                         0
+      0                         Cax 1 sub Cay div 1 add   0
+      Cay 1 sub Cax div         Cax 1 sub Cay div         1
+    ] def
+	
+    % Шаг 7: итоговая матрица R
+    /R Psi AS 3mmul def
+
+    % Возвращаем объект {R, offset, S, Alpha, Psi}
+    <<
+      /R R
+      /offset /A load
+      /S S
+      /Alpha Alpha
+	  /Psi Psi
+	>>
+	
+  end
+} def
+
+%[A, B, C, D, width, height]
+/makeProjMatrix{
+	0 dict begin
+		scale_matrix /S exch def
+		algoProjective /R get
+		S exch 3mmul 
+		cvx
+	end
+} def
+
+
+/2polar {
+	0 dict begin
+		/y exch def
+		/x exch def
+		y x atan
+		x y 2abs
+	end
+} def
+
+/2decart {
+	0 dict begin
+		/v exch def
+		/a exch def
+		
+		a cos
+		a sin
+		v
+		2mul
+	end
+} def
+
+/orderConvexQuadrilateral {
+	0 dict begin
+		/D 2edef
+		/C 2edef
+		/B 2edef
+		/A 2edef
+		
+		/AB B A 2sub 2def
+		/AC C A 2sub 2def
+		/AD D A 2sub 2def
+		
+		/b AB exch atan def
+		/c AC exch atan def
+		/d AD exch atan def
+		
+		b c le
+		{
+			% b <= c
+			c d le
+			{
+				% c <= d
+				% b <= c <= d
+				%A B C D
+				A D C B %обратный порядок
+			}
+			{
+				% c > d
+				% b ? d < c
+				b d le
+				{
+					% b <= d
+					% b <= d < c
+					%A B D C
+					A C D B %обратный порядок
+				}
+				{
+					% b > d
+					% d < b < c
+					%A D B C
+					A C B D %обратный порядок
+				}
+				ifelse
+			}
+			ifelse
+		}
+		{
+			% b > c
+			b d le
+			{
+				% b <= d
+				% c < b <= d
+				%A C B D
+				A D B C %обратный порядок
+			}
+			{
+				% b > d
+				% c ? d < b
+				c d le
+				{
+					% c <= d
+					% c <= d < b
+					%A C D B
+					A B D C %обратный порядок
+				}
+				{
+					% c > d
+					% d < c < b
+					%A D C B
+					A B C D %обратный порядок
+				}
+				ifelse
+			}
+			ifelse
+		}
+		ifelse
+	end
+} def
+

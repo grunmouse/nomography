@@ -302,9 +302,19 @@
 				/isfirst exch def
 				/mutestep2 exch def
 				/mutestep exch def
-				tofrac /step 2edef
+				/step exch def
+				%tofrac /step 2edef
 				tofrac /x2 2edef
 				tofrac /x1 2edef
+				
+				step null eq 
+				{
+					/step x2 x1 fraction-sub 2def
+				}
+				{
+					/step step tofrac 2def
+				}
+				ifelse
 				
 				mutestep2 null eq 
 				{
