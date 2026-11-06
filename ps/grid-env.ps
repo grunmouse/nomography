@@ -1,3 +1,18 @@
+{(abstract-scale.ps) stealfile} /abstract-mutegroup ifnotkey
+
+/to-unar-function {
+	dup
+	xcheck
+	not
+	{
+		[ exch
+		/pop exch
+		]
+		cvx
+	}
+	if
+} def
+
 %создаёт словарь с функциями для рисования бинарной	сетки для функции f
 % @param f - функция, отображающая пару аргументов на пару координат: a b fun -> x y
 %[f]
@@ -6,24 +21,26 @@
 		/fun exch def % Запоминаемая функция бинарного поля
 		
 		% функция первого аргумента при заданном втором
+		% [b]
 		/fun-b {
 			0 dict begin
 				/b exch def
 				[ 
 					b 
-					/fun cvx
+					/fun
 				] cvx
 			end
 		} def
 		
 		%функция второго аргумента при заданном первом
+		% [a]
 		/fun-a {
 			0 dict begin
 				/a exch def
 				[
 					a 
-					exch cvx
-					fun cvx
+					/exch
+					/fun
 				] cvx
 			end
 		} def
@@ -50,14 +67,14 @@
 		
 		% Установить пределы первого аргумента
 		/setlimits-a {
-			/max-a exch def
-			/min-a exch def
+			to-unar-function /max-a exch def
+			to-unar-function /min-a exch def
 		} def
 
 		% Установить пределы второго аргумента
-		/setlimits-a {
-			/max-b exch def
-			/min-b exch def
+		/setlimits-b {
+			to-unar-function /max-b exch def
+			to-unar-function /min-b exch def
 		} def
 		
 		%Рисовать изолинию первого аргумента
@@ -65,8 +82,13 @@
 		/curve-a {
 			gsave
 				line-width setlinewidth
-				fun-a
-				min-b max-b f-curve
+				1 dict begin
+					/current_a exch def
+					current_a fun-a
+					current_a min-b
+					current_a max-b 
+					f-curve
+				end
 			grestore
 		} def
 		
@@ -75,8 +97,13 @@
 		/curve-b {
 			gsave
 				line-width setlinewidth
-				fun-b
-				min-b max-b f-curve
+				1 dict begin
+					/current_b exch def
+					current_b fun-b
+					current_b min-a
+					current_b max-b
+					f-curve
+				end
 			grestore
 		} def
 
@@ -98,6 +125,40 @@
 		/bottom {0 0} def % ордината базовой линии
 
 
+		
+		%по аналогии с linear-scale
+		%Рисование множества линий curve-a
+		%[a1, a2, step, mutestep, mutestep2 first last]
+		/family-a {
+			%drawmute 
+			{curve-a}
+			%drawvalue
+			{
+				%[nom, den]
+				div curve-a
+			}
+			abstract-linear-scale
+			pop
+		} def
+
+		%Рисование множества линий curve-b
+		%[b1, b2, step, mutestep, mutestep2 first last]
+		/family-b {
+			%drawmute 
+			{curve-b}
+			%drawvalue
+			{
+				%[nom, den]
+				div curve-b
+			}
+			abstract-linear-scale
+			pop
+		} def
+		
+
+		
+		%рисует ломаную, заданную в терминах a,b
+		/draw-path {} def
 	
 		currentdict
 	end

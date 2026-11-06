@@ -14,6 +14,14 @@
 	ifelse
 } def
 
+/isnumber {
+	safetype
+	dup
+	/integertype eq
+	exch
+	/realtype eq or	
+} def
+
 % Рисует штрих, заданный полярными координатами
 % dir - направление штриха в градусах
 % length - длина штриха
@@ -156,6 +164,50 @@
 			end
 			movepos
 		} def		
+		
+		%[x, label]
+		%[x] - если строка опущена, то она будет создана их x
+		/-private-parse-label-args {
+			0 dict begin
+				isnumber
+				{
+					/x exch def
+					/label x prepare tostring def
+				}
+				{
+					safetype
+					<<
+						/stringtype {str-to-struct}
+						/arraytype {str-to-struct}
+						/dicttype {}
+					>>
+					exch get exec
+					/label exch def
+					/x exch def
+				}
+				ifelse
+				x label
+			end
+		} def
+		%[x, label]
+		
+		/label-only {
+			-private-parse-label-args
+			0 dict begin 
+				/label exch def
+				/x exch def
+
+				x movepos
+				
+				label
+				target 
+				currentarg dir dup a exch
+				space 
+				point-label
+				currentarg
+			end
+			movepos
+		}
 		
 
 		% [label, dir2, lx, ly, x] - рисует надписанный штрих в виде выноски

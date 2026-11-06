@@ -39,6 +39,42 @@
 } def
 %[y]
 
+%[xarray, yarray, x]
+/table-deriv {
+	0 dict begin
+		/x exch def
+		/yarray exch def
+		/xarray exch def
+		
+		xarray x vilka %[nedolet, perelet]
+		/perelet exch def
+		/nedolet exch def
+
+		
+		nedolet -1 eq
+		{
+			%[-1]
+			null
+		}
+		{
+			nedolet perelet eq
+			{
+				nedolet 0 gt
+				{/nedolet dec}
+				if
+				perelet xarray length lt
+				{/perelet inc} 
+				if
+			}
+			if
+			
+			xarray yarray nedolet perelet div-subs
+		}
+	end
+} def
+%[y]
+
+
 %[x0, x1, y0, y1, x]
 /line-approx {
 	/x exch def

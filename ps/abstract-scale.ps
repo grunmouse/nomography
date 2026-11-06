@@ -1,0 +1,157 @@
+
+		%[ x1 x2 c level drawmute]
+		/abstract-mutegroup {
+			0 dict begin
+				/drawmute exch def
+				/level exch def
+				tofrac /c 2edef
+				tofrac /x2 2edef
+				tofrac /x1 2edef
+				
+				gsave
+				x1 c fraction-add
+				c
+				x2 c fraction-sub
+				{
+					%[nom, den]
+					div
+					%[x]
+					level
+					%[x, level]
+					drawmute
+				} fraction-for
+				grestore
+			end
+		} def
+
+		%[ x1 x2 c level m drawmute]
+		/abstract-mutegroup2 {
+			0 dict begin
+				/drawmute exch def
+				tofrac /m 2edef
+				/level exch def
+				tofrac /c 2edef
+				tofrac /x2 2edef
+				tofrac /x1 2edef
+				
+			gsave
+				x1 c fraction-add
+				c
+				x2 c fraction-sub
+				{
+					%[nom, den]
+					2dup div
+					/x exch def
+					%[nom, den]
+					m
+					fraction-has-div
+					{
+						%then
+						x
+						level 1 sub
+						%[x, level]
+						drawmute
+					}
+					{
+						%else
+						x
+						level
+						%[x, level]
+						drawmute
+					}
+					ifelse
+					
+				} fraction-for
+			
+			grestore
+			
+			end
+		} def
+		%
+		% drawmute
+		% [x] drawmute
+		%
+		% drawvalue
+		% [nom den] drawvalue
+		%
+		%[x1, x2, step, mutestep, mutestep2 first last drawmute drawvalue]
+		/abstract-linear-scale {
+			0 dict begin
+				/drawvalue exch def
+				/drawmute exch def
+				/islast exch def
+				/isfirst exch def
+				/mutestep2 exch def
+				/mutestep exch def
+				/step exch def
+				tofrac /x2 2edef
+				tofrac /x1 2edef
+				
+				step null eq 
+				{
+					/step x2 x1 fraction-sub 2def
+				}
+				{
+					/step step tofrac 2def
+				}
+				ifelse
+				
+				mutestep2 null eq 
+				{
+					/mute {
+						mutestep 1 drawmute abstract-mutegroup
+					} def
+				}
+				{
+					/mute {
+						mutestep2 2 mutestep drawmute abstract-mutegroup2
+					} def
+				} ifelse
+				
+				
+				/currentarg x1 2def
+				x1 step x2
+				{
+					/nextarg 2edef
+					currentarg nextarg fraction-eq not {
+						[currentarg] [nextarg] mute
+					} if
+					nextarg x1 fraction-eq not isfirst or
+					nextarg x2 fraction-eq not islast or
+					and
+					{
+						nextarg drawvalue
+					} if
+					/currentarg nextarg 2def
+				} fraction-for
+				x2 div
+			end
+		} def		
+		%[real(x2)] - после завершения работы, в стеке числовое значение, равное x2
+
+		%[x1, x2, step, first last drawvalue]
+		/abstract-linear-labels-only {
+			0 dict begin
+				/drawvalue exch def
+				/islast exch def
+				/isfirst exch def
+				tofrac /step 2edef
+				tofrac /x2 2edef
+				tofrac /x1 2edef
+				
+				/currentarg x1 2def
+				x1 step x2
+				{
+					/nextarg 2edef
+					nextarg x1 fraction-eq not isfirst or
+					nextarg x2 fraction-eq not islast or
+					and
+					{
+						nextarg drawvalue
+					} if
+					/currentarg nextarg 2def
+				} fraction-for
+				x2 div
+			end
+		} def		
+		%[real(x2)] - после завершения работы, в стеке числовое значение, равное x2

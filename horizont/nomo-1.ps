@@ -3,7 +3,7 @@
   << /PageSize [595 842] /Orientation 0 >> setpagedevice
 %%EndSetup
 
-(../../ps-steal/steal.ps) run
+%(../../ps-steal/steal.ps) run
 (../../ps-eskd/) stealfolder
 (../../ps-eskd-font/) stealfolder
 (../../nomography/ps/) stealfolder
@@ -13,38 +13,19 @@
 	
 	0.2 setlinewidth
 	/eskd-b-font  findfont	2.2 scalefont setfont
+	
 
 /module 0.001 def % =1/1000, в 1 мм 1000 м = 1:1М
 
 /scale_h_mm {
-	0 10 1 2 5 mutegroup2
-	10 value
-	10 20 2 2 mutegroup
-	20 value
-	20 30 2 2 mutegroup
-	30 value
-	35 2 mutemark
-	40 1 mutemark
-	45 2 mutemark
-	50 value
-	55 2 mutemark
-	60 1 mutemark
-	65 2 mutemark
-	70 value
-	70 100 5 2 10 mutegroup2
-	100 value
-	100 150 5 2 10 mutegroup2
-	150 value
-	150 200 10 2 mutegroup
-	200 value
-	200 300 10 2 50 mutegroup2
-	300 value
-	300 400 10 2 50 mutegroup2
-	400 value
-	400 500 10 2 50 mutegroup2
-	500 value
-	500 600 10 2 50 mutegroup2
-	600 value
+    0           10    10    5     1     next-linear-scale
+    currentarg  30    10    2     null  next-linear-scale
+    currentarg  50    20    10    5		next-linear-scale
+    currentarg  70    20    10    5		next-linear-scale
+    currentarg  100   30    10    5		next-linear-scale
+    currentarg  150   50    10    5		next-linear-scale
+    currentarg  200   50    10    null  next-linear-scale
+    currentarg  600   100   50    10    next-linear-scale
 } def
 
 105 270 translate
@@ -77,6 +58,7 @@ grestore
 (Высота, м) show
 
 
+%-90 -20 translate
 %{1000 mul f_l module mul 0} scale-env begin
 %	/dir {pop -90} def
 %	%0 fun == ==
